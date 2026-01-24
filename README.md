@@ -97,7 +97,15 @@ git rebase upstream/main
 - **Monthly**: Full sync with upstream/main
 - **Before release**: Ensure all feature branches rebase cleanly
 
-## 🚀 Quick Start (Local Development)
+## 🚀 Quick Start
+
+### Linux (Ubuntu/Debian) - One-liner
+
+```bash
+curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/install.sh | bash
+```
+
+### Manual Setup
 
 See [docs/DEV_SETUP.md](docs/DEV_SETUP.md) for full instructions.
 
@@ -106,17 +114,14 @@ See [docs/DEV_SETUP.md](docs/DEV_SETUP.md) for full instructions.
 git clone https://github.com/error-wtf/errordon.git
 cd errordon
 
-# Set up upstream
-git remote add upstream https://github.com/mastodon/mastodon.git
+# Run install script
+chmod +x install.sh
+./install.sh
 
-# Install dependencies (requires Ruby, Node, Postgres, Redis)
+# Or manually:
 bundle install
 yarn install
-
-# Setup database
 rails db:setup
-
-# Start development server
 foreman start
 ```
 
