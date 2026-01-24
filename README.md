@@ -50,19 +50,15 @@ errordon/
 └── README.md                             # This file
 ```
 
-## 🔀 Branching Strategy
+## Branching Strategy
 
 | Branch | Purpose |
-|--------|---------|
-| `main` | Stable, upstream-tracking |
-| `develop` | Integration branch |
-| `feature/profile-media-columns` | Videos/Audio/Images tabs |
-| `feature/media-filters-ui` | Filter chips & options |
-| `feature/upload-250mb-limits` | Upload size configuration |
-| `feature/transcoding-pipeline` | ffmpeg processing jobs |
-| `feature/privacy-chaos-defaults` | Strict privacy preset |
+|--------|--------|
+| `main` | Stable release (Phase 1 complete) |
+| `master` | Development mirror |
+| `develop` | Initial blueprint |
 
-## 🔗 Upstream Setup
+## Upstream Setup
 
 This repo tracks the official Mastodon repository as upstream.
 
@@ -126,20 +122,21 @@ foreman start
 
 ## 📋 Feature Roadmap
 
-### Phase 1: UI + API (No breaking changes)
-- [ ] Analyze Mastodon codebase → `docs/ARCH_MAP_MEDIA_AND_PROFILE.md`
-- [ ] API filter param `media_type=video|audio|image`
-- [ ] Frontend profile tabs: Videos, Audio, Images
-- [ ] Filter chips UI
+### Phase 1: UI + API ✅ Complete
+- [x] Analyze Mastodon codebase → `docs/ARCH_MAP_MEDIA_AND_PROFILE.md`
+- [x] API filter param `media_type=video|audio|image`
+- [x] Frontend profile tabs: Videos, Audio, Images
+- [x] Filter chips UI (Originals, Alt text, Public)
+- [x] Instagram-style grid layout
+- [x] Privacy preset "strict" via ENV
 
-### Phase 2: Uploads + Transcoding
+### Phase 2: Uploads + Transcoding (Needs VPS)
 - [ ] Increase upload limit to 250MB
 - [ ] Server-side transcoding pipeline (Sidekiq + ffmpeg)
 - [ ] Output variants: mobile (480p), default (720p)
 - [ ] Quota/rate-limit guardrails
 
-### Phase 3: Privacy + Polish
-- [ ] Privacy preset "strict"
+### Phase 3: Polish
 - [ ] Audio player UX improvements
 - [ ] Video grid view
 - [ ] Admin UI for quotas
