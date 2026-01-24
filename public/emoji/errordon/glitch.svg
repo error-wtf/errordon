@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <rect fill="#000" width="36" height="36"/>
+  <rect fill="#f0f" x="0" y="8" width="36" height="2" opacity="0.5"/>
+  <rect fill="#0ff" x="0" y="18" width="36" height="3" opacity="0.5"/>
+  <rect fill="#0f0" x="0" y="26" width="36" height="2" opacity="0.5"/>
+  <text fill="#fff" font-family="monospace" font-size="10" x="4" y="22">ERR</text>
+  <text fill="#f0f" font-family="monospace" font-size="10" x="5" y="21" opacity="0.7">ERR</text>
+  <text fill="#0ff" font-family="monospace" font-size="10" x="3" y="23" opacity="0.7">ERR</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <rect fill="#000" width="36" height="36" rx="4"/>
+  <circle fill="none" stroke="#00ff00" stroke-width="3" cx="18" cy="18" r="10" stroke-dasharray="15,48" stroke-linecap="round"/>
+  <circle fill="none" stroke="#004400" stroke-width="3" cx="18" cy="18" r="10" opacity="0.3"/>
+  <text fill="#00ff00" font-family="monospace" font-size="5" x="11" y="34">LOAD</text>
+</svg>
