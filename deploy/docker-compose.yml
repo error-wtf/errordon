@@ -5,6 +5,10 @@
 #   cp deploy/docker-compose.yml .
 #   cp deploy/.env.example .env.production
 #   docker compose up -d
+#
+# NSFW-Protect AI (optional):
+#   Uncomment the 'ollama' service below for AI content moderation
+#   Or install Ollama on the host: curl -fsSL https://ollama.com/install.sh | sh
 
 version: '3.8'
 
@@ -93,6 +97,31 @@ services:
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep '[s]idekiq 6' || false"]
 
+  # ============================================================================
+  # NSFW-PROTECT AI (Optional)
+  # ============================================================================
+  # Uncomment to run Ollama in Docker (alternative to host installation)
+  # Note: Requires GPU support for optimal performance
+  #
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   restart: always
+  #   networks:
+  #     - internal_network
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   # Uncomment for NVIDIA GPU support:
+  #   # deploy:
+  #   #   resources:
+  #   #     reservations:
+  #   #       devices:
+  #   #         - driver: nvidia
+  #   #           count: 1
+  #   #           capabilities: [gpu]
+  #   # After starting, pull models:
+  #   #   docker compose exec ollama ollama pull llava
+  #   #   docker compose exec ollama ollama pull llama3
+
 networks:
   external_network:
   internal_network:
@@ -102,3 +131,5 @@ volumes:
   postgres_data:
   redis_data:
   mastodon_public:
+  # Uncomment if using Ollama in Docker:
+  # ollama_data:

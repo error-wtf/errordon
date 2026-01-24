@@ -68,6 +68,15 @@ fi
 log "Installing nginx and certbot..."
 sudo apt-get install -y -qq nginx certbot python3-certbot-nginx
 
+# Ask about NSFW-Protect / Ollama
+INSTALL_OLLAMA=false
+echo ""
+read -p "Install Ollama for AI content moderation (NSFW-Protect)? (y/N): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    INSTALL_OLLAMA=true
+fi
+
 # Clone or update repo
 INSTALL_DIR="/home/mastodon/errordon"
 if [ ! -d "$INSTALL_DIR" ]; then
@@ -132,13 +141,62 @@ docker compose run --rm web bundle exec rake db:setup || docker compose run --rm
 log "Precompiling assets..."
 docker compose run --rm web bundle exec rake assets:precompile
 
+# Install Ollama if requested
+if [ "$INSTALL_OLLAMA" = true ]; then
+    log "Installing Ollama for NSFW-Protect AI..."
+    
+    if ! command -v ollama &> /dev/null; then
+        curl -fsSL https://ollama.com/install.sh | sh
+        sleep 3
+    fi
+    
+    # Pull required models
+    log "Pulling llava model for image analysis (this may take a while)..."
+    ollama pull llava || warn "Failed to pull llava model"
+    
+    log "Pulling llama3 model for text analysis..."
+    ollama pull llama3 || warn "Failed to pull llama3 model"
+    
+    # Enable Ollama service
+    sudo systemctl enable ollama 2>/dev/null || true
+    sudo systemctl start ollama 2>/dev/null || true
+    
+    # Update .env.production
+    if [ -f ".env.production" ]; then
+        # Add NSFW-Protect config if not present
+        if ! grep -q "ERRORDON_NSFW_PROTECT_ENABLED" .env.production; then
+            cat >> .env.production << 'NSFWEOF'
+
+# ============================================================================
+# NSFW-PROTECT AI MODERATION
+# ============================================================================
+ERRORDON_NSFW_PROTECT_ENABLED=true
+ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434
+ERRORDON_NSFW_OLLAMA_VISION_MODEL=llava
+ERRORDON_NSFW_OLLAMA_TEXT_MODEL=llama3
+ERRORDON_NSFW_ADMIN_EMAIL=
+ERRORDON_NSFW_ALARM_THRESHOLD=10
+ERRORDON_INVITE_ONLY=false
+ERRORDON_REQUIRE_AGE_18=false
+NSFWEOF
+        else
+            sed -i 's/ERRORDON_NSFW_PROTECT_ENABLED=false/ERRORDON_NSFW_PROTECT_ENABLED=true/' .env.production
+            # Fix endpoint for Docker
+            sed -i 's|ERRORDON_NSFW_OLLAMA_ENDPOINT=http://localhost:11434|ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434|' .env.production
+        fi
+        log "NSFW-Protect enabled in .env.production"
+    fi
+    
+    log "Ollama installed successfully"
+fi
+
 # Start all services
 log "Starting all services..."
 docker compose up -d
 
 # Setup systemd services (alternative to docker)
 log "Installing systemd services..."
-sudo cp dist/mastodon-*.service /etc/systemd/system/
+sudo cp dist/mastodon-*.service /etc/systemd/system/ 2>/dev/null || true
 sudo systemctl daemon-reload
 
 echo ""
@@ -156,8 +214,23 @@ echo ""
 log "Create admin user:"
 echo "  docker compose run --rm web bin/tootctl accounts create admin --email=admin@$DOMAIN --confirmed --role=Owner"
 echo ""
-log "Errordon ENV variables for privacy:"
-echo "  Add to .env.production:"
-echo "    ERRORDON_PRIVACY_PRESET=strict"
-echo "    ERRORDON_DEFAULT_VISIBILITY=unlisted"
-echo ""
+
+# NSFW-Protect status
+if [ "$INSTALL_OLLAMA" = true ]; then
+    log "NSFW-Protect AI:"
+    echo "  ✓ Ollama installed and running"
+    echo "  ✓ llava model (image analysis)"
+    echo "  ✓ llama3 model (text analysis)"
+    echo ""
+    warn "Configure ERRORDON_NSFW_ADMIN_EMAIL in .env.production!"
+    echo ""
+else
+    warn "NSFW-Protect AI not installed"
+    echo "  To enable later:"
+    echo "    1. curl -fsSL https://ollama.com/install.sh | sh"
+    echo "    2. ollama pull llava && ollama pull llama3"
+    echo "    3. Add to .env.production:"
+    echo "       ERRORDON_NSFW_PROTECT_ENABLED=true"
+    echo "       ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434"
+    echo ""
+fi

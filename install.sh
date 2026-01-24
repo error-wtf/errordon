@@ -291,6 +291,27 @@ ERRORDON_MAX_DAILY_UPLOAD_GB=2
 ERRORDON_SECURITY_STRICT=true
 ERRORDON_BLOCK_SUSPICIOUS_IPS=true
 ERRORDON_AUDIT_FILE=true
+
+# ============================================================================
+# NSFW-PROTECT AI MODERATION
+# ============================================================================
+# Enable to activate AI-based content moderation
+ERRORDON_NSFW_PROTECT_ENABLED=false
+
+# Ollama Configuration (required when NSFW-Protect is enabled)
+ERRORDON_NSFW_OLLAMA_ENDPOINT=http://localhost:11434
+ERRORDON_NSFW_OLLAMA_VISION_MODEL=llava
+ERRORDON_NSFW_OLLAMA_TEXT_MODEL=llama3
+
+# Admin email for NSFW alerts (CSAM detection, instance freeze, etc.)
+ERRORDON_NSFW_ADMIN_EMAIL=
+
+# Instance freeze when X alarms are active (0 = disabled)
+ERRORDON_NSFW_ALARM_THRESHOLD=10
+
+# Registration restrictions
+ERRORDON_INVITE_ONLY=false
+ERRORDON_REQUIRE_AGE_18=false
 EOF
     log "Errordon security configuration added"
 fi
@@ -307,6 +328,86 @@ if [ -n "$FFMPEG_VERSION" ]; then
     fi
 else
     warn "ffmpeg not found - transcoding will not work"
+fi
+
+# ============================================================================
+# PHASE 5b: OLLAMA INSTALLATION (for NSFW-Protect AI)
+# ============================================================================
+info "Phase 5b: Installing Ollama for NSFW-Protect AI..."
+
+INSTALL_OLLAMA=false
+read -p "Install Ollama for AI content moderation? (y/N): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    INSTALL_OLLAMA=true
+fi
+
+if [ "$INSTALL_OLLAMA" = true ]; then
+    if ! command -v ollama &> /dev/null; then
+        log "Installing Ollama..."
+        curl -fsSL https://ollama.com/install.sh | sh
+        
+        # Wait for Ollama service to start
+        sleep 3
+        
+        # Pull the required models
+        log "Pulling llava model for image analysis (this may take a while)..."
+        ollama pull llava
+        
+        log "Pulling llama3 model for text analysis..."
+        ollama pull llama3
+        
+        # Enable and start Ollama service
+        sudo systemctl enable ollama 2>/dev/null || true
+        sudo systemctl start ollama 2>/dev/null || true
+        
+        log "Ollama installed successfully"
+        
+        # Update ENV to enable NSFW-Protect
+        if [ -f ".env.production" ]; then
+            sed -i 's/ERRORDON_NSFW_PROTECT_ENABLED=false/ERRORDON_NSFW_PROTECT_ENABLED=true/' .env.production
+            log "NSFW-Protect enabled in .env.production"
+        fi
+    else
+        log "Ollama already installed"
+        
+        # Check if models are available
+        if ! ollama list 2>/dev/null | grep -q "llava"; then
+            log "Pulling llava model..."
+            ollama pull llava
+        fi
+        if ! ollama list 2>/dev/null | grep -q "llama3"; then
+            log "Pulling llama3 model..."
+            ollama pull llama3
+        fi
+    fi
+    
+    # Create Ollama systemd service if it doesn't exist
+    if [ ! -f "/etc/systemd/system/ollama.service" ]; then
+        log "Creating Ollama systemd service..."
+        sudo tee /etc/systemd/system/ollama.service > /dev/null << 'OLLAMAEOF'
+[Unit]
+Description=Ollama AI Service
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/ollama serve
+Restart=always
+RestartSec=3
+Environment="OLLAMA_HOST=0.0.0.0"
+
+[Install]
+WantedBy=multi-user.target
+OLLAMAEOF
+        sudo systemctl daemon-reload
+        sudo systemctl enable ollama
+        sudo systemctl start ollama
+    fi
+else
+    warn "Ollama not installed. NSFW-Protect AI will be disabled."
+    warn "To install later: curl -fsSL https://ollama.com/install.sh | sh"
 fi
 
 # ============================================================================
@@ -489,6 +590,26 @@ echo "  ✓ Malware detection"
 echo "  ✓ Rate limiting"
 echo "  ✓ Audit logging"
 echo "  ✓ Auto IP blocking"
+echo ""
+
+# Check if Ollama/NSFW-Protect is installed
+if command -v ollama &> /dev/null; then
+    log "NSFW-Protect AI Features:"
+    echo "  ✓ Ollama AI installed"
+    echo "  ✓ Image/Video porn detection"
+    echo "  ✓ Text hate speech detection"
+    echo "  ✓ Automatic strike/freeze system"
+    echo "  ✓ Admin email alerts"
+    echo ""
+    warn "Configure ERRORDON_NSFW_ADMIN_EMAIL in .env.production!"
+else
+    warn "NSFW-Protect AI not installed"
+    echo "  To install later:"
+    echo "    curl -fsSL https://ollama.com/install.sh | sh"
+    echo "    ollama pull llava"
+    echo "    ollama pull llama3"
+    echo "    # Then set ERRORDON_NSFW_PROTECT_ENABLED=true in .env.production"
+fi
 echo ""
 warn "Reload shell: source ~/.bashrc"
 echo ""
