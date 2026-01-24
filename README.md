@@ -2,10 +2,31 @@
 
 A Mastodon fork adding **profile media tabs** (Videos/Audio/Images), **filter UI**, **250MB uploads** with server-side transcoding, and **privacy-first defaults**.
 
+> **Release:** `errordon-0.1.0` - Phase 1 Complete ✅
+
+## ✅ Implemented Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| **API: media_type filter** | ✅ | `?media_type=video\|audio\|image` |
+| **Profile Tabs** | ✅ | Videos/Audio/Images tabs on profiles |
+| **MediaFilterBar** | ✅ | Originals only, With alt text, Public only |
+| **Instagram Grid** | ✅ | 3-column layout with hover effects |
+| **Privacy Preset** | ✅ | Strict defaults via ENV config |
+| **Deploy Templates** | ✅ | Docker Compose, Nginx, .env |
+
+## ⏳ Phase 2 (Needs VPS)
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| **250MB Uploads** | 📄 Docs | Nginx + Rails config ready |
+| **Transcoding** | 📄 Docs | ffmpeg pipeline documented |
+| **Production** | ⏳ | Waiting for VPS |
+
 ## 🎯 Goals
 
 - **Profile Media Columns**: Separate tabs for Videos, Audio, Images in user profiles
-- **Filter UI**: Filter by "originals only", "with text", visibility, etc.
+- **Filter UI**: Filter by "originals only", "with alt text", visibility
 - **Large Uploads**: Up to 250MB for video/audio with automatic transcoding
 - **Privacy Defaults**: Strict preset inspired by chaos.social principles
 
