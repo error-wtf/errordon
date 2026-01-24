@@ -7926,16 +7926,73 @@ a.status-card {
 
 .account-gallery__container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+
+  @media screen and (min-width: 600px) {
+    gap: 8px;
+    padding: 8px;
+  }
 
   .media-gallery__item {
-    border-radius: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 1;
+
+    &:hover {
+      .media-gallery__item-thumbnail {
+        transform: scale(1.05);
+      }
+
+      .media-gallery__item__overlay--corner {
+        opacity: 1;
+      }
+    }
+  }
+
+  .media-gallery__item-thumbnail {
+    transition: transform 0.3s ease;
+  }
+
+  .media-gallery__item__overlay--corner {
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+  }
+
+  .media-gallery__item__badges {
+    position: absolute;
+    bottom: 8px;
+    inset-inline-start: 8px;
+    display: flex;
+    gap: 4px;
   }
 
   .load-more,
   .timeline-hint {
     grid-column: span 3;
+  }
+}
+
+// Errordon: Video duration badge
+.media-gallery__item--video-duration {
+  position: absolute;
+  bottom: 8px;
+  inset-inline-end: 8px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+// Errordon: Audio waveform placeholder
+.media-gallery__item--audio {
+  .media-gallery__item__overlay--corner {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark, #6364ff) 100%);
+    padding: 8px;
+    border-radius: 50%;
   }
 }
 
