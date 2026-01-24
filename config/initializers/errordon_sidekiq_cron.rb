@@ -39,14 +39,22 @@ Rails.application.config.after_initialize do
           class: 'Errordon::GdprCleanupWorker'
         )
 
-        Rails.logger.info "[Errordon] Scheduled jobs configured via sidekiq-cron"
+        Rails.logger.info "[Errordon] NSFW-Protect scheduled jobs configured"
       else
         # Fallback: use recurring jobs via initializer
         Rails.logger.info "[Errordon] sidekiq-cron not available, using manual scheduling"
-        
-        # Schedule initial blocklist update on startup
         Errordon::BlocklistUpdateWorker.perform_in(1.minute)
       end
+    end
+
+    # Video cleanup - runs daily at 5 AM (independent of NSFW-Protect)
+    if ENV['ERRORDON_VIDEO_CLEANUP_ENABLED'] == 'true' && defined?(Sidekiq::Cron::Job)
+      Sidekiq::Cron::Job.create(
+        name: 'Video Cleanup (480p shrink) - daily',
+        cron: '0 5 * * *',
+        class: 'Errordon::VideoCleanupWorker'
+      )
+      Rails.logger.info "[Errordon] Video cleanup job scheduled (daily 5 AM)"
     end
   end
 end
