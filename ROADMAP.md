@@ -1,9 +1,9 @@
 # Errordon Roadmap
 
-## Status-Übersicht
+## Status-Übersicht (Stand: 2026-01-24)
 
 ```
-██████████████████░░░░░░░░░░░░  60% Phase 1 (ohne VPS machbar)
+████████████████████████████░░  90% Phase 1 (ohne VPS machbar)
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0% Phase 2 (braucht VPS)
 ```
 
