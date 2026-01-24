@@ -1,6 +1,11 @@
-// ERRORDON MATRIX THEME - Part 1: Variables & Animations
+// ============================================================================
+// ERRORDON MATRIX THEME
+// Fediverse-compatible visual overlay
+// Does NOT break standard Mastodon functionality
+// Opt-in via Ctrl+Shift+M or user settings
+// ============================================================================
 
-// Colors
+// Colors (Matrix palette)
 $matrix-green: #00ff00;
 $matrix-green-dark: #00cc00;
 $matrix-green-glow: rgba(0, 255, 0, 0.5);
@@ -10,10 +15,11 @@ $matrix-dark: #0a0a0a;
 $matrix-text: #ffffff;
 $matrix-error: #ff0000;
 
-// Fonts
+// Hacker Fonts (UTF-8 compatible, fallback to system fonts)
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Fira+Code&display=swap');
-$font-hacker: 'VT323', monospace;
-$font-code: 'Fira Code', monospace;
+$font-hacker: 'VT323', 'Courier New', monospace;
+$font-code: 'Fira Code', 'Courier New', monospace;
+$font-fallback: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
 // Glitch Animation
 @keyframes glitch {
@@ -48,12 +54,14 @@ $font-code: 'Fira Code', monospace;
 
 // ============================================================================
 // BODY & BASE
+// Fediverse-compatible: Only visual changes, no structural modifications
 // ============================================================================
 
 body.theme-matrix {
-  background: $matrix-black !important;
-  color: $matrix-text !important;
+  background: $matrix-black;
+  color: $matrix-text;
   
+  // Subtle scanline effect (purely decorative, doesn't block interaction)
   &::before {
     content: '';
     position: fixed;
@@ -64,7 +72,8 @@ body.theme-matrix {
     background: linear-gradient(transparent, $matrix-green-subtle);
     animation: scanline 6s linear infinite;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 9998; // Below modals and dropdowns
+    opacity: 0.5;
   }
 }
 
@@ -72,43 +81,43 @@ body.theme-matrix {
 // NAVIGATION & COLUMNS
 // ============================================================================
 
-.theme-matrix {
+// Fediverse-compatible: Specific selectors, minimal !important
+body.theme-matrix {
   .ui, .columns-area, .columns-area__panels {
-    background: $matrix-black !important;
+    background: $matrix-black;
   }
 
   .column, .drawer {
-    background: $matrix-dark !important;
+    background: $matrix-dark;
   }
 
   .drawer__inner, .drawer__header, .navigation-panel {
-    background: $matrix-dark !important;
-    border-right: 1px solid rgba(0, 255, 0, 0.2) !important;
+    background: $matrix-dark;
+    border-right-color: rgba(0, 255, 0, 0.2);
   }
 
   .column-header {
-    background: $matrix-dark !important;
-    border-bottom: 2px solid $matrix-green !important;
+    background: $matrix-dark;
+    border-bottom: 2px solid $matrix-green;
     
     &__title {
-      font-family: $font-hacker !important;
-      font-size: 1.5em !important;
-      color: $matrix-green !important;
+      font-family: $font-hacker;
+      font-size: 1.4em;
+      color: $matrix-green;
       text-shadow: 0 0 10px $matrix-green-glow;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       animation: matrix-glow 3s ease-in-out infinite;
     }
     
     &__button {
-      color: $matrix-green-dark !important;
-      &:hover { color: $matrix-green !important; }
+      color: $matrix-green-dark;
+      &:hover { color: $matrix-green; }
     }
   }
 
   .column-back-button {
-    background: $matrix-dark !important;
-    color: $matrix-green !important;
-    border-bottom: 1px solid rgba(0, 255, 0, 0.2) !important;
+    background: $matrix-dark;
+    color: $matrix-green;
   }
 }
 
@@ -116,36 +125,33 @@ body.theme-matrix {
 // COMPOSE FORM
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .compose-form {
     .autosuggest-textarea__textarea,
     .compose-form__autosuggest-wrapper {
-      background: $matrix-black !important;
-      border: 1px solid rgba(0, 255, 0, 0.3) !important;
-      color: $matrix-text !important;
-      font-family: $font-code !important;
+      background: $matrix-black;
+      border: 1px solid rgba(0, 255, 0, 0.3);
+      color: $matrix-text;
       
-      &::placeholder { color: $matrix-green-dark !important; }
+      &::placeholder { color: $matrix-green-dark; }
       &:focus {
-        border-color: $matrix-green !important;
-        box-shadow: 0 0 15px $matrix-green-glow !important;
+        border-color: $matrix-green;
+        box-shadow: 0 0 15px $matrix-green-glow;
       }
     }
 
     .compose-form__buttons-wrapper {
-      background: $matrix-dark !important;
+      background: $matrix-dark;
     }
 
     .compose-form__publish .button {
-      background: $matrix-green !important;
-      color: $matrix-black !important;
-      font-family: $font-hacker !important;
-      font-size: 1.2em;
-      letter-spacing: 2px;
+      background: $matrix-green;
+      color: $matrix-black;
+      font-family: $font-hacker;
       
       &:hover {
-        background: $matrix-green-dark !important;
-        box-shadow: 0 0 20px $matrix-green-glow !important;
+        background: $matrix-green-dark;
+        box-shadow: 0 0 20px $matrix-green-glow;
       }
     }
   }
@@ -155,45 +161,44 @@ body.theme-matrix {
 // STATUSES / POSTS
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
+  // Posts remain readable - white text on dark
   .status, .detailed-status {
-    background: $matrix-dark !important;
-    border-bottom: 1px solid rgba(0, 255, 0, 0.15) !important;
+    background: $matrix-dark;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.15);
     
-    &:hover { background: rgba(0, 255, 0, 0.03) !important; }
+    &:hover { background: rgba(0, 255, 0, 0.03); }
   }
 
+  // Content stays white for readability (Fediverse compatible)
   .status__content, .detailed-status__content {
-    color: $matrix-text !important;
+    color: $matrix-text;
     
     a {
-      color: $matrix-green !important;
+      color: $matrix-green;
       &:hover { text-shadow: 0 0 8px $matrix-green-glow; }
     }
   }
 
+  // Usernames in Matrix green
   .display-name {
     &__html {
-      font-family: $font-hacker !important;
-      color: $matrix-green !important;
-      font-size: 1.15em;
-      letter-spacing: 1px;
+      font-family: $font-hacker;
+      color: $matrix-green;
     }
     &__account {
-      color: $matrix-green-dark !important;
-      font-family: $font-code !important;
+      color: $matrix-green-dark;
     }
   }
 
   .status__relative-time, time {
-    color: darken($matrix-green, 30%) !important;
-    font-family: $font-code !important;
+    color: $matrix-green-dark;
   }
 
   .status__action-bar, .detailed-status__action-bar {
     .icon-button {
-      color: $matrix-green-dark !important;
-      &:hover, &.active { color: $matrix-green !important; }
+      color: $matrix-green-dark;
+      &:hover, &.active { color: $matrix-green; }
     }
   }
 }
@@ -202,31 +207,32 @@ body.theme-matrix {
 // MEDIA (Video, Audio, Images)
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .media-gallery {
-    border: 1px solid rgba(0, 255, 0, 0.3) !important;
-    &:hover { box-shadow: 0 0 15px $matrix-green-glow !important; }
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    &:hover { box-shadow: 0 0 15px $matrix-green-glow; }
   }
 
+  // Keep media visible and functional
   .media-gallery__item-thumbnail {
-    filter: saturate(0.7) brightness(0.85);
+    filter: saturate(0.8) brightness(0.9);
     &:hover { filter: saturate(1) brightness(1); }
   }
 
   .video-player {
-    border: 2px solid $matrix-green !important;
+    border: 2px solid $matrix-green;
     box-shadow: 0 0 10px $matrix-green-glow;
     
-    .video-player__controls { background: rgba(0, 0, 0, 0.85) !important; }
+    .video-player__controls { background: rgba(0, 0, 0, 0.85); }
     .video-player__seek::before,
-    .video-player__volume::before { background: $matrix-green !important; }
+    .video-player__volume::before { background: $matrix-green; }
   }
 
   .audio-player {
-    background: $matrix-dark !important;
-    border: 2px solid $matrix-green !important;
+    background: $matrix-dark;
+    border: 2px solid $matrix-green;
     
-    .audio-player__progress { background: $matrix-green !important; }
+    .audio-player__progress { background: $matrix-green; }
   }
 }
 
@@ -234,47 +240,39 @@ body.theme-matrix {
 // ACCOUNTS & PROFILES
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .account, .account-card {
-    background: $matrix-dark !important;
-    border: 1px solid rgba(0, 255, 0, 0.2) !important;
-    &:hover { border-color: $matrix-green !important; }
+    background: $matrix-dark;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    &:hover { border-color: $matrix-green; }
   }
 
   .account__header {
-    background: linear-gradient($matrix-dark, $matrix-black) !important;
+    background: linear-gradient($matrix-dark, $matrix-black);
     
     &__image {
-      filter: grayscale(40%) contrast(1.1);
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(transparent 50%, $matrix-black);
-      }
+      // Subtle effect, keeps images visible
+      filter: grayscale(20%) contrast(1.05);
     }
     
-    &__bar { background: $matrix-dark !important; }
+    &__bar { background: $matrix-dark; }
     
     &__tabs__name h1 {
-      font-family: $font-hacker !important;
-      color: $matrix-green !important;
+      font-family: $font-hacker;
+      color: $matrix-green;
       text-shadow: 0 0 15px $matrix-green-glow;
-      font-size: 2em !important;
-      letter-spacing: 2px;
       
       small {
-        color: $matrix-green-dark !important;
-        font-family: $font-code !important;
+        color: $matrix-green-dark;
       }
     }
     
-    &__bio { color: $matrix-text !important; }
+    &__bio { color: $matrix-text; }
     
     &__fields {
-      border-color: rgba(0, 255, 0, 0.2) !important;
-      dt { color: $matrix-green !important; font-family: $font-code !important; }
-      dd { color: $matrix-text !important; }
+      border-color: rgba(0, 255, 0, 0.2);
+      dt { color: $matrix-green; }
+      dd { color: $matrix-text; }
     }
   }
 }
@@ -283,13 +281,12 @@ body.theme-matrix {
 // NOTIFICATIONS
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .notification {
-    border-bottom: 1px solid rgba(0, 255, 0, 0.15) !important;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.15);
     
     &__message {
-      color: $matrix-green !important;
-      font-family: $font-code !important;
+      color: $matrix-green;
     }
   }
 }
@@ -298,8 +295,8 @@ body.theme-matrix {
 // MODALS
 // ============================================================================
 
-.theme-matrix {
-  .modal-root__overlay { background: rgba(0, 0, 0, 0.92) !important; }
+body.theme-matrix {
+  .modal-root__overlay { background: rgba(0, 0, 0, 0.92); }
 
   .modal-root__container {
     .compose-modal,
@@ -308,15 +305,15 @@ body.theme-matrix {
     .mute-modal,
     .block-modal,
     .boost-modal {
-      background: $matrix-dark !important;
-      border: 2px solid $matrix-green !important;
-      box-shadow: 0 0 40px $matrix-green-glow !important;
+      background: $matrix-dark;
+      border: 2px solid $matrix-green;
+      box-shadow: 0 0 40px $matrix-green-glow;
     }
 
     .confirmation-modal__action-bar,
     .mute-modal__action-bar,
     .boost-modal__action-bar {
-      background: $matrix-black !important;
+      background: $matrix-black;
     }
   }
 }
@@ -325,29 +322,28 @@ body.theme-matrix {
 // BUTTONS
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .button {
-    background: $matrix-green !important;
-    color: $matrix-black !important;
-    font-family: $font-hacker !important;
+    background: $matrix-green;
+    color: $matrix-black;
+    font-family: $font-hacker;
     font-weight: bold;
     letter-spacing: 1px;
-    border: none !important;
     
     &:hover {
-      background: $matrix-green-dark !important;
-      box-shadow: 0 0 15px $matrix-green-glow !important;
+      background: $matrix-green-dark;
+      box-shadow: 0 0 15px $matrix-green-glow;
     }
     
     &--destructive {
-      background: $matrix-error !important;
-      &:hover { box-shadow: 0 0 15px rgba(255, 0, 0, 0.5) !important; }
+      background: $matrix-error;
+      &:hover { box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); }
     }
   }
 
   .icon-button {
-    color: $matrix-green-dark !important;
-    &:hover, &.active { color: $matrix-green !important; }
+    color: $matrix-green-dark;
+    &:hover, &.active { color: $matrix-green; }
   }
 }
 
@@ -355,7 +351,7 @@ body.theme-matrix {
 // SCROLLBARS
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: $matrix-black; }
   ::-webkit-scrollbar-thumb {
@@ -369,22 +365,21 @@ body.theme-matrix {
 // SEARCH & INPUTS
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .search__input,
   .setting-text,
   input[type="text"],
   input[type="email"],
   input[type="password"],
   textarea {
-    background: $matrix-black !important;
-    border: 1px solid rgba(0, 255, 0, 0.3) !important;
-    color: $matrix-text !important;
-    font-family: $font-code !important;
+    background: $matrix-black;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    color: $matrix-text;
     
-    &::placeholder { color: $matrix-green-dark !important; }
+    &::placeholder { color: $matrix-green-dark; }
     &:focus {
-      border-color: $matrix-green !important;
-      box-shadow: 0 0 10px $matrix-green-glow !important;
+      border-color: $matrix-green;
+      box-shadow: 0 0 10px $matrix-green-glow;
     }
   }
 }
@@ -393,10 +388,10 @@ body.theme-matrix {
 // GLITCH HEADINGS (hover effect)
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
+  // Glitch effect on hover (purely visual)
   .column-header__title:hover,
-  .account__header__tabs__name h1:hover,
-  .notification__message:hover {
+  .account__header__tabs__name h1:hover {
     animation: glitch 0.2s ease;
   }
 }
@@ -405,18 +400,18 @@ body.theme-matrix {
 // TABS & NAVIGATION ITEMS
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .tabs-bar__link,
   .column-link {
-    color: $matrix-green-dark !important;
+    color: $matrix-green-dark;
     
     &:hover, &.active {
-      color: $matrix-green !important;
-      background: rgba(0, 255, 0, 0.1) !important;
+      color: $matrix-green;
+      background: rgba(0, 255, 0, 0.1);
     }
     
     &.active {
-      border-bottom: 2px solid $matrix-green !important;
+      border-bottom-color: $matrix-green;
     }
   }
 }
@@ -425,16 +420,15 @@ body.theme-matrix {
 // LOADING & EMPTY STATES
 // ============================================================================
 
-.theme-matrix {
+body.theme-matrix {
   .loading-indicator {
     .loading-indicator__figure {
-      border-color: $matrix-green transparent !important;
+      border-color: $matrix-green transparent;
     }
   }
 
   .empty-column-indicator,
   .error-column {
-    color: $matrix-green-dark !important;
-    font-family: $font-code !important;
+    color: $matrix-green-dark;
   }
 }

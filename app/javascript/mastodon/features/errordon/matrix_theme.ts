@@ -21,12 +21,12 @@ const themes: Record<ThemeName, ThemeConfig> = {
   default: {
     name: 'Default',
     bodyClass: '',
-    description: 'Standard dark theme',
+    description: 'Standard Mastodon dark theme',
   },
   light: {
     name: 'Light',
     bodyClass: 'theme-mastodon-light',
-    description: 'Light mode',
+    description: 'Standard Mastodon light mode',
   },
 };
 
@@ -35,8 +35,9 @@ export const getStoredTheme = (): ThemeName => {
   if (stored && stored in themes) {
     return stored as ThemeName;
   }
-  // Default to Matrix theme for Errordon
-  return 'matrix';
+  // Default to standard Mastodon theme for Fediverse compatibility
+  // Users can opt-in to Matrix theme via Ctrl+Shift+M or settings
+  return 'default';
 };
 
 export const setTheme = (themeName: ThemeName): void => {
