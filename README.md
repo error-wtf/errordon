@@ -1,4 +1,4 @@
-# Mastodon Media Columns
+# Errordon
 
 A Mastodon fork adding **profile media tabs** (Videos/Audio/Images), **filter UI**, **250MB uploads** with server-side transcoding, and **privacy-first defaults**.
 
@@ -12,7 +12,7 @@ A Mastodon fork adding **profile media tabs** (Videos/Audio/Images), **filter UI
 ## 📁 Repository Structure
 
 ```
-mastodon-media-columns/
+errordon/
 ├── docs/
 │   ├── ARCH_MAP_MEDIA_AND_PROFILE.md    # Code architecture analysis
 │   ├── FEATURES/
@@ -53,8 +53,8 @@ git remote add upstream https://github.com/mastodon/mastodon.git
 
 # Verify remotes
 git remote -v
-# origin    https://github.com/error-wtf/mastodon-media-columns.git (fetch)
-# origin    https://github.com/error-wtf/mastodon-media-columns.git (push)
+# origin    https://github.com/error-wtf/errordon.git (fetch)
+# origin    https://github.com/error-wtf/errordon.git (push)
 # upstream  https://github.com/mastodon/mastodon.git (fetch)
 # upstream  https://github.com/mastodon/mastodon.git (push)
 ```
@@ -86,8 +86,8 @@ See [docs/DEV_SETUP.md](docs/DEV_SETUP.md) for full instructions.
 
 ```bash
 # Clone this repo
-git clone https://github.com/error-wtf/mastodon-media-columns.git
-cd mastodon-media-columns
+git clone https://github.com/error-wtf/errordon.git
+cd errordon
 
 # Set up upstream
 git remote add upstream https://github.com/mastodon/mastodon.git
