@@ -15,7 +15,7 @@ trap 'error "Installation failed at line $LINENO"' ERR
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-ERRORDON_VERSION="0.5.0-security"
+ERRORDON_VERSION="0.3.0"
 RUBY_VERSION="3.3.0"
 NODE_VERSION="20"
 MIN_DISK_GB=20

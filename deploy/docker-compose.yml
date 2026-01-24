@@ -1,5 +1,10 @@
-# Errordon Docker Compose Template
+# Errordon Docker Compose Template v0.3.0
 # Copy to your server and adjust values
+#
+# Usage:
+#   cp deploy/docker-compose.yml .
+#   cp deploy/.env.example .env.production
+#   docker compose up -d
 
 version: '3.8'
 
@@ -28,9 +33,12 @@ services:
       - redis_data:/data
 
   web:
-    image: ghcr.io/mastodon/mastodon:v4.3.0
-    # Or build from your fork:
-    # build: .
+    # Option 1: Use official Mastodon image (without Errordon features)
+    # image: ghcr.io/mastodon/mastodon:v4.3.0
+    # Option 2: Build Errordon from source (recommended)
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     env_file: .env.production
     command: bundle exec puma -C config/puma.rb
@@ -48,7 +56,10 @@ services:
       - mastodon_public:/mastodon/public/system
 
   streaming:
-    image: ghcr.io/mastodon/mastodon-streaming:v4.3.0
+    # image: ghcr.io/mastodon/mastodon-streaming:v4.3.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     env_file: .env.production
     command: node ./streaming/index.js
@@ -64,7 +75,10 @@ services:
       - redis
 
   sidekiq:
-    image: ghcr.io/mastodon/mastodon:v4.3.0
+    # image: ghcr.io/mastodon/mastodon:v4.3.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     env_file: .env.production
     command: bundle exec sidekiq
