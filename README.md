@@ -1,8 +1,8 @@
 # Errordon
 
-A Mastodon fork adding **profile media tabs** (Videos/Audio/Images), **filter UI**, **250MB uploads** with server-side transcoding, and **privacy-first defaults**.
+A Mastodon fork adding **profile media tabs** (Videos/Audio/Images), **filter UI**, **250MB uploads** with server-side transcoding, **Matrix theme**, **custom hacker emojis**, and **privacy-first defaults**.
 
-> **Release:** `errordon-0.1.0` - Phase 1 Complete ✅
+> **Release:** `errordon-0.2.0` - Matrix Theme + Custom Emojis ✅
 
 ## ✅ Implemented Features
 
@@ -14,6 +14,45 @@ A Mastodon fork adding **profile media tabs** (Videos/Audio/Images), **filter UI
 | **Instagram Grid** | ✅ | 3-column layout with hover effects |
 | **Privacy Preset** | ✅ | Strict defaults via ENV config |
 | **Deploy Templates** | ✅ | Docker Compose, Nginx, .env |
+| **Matrix Theme** | ✅ | Cyberpunk green theme (Fediverse-compatible) |
+| **Custom Emojis** | ✅ | 25 Matrix/Hacker/Nerd emojis |
+
+## 🎨 Matrix Theme
+
+Errordon includes an optional **Matrix-style cyberpunk theme** with:
+
+- **Green neon color palette** (`#00ff00`)
+- **VT323 hacker font** for headings (UTF-8 compatible)
+- **Glitch effects** on hover
+- **Dark background** with white text for readability
+- **100% Fediverse-compatible** (opt-in, no structural changes)
+
+### Toggle Theme
+
+```
+Keyboard: Ctrl + Shift + M
+```
+
+Or set default via environment:
+```bash
+ERRORDON_THEME=matrix  # Options: matrix, default, light
+```
+
+## 😎 Custom Emojis
+
+25 Matrix/Hacker/Nerd themed emojis in 3 categories:
+
+| Category | Emojis |
+|----------|--------|
+| **Matrix** | `:matrix_code:` `:red_pill:` `:blue_pill:` `:skull_matrix:` `:matrix_cat:` `:glitch:` |
+| **Hacker** | `:hacker:` `:terminal:` `:binary:` `:encrypt:` `:access_granted:` `:access_denied:` `:anonymous:` `:wifi_hack:` `:firewall:` `:sudo:` |
+| **Nerd** | `:nerd:` `:keyboard:` `:code:` `:bug:` `:cyber_eye:` `:robot:` `:coffee_code:` `:git:` `:loading:` |
+
+### Import Emojis
+
+```bash
+bundle exec rails errordon:import_emojis
+```
 
 ## ⏳ Phase 2 (Needs VPS)
 
