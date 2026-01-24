@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'open3'
+require 'fileutils'
+
 module Errordon
   class MediaTranscodeWorker
     include Sidekiq::Worker

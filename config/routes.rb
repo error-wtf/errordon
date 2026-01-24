@@ -223,6 +223,8 @@ Rails.application.routes.draw do
 
   draw(:api)
 
+  draw(:errordon)
+
   draw(:fasp)
 
   draw(:web_app)

@@ -34,8 +34,17 @@ class Api::V1::Errordon::QuotasController < Api::BaseController
     new_quota = params[:quota].to_i
 
     if new_quota.positive?
-      # Store custom quota in account settings or a dedicated field
-      @account.update!(custom_storage_quota: new_quota)
+      # Store custom quota in user settings (JSON field)
+      @account.user.settings['errordon_custom_quota'] = new_quota
+      @account.user.save!
+      
+      Errordon::AuditLogger.log_admin_action(
+        :quota_updated,
+        current_account,
+        @account,
+        { new_quota: new_quota }
+      )
+      
       render json: { success: true, new_quota: new_quota }
     else
       render json: { error: 'Invalid quota value' }, status: :unprocessable_entity

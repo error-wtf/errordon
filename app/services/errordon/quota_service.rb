@@ -26,6 +26,10 @@ module Errordon
     end
 
     def storage_quota
+      # Check for custom quota in user settings first
+      custom_quota = @account.user&.settings&.dig('errordon_custom_quota')
+      return custom_quota.to_i if custom_quota.present? && custom_quota.to_i.positive?
+      
       @config.dig(:storage, :max_per_user) || 10.gigabytes
     end
 
