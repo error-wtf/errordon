@@ -1,0 +1,270 @@
+{
+  "oracle_01": {
+    "speaker": "Oracle",
+    "text": "Hello, my child. What brings you here seeking answers?",
+    "options": {
+      "1": { "text": "I seek guidance.", "next": "oracle_02" },
+      "2": { "text": "I have questions.", "next": "oracle_02" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_02": {
+    "speaker": "Oracle",
+    "text": "The path is never straight; it twists with choices.",
+    "options": {
+      "1": { "text": "What choice should I make?", "next": "oracle_03" },
+      "2": { "text": "Why is it twisted?", "next": "oracle_03" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_03": {
+    "speaker": "Oracle",
+    "text": "Sometimes the harder path leads to truth.",
+    "options": {
+      "1": { "text": "Harder path?", "next": "oracle_04" },
+      "2": { "text": "Why truth?", "next": "oracle_04" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_04": {
+    "speaker": "Oracle",
+    "text": "Comfort can blind you to what matters.",
+    "options": {
+      "1": { "text": "What matters?", "next": "oracle_05" },
+      "2": { "text": "Is comfort bad?", "next": "oracle_05" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_05": {
+    "speaker": "Oracle",
+    "text": "Your heart knows the answers before your mind does.",
+    "options": {
+      "1": { "text": "How to listen?", "next": "oracle_06" },
+      "2": { "text": "What if I ignore it?", "next": "oracle_06" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_06": {
+    "speaker": "Oracle",
+    "text": "Sit quietly and let your thoughts settle.",
+    "options": {
+      "1": { "text": "I will be still.", "next": "oracle_07" },
+      "2": { "text": "I struggle to quiet my mind.", "next": "oracle_07" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_07": {
+    "speaker": "Oracle",
+    "text": "In stillness, the truth whispers.",
+    "options": {
+      "1": { "text": "I hear a whisper.", "next": "oracle_08" },
+      "2": { "text": "I hear nothing.", "next": "oracle_08" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_08": {
+    "speaker": "Oracle",
+    "text": "Trust the whisper, even if it's faint.",
+    "options": {
+      "1": { "text": "I trust it.", "next": "oracle_09" },
+      "2": { "text": "What if I'm wrong?", "next": "oracle_09" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_09": {
+    "speaker": "Oracle",
+    "text": "Mistakes are lessons in disguise.",
+    "options": {
+      "1": { "text": "I will learn.", "next": "oracle_10" },
+      "2": { "text": "I fear mistakes.", "next": "oracle_10" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_10": {
+    "speaker": "Oracle",
+    "text": "Fear not the fall, but the failure to rise.",
+    "options": {
+      "1": { "text": "I will rise.", "next": "oracle_11" },
+      "2": { "text": "I might stay down.", "next": "oracle_11" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_11": {
+    "speaker": "Oracle",
+    "text": "Your strength is in your choices.",
+    "options": {
+      "1": { "text": "Choose wisely.", "next": "oracle_12" },
+      "2": { "text": "What choice?", "next": "oracle_12" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_12": {
+    "speaker": "Oracle",
+    "text": "Sometimes letting go is the bravest act.",
+    "options": {
+      "1": { "text": "Let go.", "next": "oracle_13" },
+      "2": { "text": "Hold on.", "next": "oracle_13" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_13": {
+    "speaker": "Oracle",
+    "text": "And sometimes holding on is necessary.",
+    "options": {
+      "1": { "text": "I understand.", "next": "oracle_14" },
+      "2": { "text": "This is confusing.", "next": "oracle_14" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_14": {
+    "speaker": "Oracle",
+    "text": "Balance comes from knowing both sides.",
+    "options": {
+      "1": { "text": "I seek balance.", "next": "oracle_15" },
+      "2": { "text": "Is balance possible?", "next": "oracle_15" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_15": {
+    "speaker": "Oracle",
+    "text": "Look within; the answer is there.",
+    "options": {
+      "1": { "text": "I look within.", "next": "oracle_16" },
+      "2": { "text": "I see darkness.", "next": "oracle_16" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_16": {
+    "speaker": "Oracle",
+    "text": "Darkness reveals what light conceals.",
+    "options": {
+      "1": { "text": "I embrace it.", "next": "oracle_17" },
+      "2": { "text": "I fear it.", "next": "oracle_17" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_17": {
+    "speaker": "Oracle",
+    "text": "Courage is not absence of fear, but action in spite of it.",
+    "options": {
+      "1": { "text": "I will act.", "next": "oracle_18" },
+      "2": { "text": "I hesitate.", "next": "oracle_18" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_18": {
+    "speaker": "Oracle",
+    "text": "Your faith lights the way.",
+    "options": {
+      "1": { "text": "My faith is strong.", "next": "oracle_19" },
+      "2": { "text": "Can I strengthen it?", "next": "oracle_19" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_19": {
+    "speaker": "Oracle",
+    "text": "In time, all answers will come.",
+    "options": {
+      "1": { "text": "I will wait.", "next": "oracle_20" },
+      "2": { "text": "I am impatient.", "next": "oracle_20" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_20": {
+    "speaker": "Oracle",
+    "text": "Patience is a form of wisdom.",
+    "options": {
+      "1": { "text": "I am patient.", "next": "oracle_21" },
+      "2": { "text": "Teach me patience.", "next": "oracle_21" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_21": {
+    "speaker": "Oracle",
+    "text": "Wisdom grows with time and experience.",
+    "options": {
+      "1": { "text": "I seek experience.", "next": "oracle_22" },
+      "2": { "text": "I seek time.", "next": "oracle_22" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_22": {
+    "speaker": "Oracle",
+    "text": "Your journey is your teacher.",
+    "options": {
+      "1": { "text": "I will learn.", "next": "oracle_23" },
+      "2": { "text": "I will remember.", "next": "oracle_23" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_23": {
+    "speaker": "Oracle",
+    "text": "And now, you must choose your path.",
+    "options": {
+      "1": { "text": "I choose light.", "next": "oracle_24" },
+      "2": { "text": "I choose shadow.", "next": "oracle_24" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_24": {
+    "speaker": "Oracle",
+    "text": "Light reveals, shadow conceals.",
+    "options": {
+      "1": { "text": "Reveal for me.", "next": "oracle_25" },
+      "2": { "text": "Conceal for me.", "next": "oracle_25" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_25": {
+    "speaker": "Oracle",
+    "text": "Every choice shapes destiny.",
+    "options": {
+      "1": { "text": "Shape it well.", "next": "oracle_26" },
+      "2": { "text": "I fear consequences.", "next": "oracle_26" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_26": {
+    "speaker": "Oracle",
+    "text": "Fear not consequences, but regret.",
+    "options": {
+      "1": { "text": "No regrets.", "next": "oracle_27" },
+      "2": { "text": "Teach me regret.", "next": "oracle_27" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_27": {
+    "speaker": "Oracle",
+    "text": "Regret is a lesson, not a prison.",
+    "options": {
+      "1": { "text": "I will learn.", "next": "oracle_28" },
+      "2": { "text": "I will let go.", "next": "oracle_28" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_28": {
+    "speaker": "Oracle",
+    "text": "Your heart knows the way home.",
+    "options": {
+      "1": { "text": "I feel it.", "next": "oracle_29" },
+      "2": { "text": "I'm lost.", "next": "oracle_29" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_29": {
+    "speaker": "Oracle",
+    "text": "Then follow it.",
+    "options": {
+      "1": { "text": "I will.", "next": "oracle_30" },
+      "2": { "text": "I hesitate.", "next": "oracle_30" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "oracle_30": {
+    "speaker": "Oracle",
+    "text": "This conversation ends. Go with wisdom.",
+    "options": {
+      "1": { "text": "Exit.", "next": null }
+    }
+  }
+}

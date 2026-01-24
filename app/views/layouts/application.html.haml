@@ -43,8 +43,21 @@
     = yield :header_tags
 
   %body{ class: body_classes }
+    -# Errordon Matrix Theme - Rain Background Canvas (inserted via JS)
+    = javascript_tag nonce: request.content_security_policy_nonce do
+      :plain
+        // Errordon Matrix Theme Auto-Init
+        (function() {
+          var matrixEnabled = localStorage.getItem('errordon_matrix_theme') === 'true';
+          if (matrixEnabled) {
+            document.body.classList.add('theme-matrix');
+          }
+        })();
     = content_for?(:content) ? yield(:content) : yield
 
     .logo-resources{ 'tabindex' => '-1', 'inert' => true, 'aria-hidden' => 'true' }
       = inline_svg_tag 'logo-symbol-icon.svg'
       = inline_svg_tag 'logo-symbol-wordmark.svg'
+    
+    -# Errordon Matrix Theme JavaScript
+    = vite_javascript_tag 'errordon/matrix/index.js', crossorigin: 'anonymous' if ENV['ERRORDON_MATRIX_THEME_ENABLED'] != 'false'

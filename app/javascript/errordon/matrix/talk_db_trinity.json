@@ -1,0 +1,270 @@
+{
+  "trinity_01": {
+    "speaker": "Trinity",
+    "text": "Hey, you made it. Ready to dive deeper?",
+    "options": {
+      "1": { "text": "Absolutely, lead the way.", "next": "trinity_02" },
+      "2": { "text": "What should I expect?", "next": "trinity_02" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_02": {
+    "speaker": "Trinity",
+    "text": "The system tries to contain us. We have to move fast.",
+    "options": {
+      "1": { "text": "How do we move fast?", "next": "trinity_03" },
+      "2": { "text": "Why is speed important?", "next": "trinity_03" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_03": {
+    "speaker": "Trinity",
+    "text": "Stay in the moment, trust your instincts.",
+    "options": {
+      "1": { "text": "Trust instincts?", "next": "trinity_04" },
+      "2": { "text": "What if I doubt?", "next": "trinity_04" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_04": {
+    "speaker": "Trinity",
+    "text": "Doubt is the enemy of speed.",
+    "options": {
+      "1": { "text": "Then I won't doubt.", "next": "trinity_05" },
+      "2": { "text": "How to overcome doubt?", "next": "trinity_05" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_05": {
+    "speaker": "Trinity",
+    "text": "Focus on your goal and let go of fear.",
+    "options": {
+      "1": { "text": "What's the goal?", "next": "trinity_06" },
+      "2": { "text": "Why fear?", "next": "trinity_06" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_06": {
+    "speaker": "Trinity",
+    "text": "We fight for freedom—our own and others'.",
+    "options": {
+      "1": { "text": "How do we free them?", "next": "trinity_07" },
+      "2": { "text": "Is it possible?", "next": "trinity_07" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_07": {
+    "speaker": "Trinity",
+    "text": "One mind at a time, one choice at a time.",
+    "options": {
+      "1": { "text": "My choice matters?", "next": "trinity_08" },
+      "2": { "text": "What choice?", "next": "trinity_08" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_08": {
+    "speaker": "Trinity",
+    "text": "Every decision rewrites your path.",
+    "options": {
+      "1": { "text": "Rewrite path?", "next": "trinity_09" },
+      "2": { "text": "Can I undo mistakes?", "next": "trinity_09" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_09": {
+    "speaker": "Trinity",
+    "text": "Mistakes teach you more than success.",
+    "options": {
+      "1": { "text": "Teach me.", "next": "trinity_10" },
+      "2": { "text": "I fear mistakes.", "next": "trinity_10" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_10": {
+    "speaker": "Trinity",
+    "text": "Embrace failure as part of the journey.",
+    "options": {
+      "1": { "text": "I'm ready to fail.", "next": "trinity_11" },
+      "2": { "text": "How do I embrace it?", "next": "trinity_11" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_11": {
+    "speaker": "Trinity",
+    "text": "Courage isn't the absence of fear, but action despite it.",
+    "options": {
+      "1": { "text": "Define courage.", "next": "trinity_12" },
+      "2": { "text": "I need courage.", "next": "trinity_12" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_12": {
+    "speaker": "Trinity",
+    "text": "Trust yourself. You've come this far.",
+    "options": {
+      "1": { "text": "I trust.", "next": "trinity_13" },
+      "2": { "text": "I doubt still.", "next": "trinity_13" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_13": {
+    "speaker": "Trinity",
+    "text": "We're stronger together than alone.",
+    "options": {
+      "1": { "text": "We're a team.", "next": "trinity_14" },
+      "2": { "text": "Can I stand alone?", "next": "trinity_14" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_14": {
+    "speaker": "Trinity",
+    "text": "I'll watch your back if you watch mine.",
+    "options": {
+      "1": { "text": "I appreciate that.", "next": "trinity_15" },
+      "2": { "text": "I can manage alone.", "next": "trinity_15" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_15": {
+    "speaker": "Trinity",
+    "text": "Ready for the next challenge?",
+    "options": {
+      "1": { "text": "Bring it on.", "next": "trinity_16" },
+      "2": { "text": "What is it?", "next": "trinity_16" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_16": {
+    "speaker": "Trinity",
+    "text": "We need to hack deeper into the Matrix.",
+    "options": {
+      "1": { "text": "Guide me.", "next": "trinity_17" },
+      "2": { "text": "Is it risky?", "next": "trinity_17" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_17": {
+    "speaker": "Trinity",
+    "text": "Risk is part of the mission; we adapt.",
+    "options": {
+      "1": { "text": "I adapt.", "next": "trinity_18" },
+      "2": { "text": "Can I fail?", "next": "trinity_18" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_18": {
+    "speaker": "Trinity",
+    "text": "Focus, move fast, don't look back.",
+    "options": {
+      "1": { "text": "No looking back.", "next": "trinity_19" },
+      "2": { "text": "What if I slip?", "next": "trinity_19" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_19": {
+    "speaker": "Trinity",
+    "text": "Every slip is a lesson—remember it.",
+    "options": {
+      "1": { "text": "I remember.", "next": "trinity_20" },
+      "2": { "text": "I won't forget.", "next": "trinity_20" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_20": {
+    "speaker": "Trinity",
+    "text": "Now, take a breath and regroup.",
+    "options": {
+      "1": { "text": "Breathing.", "next": "trinity_21" },
+      "2": { "text": "Ready now.", "next": "trinity_21" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_21": {
+    "speaker": "Trinity",
+    "text": "We're almost there. One more push.",
+    "options": {
+      "1": { "text": "Let's push.", "next": "trinity_22" },
+      "2": { "text": "I need guidance.", "next": "trinity_22" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_22": {
+    "speaker": "Trinity",
+    "text": "Trust yourself—I'll handle the rest.",
+    "options": {
+      "1": { "text": "I trust you.", "next": "trinity_23" },
+      "2": { "text": "I trust myself.", "next": "trinity_23" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_23": {
+    "speaker": "Trinity",
+    "text": "We did it. The path is open.",
+    "options": {
+      "1": { "text": "Great.", "next": "trinity_24" },
+      "2": { "text": "What's next?", "next": "trinity_24" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_24": {
+    "speaker": "Trinity",
+    "text": "Now rest, recover your strength.",
+    "options": {
+      "1": { "text": "I will rest.", "next": "trinity_25" },
+      "2": { "text": "I keep going.", "next": "trinity_25" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_25": {
+    "speaker": "Trinity",
+    "text": "Every journey needs moments of peace.",
+    "options": {
+      "1": { "text": "Peace feels good.", "next": "trinity_26" },
+      "2": { "text": "I can't relax.", "next": "trinity_26" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_26": {
+    "speaker": "Trinity",
+    "text": "When you're ready, we'll move again.",
+    "options": {
+      "1": { "text": "I'm ready.", "next": "trinity_27" },
+      "2": { "text": "Give me time.", "next": "trinity_27" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_27": {
+    "speaker": "Trinity",
+    "text": "Remember: I believe in you.",
+    "options": {
+      "1": { "text": "Thank you.", "next": "trinity_28" },
+      "2": { "text": "I believe too.", "next": "trinity_28" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_28": {
+    "speaker": "Trinity",
+    "text": "Let's keep fighting—for all of us.",
+    "options": {
+      "1": { "text": "For all of us.", "next": "trinity_29" },
+      "2": { "text": "I'm with you.", "next": "trinity_29" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_29": {
+    "speaker": "Trinity",
+    "text": "This is only the beginning.",
+    "options": {
+      "1": { "text": "Bring it on.", "next": "trinity_30" },
+      "2": { "text": "I'm ready.", "next": "trinity_30" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "trinity_30": {
+    "speaker": "Trinity",
+    "text": "See you on the other side.",
+    "options": {
+      "1": { "text": "Exit.", "next": null }
+    }
+  }
+}

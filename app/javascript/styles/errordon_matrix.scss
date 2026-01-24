@@ -432,3 +432,209 @@ body.theme-matrix {
     color: $matrix-green-dark;
   }
 }
+
+// ============================================================================
+// MATRIX RAIN BACKGROUND CANVAS
+// ============================================================================
+
+// Matrix Rain Canvas - fixed background behind everything
+.matrix-rain-canvas {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+// When Matrix theme active, make body transparent
+body.theme-matrix {
+  background: transparent !important;
+  
+  // Main UI containers semi-transparent to show rain through
+  .ui {
+    background: transparent !important;
+  }
+  
+  .columns-area {
+    background: transparent !important;
+  }
+  
+  .columns-area__panels {
+    background: transparent !important;
+  }
+  
+  // Columns get dark overlay - rain shows through slightly
+  .column,
+  .drawer {
+    background: rgba(0, 0, 0, 0.88) !important;
+    backdrop-filter: blur(1px);
+  }
+  
+  .drawer__inner {
+    background: rgba(0, 0, 0, 0.88) !important;
+  }
+  
+  // Posts semi-transparent - rain visible behind
+  .status,
+  .detailed-status {
+    background: rgba(0, 0, 0, 0.85) !important;
+  }
+  
+  // Navigation panel
+  .navigation-panel {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+}
+
+// ============================================================================
+// MATRIX SPLASH SCREEN (Enter Matrix)
+// ============================================================================
+
+.matrix-splash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $matrix-black;
+
+  &.matrix-fade-out {
+    animation: matrixFadeOut 1s ease-out forwards;
+  }
+
+  &.matrix-glitch {
+    animation: matrixGlitchScreen 0.3s ease-in-out;
+  }
+}
+
+.splash-matrix-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.matrix-splash-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 60px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 2px solid $matrix-green;
+  border-radius: 10px;
+  box-shadow: 0 0 50px $matrix-green-glow;
+}
+
+.matrix-splash-title {
+  color: $matrix-green;
+  font-family: $font-hacker;
+  font-size: 56px;
+  font-weight: bold;
+  text-shadow: 0 0 30px $matrix-green;
+  letter-spacing: 10px;
+  margin-bottom: 20px;
+  animation: matrix-glow 2s ease-in-out infinite;
+}
+
+.matrix-splash-subtitle {
+  color: $matrix-green-dark;
+  font-family: $font-hacker;
+  font-size: 20px;
+  margin-bottom: 40px;
+  letter-spacing: 3px;
+}
+
+.matrix-splash-terminal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.matrix-prompt {
+  color: $matrix-green;
+  font-family: $font-code;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.matrix-splash-input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid $matrix-green;
+  color: $matrix-green;
+  font-family: $font-code;
+  font-size: 18px;
+  padding: 12px 15px;
+  width: 350px;
+  outline: none;
+  letter-spacing: 1px;
+
+  &::placeholder {
+    color: rgba(0, 255, 0, 0.4);
+    font-style: italic;
+  }
+
+  &:focus {
+    box-shadow: 0 4px 15px $matrix-green-glow;
+  }
+}
+
+.matrix-splash-hint {
+  color: $matrix-green-dark;
+  font-family: $font-hacker;
+  font-size: 16px;
+  font-style: italic;
+  animation: matrixBlink 2s ease-in-out infinite;
+}
+
+// Splash Animations
+@keyframes matrixFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes matrixGlitchScreen {
+  0%, 100% { transform: translate(0); filter: none; }
+  20% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
+  40% { transform: translate(5px, -5px); filter: hue-rotate(180deg); }
+  60% { transform: translate(-3px, 3px); filter: hue-rotate(270deg); }
+  80% { transform: translate(3px, -3px); filter: hue-rotate(360deg); }
+}
+
+@keyframes matrixBlink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+.matrix-glitch-text {
+  animation: matrixTextGlitch 0.5s ease-in-out infinite;
+}
+
+@keyframes matrixTextGlitch {
+  0%, 100% { 
+    text-shadow: 0 0 20px $matrix-green;
+    transform: translate(0);
+  }
+  25% { 
+    text-shadow: -3px 0 #ff0000, 3px 0 #00ffff;
+    transform: translate(2px, -1px);
+  }
+  50% { 
+    text-shadow: 3px 0 #ff0000, -3px 0 #00ffff;
+    transform: translate(-2px, 1px);
+  }
+  75% { 
+    text-shadow: 0 0 20px $matrix-green;
+    transform: translate(1px, 2px);
+  }
+}
