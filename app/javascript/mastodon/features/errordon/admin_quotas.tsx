@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 
 import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
