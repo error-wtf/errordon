@@ -1,30 +1,38 @@
-import { useCallback } from 'react';
-
 import { FormattedMessage } from 'react-intl';
 
 interface MediaFilterBarProps {
   excludeReblogs: boolean;
+  onlyWithAlt: boolean;
   onToggleExcludeReblogs: () => void;
+  onToggleOnlyWithAlt: () => void;
 }
 
 export const MediaFilterBar: React.FC<MediaFilterBarProps> = ({
   excludeReblogs,
+  onlyWithAlt,
   onToggleExcludeReblogs,
+  onToggleOnlyWithAlt,
 }) => {
-  const handleToggle = useCallback(() => {
-    onToggleExcludeReblogs();
-  }, [onToggleExcludeReblogs]);
-
   return (
     <div className='media-filter-bar'>
       <button
         className={`filter-chip ${excludeReblogs ? 'active' : ''}`}
-        onClick={handleToggle}
+        onClick={onToggleExcludeReblogs}
         type='button'
       >
         <FormattedMessage
           id='account.media_filter.originals_only'
           defaultMessage='Originals only'
+        />
+      </button>
+      <button
+        className={`filter-chip ${onlyWithAlt ? 'active' : ''}`}
+        onClick={onToggleOnlyWithAlt}
+        type='button'
+      >
+        <FormattedMessage
+          id='account.media_filter.with_alt_text'
+          defaultMessage='With alt text'
         />
       </button>
     </div>

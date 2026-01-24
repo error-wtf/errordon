@@ -61,6 +61,7 @@ export const AccountGallery: React.FC<{
   const dispatch = useAppDispatch();
   const accountId = useAccountId();
   const [excludeReblogs, setExcludeReblogs] = useState(false);
+  const [onlyWithAlt, setOnlyWithAlt] = useState(false);
   const allAttachments = useAppSelector((state) =>
     accountId
       ? getAccountGallery(state, accountId)
@@ -77,6 +78,14 @@ export const AccountGallery: React.FC<{
     attachments = attachments.filter((attachment) => {
       const status = attachment.get('status') as ImmutableMap<string, unknown> | undefined;
       return status && !status.get('reblog');
+    });
+  }
+
+  // Filter to only show media with alt text
+  if (onlyWithAlt) {
+    attachments = attachments.filter((attachment) => {
+      const description = attachment.get('description') as string | undefined;
+      return description && description.length > 0;
     });
   }
   const isLoading = useAppSelector((state) =>
@@ -213,7 +222,9 @@ export const AccountGallery: React.FC<{
               {!forceEmptyState && (
                 <MediaFilterBar
                   excludeReblogs={excludeReblogs}
+                  onlyWithAlt={onlyWithAlt}
                   onToggleExcludeReblogs={() => setExcludeReblogs(!excludeReblogs)}
+                  onToggleOnlyWithAlt={() => setOnlyWithAlt(!onlyWithAlt)}
                 />
               )}
             </>
