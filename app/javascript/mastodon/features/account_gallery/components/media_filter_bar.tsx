@@ -3,15 +3,19 @@ import { FormattedMessage } from 'react-intl';
 interface MediaFilterBarProps {
   excludeReblogs: boolean;
   onlyWithAlt: boolean;
+  onlyPublic: boolean;
   onToggleExcludeReblogs: () => void;
   onToggleOnlyWithAlt: () => void;
+  onToggleOnlyPublic: () => void;
 }
 
 export const MediaFilterBar: React.FC<MediaFilterBarProps> = ({
   excludeReblogs,
   onlyWithAlt,
+  onlyPublic,
   onToggleExcludeReblogs,
   onToggleOnlyWithAlt,
+  onToggleOnlyPublic,
 }) => {
   return (
     <div className='media-filter-bar'>
@@ -33,6 +37,16 @@ export const MediaFilterBar: React.FC<MediaFilterBarProps> = ({
         <FormattedMessage
           id='account.media_filter.with_alt_text'
           defaultMessage='With alt text'
+        />
+      </button>
+      <button
+        className={`filter-chip ${onlyPublic ? 'active' : ''}`}
+        onClick={onToggleOnlyPublic}
+        type='button'
+      >
+        <FormattedMessage
+          id='account.media_filter.public_only'
+          defaultMessage='Public only'
         />
       </button>
     </div>

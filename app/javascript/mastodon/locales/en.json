@@ -68,6 +68,7 @@
   "account.images": "Images",
   "account.media_filter.originals_only": "Originals only",
   "account.media_filter.with_alt_text": "With alt text",
+  "account.media_filter.public_only": "Public only",
   "account.mention": "Mention @{name}",
   "account.moved_to": "{name} has indicated that their new account is now:",
   "account.mute": "Mute @{name}",

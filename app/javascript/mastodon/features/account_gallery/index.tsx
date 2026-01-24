@@ -62,6 +62,7 @@ export const AccountGallery: React.FC<{
   const accountId = useAccountId();
   const [excludeReblogs, setExcludeReblogs] = useState(false);
   const [onlyWithAlt, setOnlyWithAlt] = useState(false);
+  const [onlyPublic, setOnlyPublic] = useState(false);
   const allAttachments = useAppSelector((state) =>
     accountId
       ? getAccountGallery(state, accountId)
@@ -86,6 +87,14 @@ export const AccountGallery: React.FC<{
     attachments = attachments.filter((attachment) => {
       const description = attachment.get('description') as string | undefined;
       return description && description.length > 0;
+    });
+  }
+
+  // Filter to only show public posts
+  if (onlyPublic) {
+    attachments = attachments.filter((attachment) => {
+      const status = attachment.get('status') as ImmutableMap<string, unknown> | undefined;
+      return status && status.get('visibility') === 'public';
     });
   }
   const isLoading = useAppSelector((state) =>
@@ -223,8 +232,10 @@ export const AccountGallery: React.FC<{
                 <MediaFilterBar
                   excludeReblogs={excludeReblogs}
                   onlyWithAlt={onlyWithAlt}
+                  onlyPublic={onlyPublic}
                   onToggleExcludeReblogs={() => setExcludeReblogs(!excludeReblogs)}
                   onToggleOnlyWithAlt={() => setOnlyWithAlt(!onlyWithAlt)}
+                  onToggleOnlyPublic={() => setOnlyPublic(!onlyPublic)}
                 />
               )}
             </>

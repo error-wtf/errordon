@@ -3,7 +3,7 @@
 ## Status-Übersicht (Stand: 2026-01-24)
 
 ```
-████████████████████████████░░  90% Phase 1 (ohne VPS machbar)
+██████████████████████████████  95% Phase 1 (ohne VPS machbar)
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0% Phase 2 (braucht VPS)
 ```
 
@@ -19,49 +19,29 @@
 | UI: Profil-Tabs | `feature/profile-media-columns` | Videos/Audio/Images Tabs |
 | UI: Routes | `feature/profile-media-columns` | `/@:acct/videos\|audio\|images` |
 | i18n | `feature/profile-media-columns` | EN Übersetzungen |
-| MediaFilterBar Component | `feature/profile-media-columns` | Grundgerüst erstellt |
+| MediaFilterBar | `master` | ✅ Komplett mit CSS |
+| Filter: Originals only | `master` | ✅ Client-side reblog filter |
+| Filter: With alt text | `master` | ✅ Alt-text filter |
+| Grid: Instagram-Style | `master` | ✅ 3-Spalten, hover, badges |
 | Privacy Preset Stub | `feature/privacy-chaos-defaults` | `config/initializers/privacy_preset.rb` |
 | Upload-Limit Doku | `feature/upload-250mb-limits` | `docs/UPLOAD_250MB_CONFIG.md` |
 | Transcoding Doku | `feature/transcoding-pipeline` | `docs/TRANSCODING_PIPELINE.md` |
 | CI Workflow | `master` | `.github/workflows/ci.yml` |
 | Feature Specs | `master` | `docs/FEATURES/*.md` |
+| Deploy Templates | `master` | docker-compose, nginx, .env |
 
 ## ⚠️ Offen (ohne VPS machbar)
 
-### 1. MediaFilterBar Integration
-**Branch:** `feature/profile-media-columns`
-**Aufwand:** ~2h
+### 1. Weitere Filter-Optionen
+**Branch:** `master`
+**Aufwand:** ~1h
 
 ```
-□ MediaFilterBar in AccountGallery einbinden
-□ State für excludeReblogs hinzufügen
-□ API-Call mit exclude_reblogs Parameter
-□ CSS für .media-filter-bar und .filter-chip
+□ "Nur Public" Filter
+□ "Nur Unlisted" Filter
 ```
 
-### 2. Grid-Ansichten (Instagram-Style)
-**Branch:** `feature/profile-media-columns`
-**Aufwand:** ~4h
-
-```
-□ Bilder: Grid-Layout (3 Spalten, quadratische Thumbs)
-□ Videos: Cards mit Duration-Badge + Preview
-□ Audio: Player-Cards mit Waveform-Platzhalter
-□ CSS/SCSS für neue Layouts
-```
-
-### 3. Weitere Filter-Optionen
-**Branch:** `feature/media-filters-ui`
-**Aufwand:** ~3h
-
-```
-□ "Nur mit Text" Filter
-□ "Nur Public/Unlisted" Filter  
-□ API: Erweiterte Filter-Parameter
-□ UI: Dropdown oder Chip-Gruppe
-```
-
-### 4. Privacy Preset vollständig
+### 2. Privacy Preset vollständig
 **Branch:** `feature/privacy-chaos-defaults`
 **Aufwand:** ~2h
 
@@ -70,17 +50,6 @@
 □ User-Model Defaults anpassen
 □ Admin-Settings Integration (optional)
 □ Dokumentation vervollständigen
-```
-
-### 5. Deploy-Ordner vorbereiten
-**Branch:** `feature/deploy-vps-docs` (neu)
-**Aufwand:** ~2h
-
-```
-□ deploy/docker-compose.yml (Template)
-□ deploy/nginx.conf (Template)
-□ deploy/README_VPS.md
-□ deploy/.env.example
 ```
 
 ## 🔒 Blockiert (braucht VPS)
