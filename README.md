@@ -135,11 +135,12 @@ foreman start
 - [x] Instagram-style grid layout
 - [x] Privacy preset "strict" via ENV
 
-### Phase 2: Uploads + Transcoding (Needs VPS)
-- [ ] Increase upload limit to 250MB
-- [ ] Server-side transcoding pipeline (Sidekiq + ffmpeg)
-- [ ] Output variants: mobile (480p), default (720p)
-- [ ] Quota/rate-limit guardrails
+### Phase 2: Uploads + Transcoding ✅ Code Ready
+- [x] Increase upload limit to 250MB (`config/initializers/errordon_upload_limits.rb`)
+- [x] Server-side transcoding pipeline (`app/workers/errordon/media_transcode_worker.rb`)
+- [x] Output variants: mobile (480p), default (720p)
+- [x] Quota/rate-limit guardrails (`config/initializers/errordon_quotas.rb`)
+- [ ] **Needs VPS to test live**
 
 ### Phase 3: Polish
 - [ ] Audio player UX improvements
