@@ -115,3 +115,31 @@ en:
         delete: "Delete data"
         retention: "Retention periods"
         info: "Privacy information"
+        
+    blocklist:
+      categories:
+        porn: "Pornography"
+        hate: "Hate speech"
+        fascism: "Fascism/Far-right extremism"
+        neo_nazi: "Neo-Nazi propaganda"
+        conspiracy: "Conspiracy theories"
+        
+      warnings:
+        hard_block:
+          porn: "🚫 Pornographic content is not allowed on this instance."
+          fascism: "🚫 This URL points to a website with illegal content (Neo-Nazi propaganda, Holocaust denial, terrorism). Sharing such links is not allowed."
+        soft_block:
+          fascism: |
+            ⚠️ This URL points to a website that spreads hate, fascism, or 
+            far-right extremist content.
+            
+            We don't want to give these sites traffic.
+            
+            📸 If you want to report about this site, please share a screenshot 
+            instead of a direct link.
+            
+            You can manually reveal the link, but it will be marked as NSFW.
+            
+      screenshot_hint: "Please share a screenshot instead of a direct link"
+      no_traffic: "We don't want to give these sites traffic"
+      reveal_button: "Reveal link (will be marked as NSFW)"

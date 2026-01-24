@@ -593,3 +593,109 @@ exceptions:
     - moderator
   admin_bypass_enabled: true
 ```
+
+---
+
+## 19. Anti-Fascism Blocklist
+
+Errordon blocks links to fascist, far-right, and hate-spreading websites.
+
+### Block Types
+
+| Type | Behavior | Use Case |
+|------|----------|----------|
+| **Hard Block** | Post rejected, strike created | Neo-Nazi, Holocaust denial, terrorism |
+| **Soft Block** | Post allowed but flagged NSFW with warning | Far-right parties, propaganda media |
+
+### Categories
+
+| Category | Examples | Block Type |
+|----------|----------|------------|
+| `neo_nazi` | Stormfront, Daily Stormer | Hard |
+| `holocaust_denial` | IHR, CODOH | Hard |
+| `far_right_parties` | AfD, FPÖ, RN, Vox, PVV, GOP | Soft |
+| `far_right_media` | NIUS, Breitbart, OANN, RT | Soft |
+| `hate_platforms` | Gab, Parler, 8kun | Soft |
+| `conspiracy` | InfoWars, KenFM, QAnon | Soft |
+
+### Configuration
+
+Location: `config/errordon/fascism_blocklist.yml`
+
+```yaml
+hard_block:
+  neo_nazi:
+    - stormfront.org
+    - dailystormer.name
+  holocaust_denial:
+    - ihr.org
+    - codoh.com
+
+soft_block:
+  germany:
+    parties:
+      - afd.de
+      - npd.de
+    media:
+      - nius.de
+      - pi-news.net
+  usa:
+    trump_maga:
+      - truthsocial.com
+      - gettr.com
+    media:
+      - breitbart.com
+      - infowars.com
+
+whitelist:
+  journalism:
+    - belltower.news
+    - volksverpetzer.de
+```
+
+### User Experience
+
+**Soft-blocked links:**
+1. Post is allowed but marked as **sensitive/NSFW**
+2. Spoiler text added: "⚠️ Contains link to problematic source"
+3. User sees warning explaining why
+4. Suggestion to share **screenshots instead of direct links**
+
+**Hard-blocked links:**
+1. Post is **rejected**
+2. Strike created against account
+3. Error message explains the block
+
+### Philosophy
+
+> "Free communication including hacking discussions is welcome.
+> But NO porn, NO hate, NO fascism.
+> We don't want to give traffic to sites spreading hate."
+
+**Allowed:**
+- Reporting about far-right topics (journalism)
+- Discussions and criticism
+- Educational content
+
+**Blocked:**
+- Direct links that give traffic to hate sites
+- Promotion of fascist content
+
+### Whitelist for Journalism
+
+Sites researching and reporting on extremism are whitelisted:
+- belltower.news
+- volksverpetzer.de
+- correctiv.org
+- bnr.de (Blick nach Rechts)
+
+### Statistics
+
+```ruby
+stats = Errordon::DomainBlocklistService.stats
+# => {
+#   porn: { total: 150000, ... },
+#   fascism: { hard_block: 50, soft_block: 300, total: 350 },
+#   total_domains: 150350
+# }
+```

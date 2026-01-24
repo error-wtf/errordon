@@ -1,0 +1,434 @@
+# Errordon Fascism/Hate/Right-Wing Extremism Blocklist
+# =====================================================
+# Diese Liste blockiert rechtsextreme, faschistische und Hass-verbreitende Webseiten.
+# Journalistische Berichterstattung über diese Themen ist erlaubt - nur Direktverlinkung wird blockiert.
+# Bei versehentlicher Verlinkung: Soft-Block mit Warnung + Hinweis auf Screenshots.
+#
+# Kategorien:
+# - far_right_parties: Rechtsextreme Parteien
+# - far_right_media: Rechte Propaganda-Medien
+# - hate_platforms: Hass-Plattformen
+# - conspiracy: Verschwörungstheorien
+# - neo_nazi: Neonazi-Seiten
+#
+# WICHTIG: Wir wollen diesen Seiten keinen Traffic geben!
+# Nutzer werden aufgefordert, Screenshots statt Direktlinks zu teilen.
+
+# =============================================================================
+# HARD BLOCK - Wird immer blockiert, kein Soft-Block möglich
+# =============================================================================
+hard_block:
+  neo_nazi:
+    - stormfront.org
+    - dailystormer.name
+    - dailystormer.su
+    - dailystormer.in
+    - nationalvanguard.org
+    - vanguardnewsnetwork.com
+    - bloodandsoil.org
+    - americannaziparty.com
+    - nsm88.org
+    - aryanunity.com
+    - whitepowermusic.com
+    - resistance.com
+    - hammerskins.net
+    
+  terrorist_adjacent:
+    - atomwaffendivision.org
+    - ironmarch.org
+    - fascistforge.com
+    
+  holocaust_denial:
+    - ihr.org
+    - codoh.com
+    - vho.org
+
+# =============================================================================
+# SOFT BLOCK - Warnung + NSFW-Toggle, User kann einblenden
+# =============================================================================
+soft_block:
+  # -------------------------------------------------------------------------
+  # DEUTSCHLAND - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  germany:
+    parties:
+      - afd.de
+      - afd-fraktion.de
+      - alternativefuer.de
+      - junge-alternative.com
+      - npd.de
+      - heimat-npd.de
+      - der-dritte-weg.info
+      - die-rechte.net
+      - pro-deutschland.de
+      - pro-nrw.de
+      - pro-koeln.de
+      - rep.de
+      - dieblaue.de
+      
+    media:
+      - nius.de
+      - pi-news.net
+      - journalistenwatch.com
+      - jungefreiheit.de
+      - sezession.de
+      - compact-online.de
+      - auf1.tv
+      - auf1.info
+      - epochtimes.de
+      - reitschuster.de
+      - tichyseinblick.de
+      - achgut.com
+      - publicomag.com
+      - apollo-news.net
+      - freiewelt.net
+      - deutschland-kurier.org
+      - philosophia-perennis.com
+      - theeuropean.de
+      - eigentümlich-frei.de
+      - ef-magazin.de
+      - blaue-narzisse.de
+      - sichtplatz.de
+      - anonymous-news.com
+      - anonymousnews.org
+      
+    conspiracy:
+      - kla.tv
+      - bewusst.tv
+      - nuoviso.tv
+      - querdenken-711.de
+      - corona-ausschuss.de
+      - rubikon.news
+      - multipolar-magazin.de
+      - nachdenkseiten.de
+      - anti-spiegel.ru
+      
+  # -------------------------------------------------------------------------
+  # ÖSTERREICH - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  austria:
+    parties:
+      - fpoe.at
+      - fpoe-parlamentsklub.at
+      - hcstrache.at
+      - bzoe.at
+      
+    media:
+      - unzensuriert.at
+      - wochenblick.at
+      - exxpress.at
+      - report24.news
+      - auf1.tv
+      - tkp.at
+      
+  # -------------------------------------------------------------------------
+  # SCHWEIZ - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  switzerland:
+    parties:
+      - svp.ch
+      - pnos.ch
+      
+    media:
+      - weltwoche.ch
+      - nebelspalter.ch
+      - schweizerzeitung.ch
+      
+  # -------------------------------------------------------------------------
+  # FRANKREICH - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  france:
+    parties:
+      - rassemblementnational.fr
+      - frontnational.com
+      - reconquete.fr
+      - marinelepen.fr
+      - ericzemmourfr.fr
+      
+    media:
+      - fdesouche.com
+      - ripostelaique.com
+      - breizh-info.com
+      - valeursactuelles.com
+      - bvoltaire.fr
+      - tvlibertes.com
+      - lesalonbeige.fr
+      
+  # -------------------------------------------------------------------------
+  # ITALIEN - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  italy:
+    parties:
+      - fratelli-italia.it
+      - leganord.org
+      - casapounditalia.org
+      - forzanuova.eu
+      
+    media:
+      - ilprimatonazionale.it
+      - loccidentale.it
+      
+  # -------------------------------------------------------------------------
+  # SPANIEN - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  spain:
+    parties:
+      - voxespana.es
+      
+    media:
+      - gaceta.es
+      - mediterraneodigital.com
+      - alertadigital.com
+      - libertaddigital.com
+      - outono.net
+      
+  # -------------------------------------------------------------------------
+  # NIEDERLANDE - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  netherlands:
+    parties:
+      - pvv.nl
+      - geertwilders.nl
+      - fvd.nl
+      - forumvoordemocratie.nl
+      
+    media:
+      - dagelijksestandaard.nl
+      - geenstijl.nl
+      - tpo.nl
+      
+  # -------------------------------------------------------------------------
+  # BELGIEN - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  belgium:
+    parties:
+      - vlaamsbelang.org
+      
+  # -------------------------------------------------------------------------
+  # POLEN - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  poland:
+    parties:
+      - pis.org.pl
+      - konfederacja.pl
+      - rfrp.pl
+      
+    media:
+      - tvrepublika.pl
+      - niezalezna.pl
+      - wpolsce.pl
+      
+  # -------------------------------------------------------------------------
+  # UNGARN - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  hungary:
+    parties:
+      - fidesz.hu
+      - jobbik.com
+      - mihazank.hu
+      
+    media:
+      - 888.hu
+      - origo.hu
+      - mandiner.hu
+      - magyar-nemzet.hu
+      - pestisracok.hu
+      
+  # -------------------------------------------------------------------------
+  # GROSSBRITANNIEN - Rechtsextreme Medien & Parteien
+  # -------------------------------------------------------------------------
+  uk:
+    parties:
+      - reformparty.uk
+      - brexitparty.org
+      - ukip.org
+      - bnp.org.uk
+      - britainfirst.org
+      
+    media:
+      - breitbart.co.uk
+      - spectator.co.uk
+      - unherd.com
+      - spiked-online.com
+      - guido.co.uk
+      - westmonster.com
+      - theconservativewoman.co.uk
+      
+  # -------------------------------------------------------------------------
+  # USA - Rechtsextreme Medien & MAGA
+  # -------------------------------------------------------------------------
+  usa:
+    trump_maga:
+      - donaldjtrump.com
+      - djt.com
+      - trump.com
+      - magapac.com
+      - winred.com
+      - gettr.com
+      - truthsocial.com
+      - frankspeech.com
+      - mikepillow.com
+      
+    parties_orgs:
+      - gop.com
+      - republicans.org
+      - teapartypatriots.org
+      - proudboys.com
+      - oathkeepers.org
+      - americafirstpolicy.com
+      
+    media:
+      - breitbart.com
+      - dailywire.com
+      - theblaze.com
+      - oann.com
+      - newsmax.com
+      - townhall.com
+      - thefederalist.com
+      - pjmedia.com
+      - redstate.com
+      - twitchy.com
+      - hotair.com
+      - dailycaller.com
+      - washingtonexaminer.com
+      - washingtontimes.com
+      - nationalreview.com
+      - americanthinker.com
+      - wnd.com
+      - infowars.com
+      - banned.video
+      - newswars.com
+      - naturalnews.com
+      - zerohedge.com
+      - thegatewaypundit.com
+      - revolver.news
+      - amren.com
+      - takimag.com
+      - vdare.com
+      - unz.com
+      
+    conspiracy:
+      - infowars.com
+      - prisonplanet.com
+      - naturalnews.com
+      - beforeitsnews.com
+      - godlikeproductions.com
+      - abovetopsecret.com
+      - rumble.com
+      - bitchute.com
+      - odysee.com
+      - brighteon.com
+      - banned.video
+      
+  # -------------------------------------------------------------------------
+  # RUSSLAND - Propaganda
+  # -------------------------------------------------------------------------
+  russia:
+    state_media:
+      - rt.com
+      - sputniknews.com
+      - ria.ru
+      - tass.com
+      - pravda.ru
+      - southfront.org
+      
+    disinformation:
+      - strategic-culture.org
+      - globalresearch.ca
+      - journal-neo.org
+      
+  # -------------------------------------------------------------------------
+  # INTERNATIONALE HASS-PLATTFORMEN
+  # -------------------------------------------------------------------------
+  international:
+    hate_platforms:
+      - gab.com
+      - gab.ai
+      - parler.com
+      - minds.com
+      - mewe.com
+      - wimkin.com
+      - clouthub.com
+      - frankspeech.com
+      - cozy.tv
+      - dlive.tv
+      - trovo.live
+      - kick.com
+      
+    chan_boards:
+      - 4chan.org
+      - 8kun.top
+      - endchan.org
+      - kohlchan.net
+      - neinchan.com
+      
+    doxxing_harassment:
+      - kiwifarms.net
+      - kiwifarms.ru
+      - kiwifarms.st
+      - lolcow.farm
+      - encyclopediadramatica.rs
+      
+  # -------------------------------------------------------------------------
+  # ANTISEMITISMUS & VERSCHWÖRUNGSTHEORIEN
+  # -------------------------------------------------------------------------
+  antisemitism:
+    - veteranstoday.com
+    - rense.com
+    - henrymakow.com
+    - smoloko.com
+    - davidduke.com
+
+# =============================================================================
+# WHITELIST - Journalismus über rechte Themen ist erlaubt
+# =============================================================================
+whitelist:
+  journalism:
+    - belltower.news           # Recherche über Rechtsextremismus
+    - bnr.de                   # Blick nach Rechts
+    - endstation-rechts.de     # Recherche Rechtsextremismus
+    - netz-gegen-nazis.de      # Amadeu Antonio Stiftung
+    - volksverpetzer.de        # Faktenchecks
+    - correctiv.org            # Investigativ
+    - mimikama.at              # Faktenchecks
+    - hoaxmap.org              # Faktenchecks
+    - der-rechte-rand.de       # Magazin
+    - rechtsaussen.berlin      # Berlin
+    - aida-archiv.de           # Archiv
+    
+# =============================================================================
+# WARNMELDUNGEN
+# =============================================================================
+warnings:
+  de:
+    soft_block: |
+      ⚠️ Diese URL verweist auf eine Webseite, die Hass, Faschismus oder 
+      rechtsextreme Inhalte verbreitet. Wir möchten diesen Seiten keinen 
+      Traffic geben.
+      
+      Wenn du über diese Seite berichten möchtest, teile bitte einen 
+      Screenshot statt eines Direktlinks.
+      
+      Du kannst den Link manuell einblenden, aber er wird als NSFW markiert.
+      
+    hard_block: |
+      🚫 Diese URL verweist auf eine Webseite mit illegalem Inhalt 
+      (Neonazi-Propaganda, Holocaust-Leugnung, Terrorismus).
+      
+      Das Teilen solcher Links ist auf dieser Instanz nicht erlaubt.
+      
+  en:
+    soft_block: |
+      ⚠️ This URL points to a website that spreads hate, fascism, or 
+      far-right extremist content. We don't want to give these sites traffic.
+      
+      If you want to report about this site, please share a screenshot 
+      instead of a direct link.
+      
+      You can manually reveal the link, but it will be marked as NSFW.
+      
+    hard_block: |
+      🚫 This URL points to a website with illegal content 
+      (Neo-Nazi propaganda, Holocaust denial, terrorism).
+      
+      Sharing such links is not allowed on this instance.

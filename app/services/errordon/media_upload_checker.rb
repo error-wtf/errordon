@@ -196,13 +196,25 @@ module Errordon
       urls = extract_urls(text)
 
       urls.each do |url|
-        if Errordon::DomainBlocklistService.check_url(url)
-          handle_blocked_url!(url)
+        check_result = Errordon::DomainBlocklistService.check_url(url)
+        next unless check_result[:blocked]
+        
+        domain = URI.parse(url).host rescue url
+        
+        case check_result[:type]
+        when :hard
+          # Hard block: completely blocked, create strike and raise error
+          handle_blocked_url!(url, check_result)
           raise ViolationError.new(
-            "Blocked domain detected: #{URI.parse(url).host}",
+            check_result[:warning] || "Blocked domain: #{domain}",
             nil,
             violation_type: :blocked_url
           )
+          
+        when :soft
+          # Soft block: flag as NSFW with warning, allow post but mark it
+          handle_soft_blocked_url!(url, check_result)
+          # Don't raise error, but mark the status as sensitive
         end
       end
     end
@@ -213,25 +225,65 @@ module Errordon
       []
     end
 
-    def handle_blocked_url!(url)
+    def handle_blocked_url!(url, check_result)
       domain = URI.parse(url).host rescue url
+      category = check_result[:category] || :blocked_domain
 
       strike = NsfwProtectStrike.create!(
         account: @account,
         status: @attachment.status,
         media_attachment: @attachment,
-        strike_type: :porn,
-        severity: 3,
+        strike_type: category == :porn ? :porn : :hate,
+        severity: category == :neo_nazi ? 5 : 3,
         ip_address: @ip_address,
         ai_analysis_result: nil,
         ai_confidence: 1.0,
-        ai_category: 'BLOCKED_DOMAIN',
-        ai_reason: "Posted link to blocked porn domain: #{domain}"
+        ai_category: category.to_s.upcase,
+        ai_reason: "Posted link to blocked domain (#{category}): #{domain}"
       )
 
-      Rails.logger.warn "[NSFW-Protect] Blocked URL detected: Account=#{@account.id}, Domain=#{domain}"
+      Rails.logger.warn "[NSFW-Protect] Hard blocked URL: Account=#{@account.id}, " \
+                        "Domain=#{domain}, Category=#{category}"
 
       strike
+    end
+
+    def handle_soft_blocked_url!(url, check_result)
+      domain = URI.parse(url).host rescue url
+      status = @attachment.status
+      
+      # Mark status as sensitive (NSFW)
+      status.update!(sensitive: true) if status.present?
+      
+      # Add spoiler text with warning if not already present
+      if status.present? && status.spoiler_text.blank?
+        warning = I18n.t(
+          'errordon.blocklist.warnings.soft_block.fascism',
+          default: check_result[:warning]
+        )
+        
+        # Truncate for spoiler text (max 500 chars)
+        spoiler = "⚠️ Enthält Link zu problematischer Quelle (#{check_result[:category]}). " \
+                  "Bitte Screenshots statt Direktlinks teilen."
+        
+        status.update!(spoiler_text: spoiler)
+      end
+      
+      # Log but don't create strike for soft blocks (just a warning)
+      Rails.logger.info "[NSFW-Protect] Soft blocked URL flagged: Account=#{@account.id}, " \
+                        "Domain=#{domain}, Category=#{check_result[:category]}"
+      
+      # Create audit log entry
+      Errordon::AuditLogger.log(
+        action: :soft_block_url,
+        account_id: @account.id,
+        details: {
+          url: url,
+          domain: domain,
+          category: check_result[:category],
+          status_id: status&.id
+        }
+      ) if defined?(Errordon::AuditLogger)
     end
 
     def extract_ip_from_request(request)
