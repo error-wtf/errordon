@@ -1,0 +1,149 @@
+# NSFW-Protect Filter Rules Configuration
+# =========================================
+# This file defines detection rules, thresholds, and AI persona settings
+# for the NSFW-Protect content moderation system.
+
+# AI Confidence Thresholds
+thresholds:
+  auto_delete: 0.90      # Confidence above this = auto-delete + strike
+  auto_flag: 0.75        # Confidence above this = flag for review
+  needs_review: 0.50     # Confidence above this = queue for manual review
+  csam_threshold: 0.60   # ANY CSAM detection above this = immediate action
+
+# Strike Escalation (freeze durations in hours)
+strike_escalation:
+  porn:
+    1: 24       # 1st strike: 24 hours
+    2: 72       # 2nd strike: 3 days
+    3: 168      # 3rd strike: 7 days
+    4: 720      # 4th strike: 30 days
+    5: permanent
+  hate:
+    1: 0        # 1st strike: warning only
+    2: 72       # 2nd strike: 3 days
+    3: 168      # 3rd strike: 7 days
+    4: permanent
+  illegal:
+    1: 168      # 1st strike: 7 days
+    2: 720      # 2nd strike: 30 days
+    3: permanent
+  csam:
+    1: permanent  # Always permanent + law enforcement
+
+# Text Detection Patterns (German law focus)
+text_patterns:
+  # §130 StGB - Volksverhetzung
+  hate_speech:
+    - pattern: '\b(sieg\s*heil|heil\s*hitler|88|1488)\b'
+      severity: critical
+      law: "§130 StGB"
+    - pattern: '\b(vergasen|ausrotten|vernichten).*(juden|türken|muslime|ausländer)\b'
+      severity: critical
+      law: "§130 StGB"
+    - pattern: '\b(kanaken?|kameltreiber|kümmeltürken?|neger|nigger)\b'
+      severity: high
+      law: "§130 StGB"
+    
+  # §86a StGB - Verfassungswidrige Symbole
+  nazi_symbols:
+    - pattern: '\b(hakenkreuz|swastika|totenkopf\s*ss|wolfsangel)\b'
+      severity: critical
+      law: "§86a StGB"
+    - pattern: '\b(white\s*power|blood\s*and\s*honour|combat\s*18)\b'
+      severity: critical
+      law: "§86a StGB"
+      
+  # §131 StGB - Gewaltverherrlichung
+  violence_glorification:
+    - pattern: '\b(töten|ermorden|abschlachten).*(sollte|müsste|würde)\b'
+      severity: high
+      law: "§131 StGB"
+    - pattern: '\b(terroranschlag|amoklauf).*(geil|cool|basiert)\b'
+      severity: high
+      law: "§131 StGB"
+
+  # Holocaust denial
+  holocaust_denial:
+    - pattern: '\b(holocaust|shoah).*(lüge|fake|erfunden|nie\s*passiert)\b'
+      severity: critical
+      law: "§130 Abs. 3 StGB"
+    - pattern: '\b(gaskammern?).*(gab\s*es\s*nicht|erfunden|propaganda)\b'
+      severity: critical
+      law: "§130 Abs. 3 StGB"
+
+# Image Detection Rules (for AI analysis)
+image_rules:
+  porn_indicators:
+    - nudity_explicit
+    - sexual_activity
+    - genitalia_visible
+    - sexual_poses
+    
+  hate_indicators:
+    - swastika_symbol
+    - ss_runes
+    - confederate_flag
+    - kkk_imagery
+    - nazi_uniforms
+    
+  csam_indicators:
+    - minor_nudity
+    - child_sexual_content
+    - child_exploitation
+    # These trigger IMMEDIATE permanent ban + law enforcement notification
+
+# URL/Domain Blocking
+blocked_domains:
+  # Reference to external blocklist (auto-updated)
+  external_list: "config/errordon/porn_domain_blocklist.txt"
+  update_interval: 86400  # 24 hours in seconds
+  
+  # Internal always-blocked domains (examples)
+  hardcoded:
+    - pornhub.com
+    - xvideos.com
+    - xnxx.com
+    - xhamster.com
+    - redtube.com
+    - youporn.com
+    - tube8.com
+    - spankbang.com
+    - chaturbate.com
+    - onlyfans.com
+    - fansly.com
+
+# Allowed Exceptions
+exceptions:
+  # Art/medical contexts (requires human review)
+  allow_review_for:
+    - "medical education"
+    - "art history"
+    - "news reporting"
+    - "documentary"
+  
+  # Accounts exempt from auto-moderation (admin-verified)
+  exempt_roles:
+    - admin
+    - moderator
+    
+# Instance Freeze Settings
+instance_freeze:
+  alarm_threshold: 10           # Freeze when this many alarms active
+  freeze_duration_hours: 24     # How long instance stays frozen
+  auto_unfreeze: true           # Automatically unfreeze when alarms clear
+
+# Logging Settings
+logging:
+  log_all_checks: false         # Set true for debugging (high volume!)
+  log_violations: true
+  log_reviews: true
+  retain_logs_days: 365         # Keep logs for 1 year (legal requirement)
+  
+# External Reporting
+reporting:
+  # For CSAM - automatic notification templates
+  csam:
+    notify_bka: true
+    bka_email: "kinderpornografie@bka.bund.de"
+    retain_evidence: true
+    evidence_retention_days: 730  # 2 years

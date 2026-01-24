@@ -153,15 +153,18 @@ module Errordon
 
     def log_strike_action!
       Rails.logger.info "[NSFW-Protect] Strike applied: Account=#{@account.id}, Type=#{@strike.strike_type}, " \
-                        "Confidence=#{@strike.ai_confidence}, TotalStrikes=#{@account.nsfw_strike_count}"
+                        "Confidence=#{@strike.ai_confidence}, TotalStrikes=#{@account.nsfw_strike_count}, " \
+                        "IP=#{@strike.ip_address}"
 
-      Errordon::AuditLogger.log(
-        action: 'nsfw_strike',
-        account_id: @account.id,
-        strike_id: @strike.id,
-        strike_type: @strike.strike_type,
-        ai_confidence: @strike.ai_confidence,
-        ip_address: @strike.ip_address&.to_s
+      # Use enhanced audit logger for comprehensive violation logging
+      Errordon::NsfwAuditLogger.log_violation(
+        strike: @strike,
+        account: @account,
+        request_info: {
+          ip: @strike.ip_address&.to_s,
+          user_agent: nil,
+          referrer: nil
+        }
       )
     end
   end

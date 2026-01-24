@@ -7,47 +7,112 @@
     .content { padding: 20px; background: #fff5f5; }
     .critical { color: #ff0000; font-weight: bold; font-size: 1.2em; }
     .info-box { background: #ffe0e0; padding: 15px; border-radius: 5px; margin: 15px 0; border: 2px solid #ff0000; }
-    .label { font-weight: bold; color: #666; }
-    .value { margin-left: 10px; }
-    .action-required { background: #ff0000; color: white; padding: 15px; text-align: center; margin: 20px 0; }
+    .ip-box { background: #ffcccc; padding: 15px; border-radius: 5px; margin: 15px 0; border: 3px solid #ff0000; }
+    .label { font-weight: bold; color: #666; display: inline-block; width: 180px; }
+    .value { font-family: monospace; }
+    .action-required { background: #ff0000; color: white; padding: 15px; text-align: center; margin: 20px 0; font-size: 1.1em; }
+    .evidence { background: #333; color: #0f0; padding: 15px; font-family: monospace; margin: 15px 0; border-radius: 5px; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background: #f5f5f5; }
+    .highlight { background: #ffff00; padding: 2px 5px; }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>🚨 CRITICAL ALERT 🚨</h1>
-    <h2>CSAM CONTENT DETECTED</h2>
+    <h2>CSAM CONTENT DETECTED - §184b StGB</h2>
+    <p>Strike ID: <%= @strike.id %> | <%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></p>
   </div>
   
   <div class="content">
     <div class="action-required">
-      <strong>IMMEDIATE ACTION REQUIRED</strong><br>
-      This content may need to be reported to law enforcement (§184b StGB)
+      <strong>⚠️ IMMEDIATE ACTION REQUIRED ⚠️</strong><br>
+      Child Sexual Abuse Material detected. Report to law enforcement required.<br>
+      <strong>BKA Meldestelle: +49 611 55-13155 | NCMEC CyberTipline</strong>
     </div>
-    
+
+    <h3>📋 SUSPECT ACCOUNT INFORMATION (for police report)</h3>
     <div class="info-box">
-      <p><span class="label">Account ID:</span> <span class="value"><%= @account.id %></span></p>
-      <p><span class="label">Username:</span> <span class="value">@<%= @account.username %></span></p>
-      <p><span class="label">Email:</span> <span class="value"><%= @account.user&.email || 'N/A' %></span></p>
-      <p><span class="label">IP Address:</span> <span class="value critical"><%= @strike.ip_address || 'Unknown' %></span></p>
-      <p><span class="label">Detection Time:</span> <span class="value"><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></span></p>
-      <p><span class="label">AI Confidence:</span> <span class="value"><%= (@strike.ai_confidence * 100).round(1) %>%</span></p>
+      <table>
+        <tr><th colspan="2">Account Details</th></tr>
+        <tr><td class="label">Account ID</td><td class="value highlight"><%= @account.id %></td></tr>
+        <tr><td class="label">Username</td><td class="value highlight">@<%= @account.username %></td></tr>
+        <tr><td class="label">Display Name</td><td class="value"><%= @account.display_name %></td></tr>
+        <tr><td class="label">Email</td><td class="value highlight"><%= @account.user&.email || 'N/A' %></td></tr>
+        <tr><td class="label">Email Confirmed</td><td class="value"><%= @account.user&.confirmed? ? 'Yes' : 'No' %></td></tr>
+        <tr><td class="label">Account Created</td><td class="value"><%= @account.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></td></tr>
+        <tr><td class="label">Previous Violations</td><td class="value"><%= @account.nsfw_strike_count %></td></tr>
+      </table>
     </div>
-    
+
+    <h3>🌐 IP ADDRESS INFORMATION (critical for investigation)</h3>
+    <div class="ip-box">
+      <table>
+        <tr><th>Type</th><th>IP Address</th><th>Timestamp</th></tr>
+        <tr>
+          <td><strong>VIOLATION IP</strong></td>
+          <td class="value highlight" style="font-size: 1.2em;"><%= @strike.ip_address || 'Unknown' %></td>
+          <td><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></td>
+        </tr>
+        <% if @account.user&.sign_up_ip %>
+        <tr>
+          <td>Signup IP</td>
+          <td class="value"><%= @account.user.sign_up_ip %></td>
+          <td><%= @account.user.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></td>
+        </tr>
+        <% end %>
+        <% if @account.user&.current_sign_in_ip %>
+        <tr>
+          <td>Current Login IP</td>
+          <td class="value"><%= @account.user.current_sign_in_ip %></td>
+          <td><%= @account.user.current_sign_in_at&.strftime('%Y-%m-%d %H:%M:%S UTC') %></td>
+        </tr>
+        <% end %>
+        <% if @account.user&.last_sign_in_ip %>
+        <tr>
+          <td>Last Login IP</td>
+          <td class="value"><%= @account.user.last_sign_in_ip %></td>
+          <td><%= @account.user.last_sign_in_at&.strftime('%Y-%m-%d %H:%M:%S UTC') %></td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
+
+    <h3>🤖 AI ANALYSIS</h3>
+    <div class="info-box">
+      <p><span class="label">Confidence:</span> <span class="value critical"><%= (@strike.ai_confidence.to_f * 100).round(1) %>%</span></p>
+      <p><span class="label">Category:</span> <span class="value"><%= @strike.ai_category %></span></p>
+      <p><span class="label">Reason:</span> <span class="value"><%= @strike.ai_reason %></span></p>
+    </div>
+
+    <h3>📎 CONTENT REFERENCES</h3>
+    <div class="evidence">
+      Status ID: <%= @strike.status_id || 'N/A' %><br>
+      Media Attachment ID: <%= @strike.media_attachment_id || 'N/A' %><br>
+      Report ID: <%= @strike.report_id || 'N/A' %>
+    </div>
+
     <p class="critical">
-      ⚠️ The account has been PERMANENTLY SUSPENDED.<br>
-      ⚠️ All content has been preserved for potential evidence.<br>
-      ⚠️ Please review and take appropriate legal action.
+      ✅ Account has been PERMANENTLY SUSPENDED<br>
+      ✅ Content preserved in database for evidence<br>
+      ✅ Audit log entry created at: log/nsfw_protect/csam_alerts.log<br>
+      ✅ Full report available at: log/nsfw_protect/admin_reports/
     </p>
     
-    <h3>Legal References (Germany)</h3>
+    <h3>⚖️ Legal References (Germany)</h3>
     <ul>
-      <li>§184b StGB - Verbreitung kinderpornographischer Inhalte</li>
-      <li>Meldepflicht an BKA/NCMEC beachten</li>
+      <li><strong>§184b StGB</strong> - Verbreitung, Erwerb und Besitz kinderpornographischer Inhalte</li>
+      <li><strong>Meldepflicht:</strong> BKA Zentralstelle Kinderpornografie</li>
+      <li><strong>International:</strong> NCMEC CyberTipline (USA)</li>
+      <li><strong>Aufbewahrungspflicht:</strong> Daten für Ermittlungsbehörden sichern</li>
     </ul>
     
-    <p>
-      <a href="<%= admin_account_url(@account) %>">View Account in Admin Panel</a>
-    </p>
+    <div class="action-required">
+      <a href="<%= admin_account_url(@account) %>" style="color: white; text-decoration: underline;">
+        View Account in Admin Panel
+      </a>
+    </div>
   </div>
 </body>
 </html>

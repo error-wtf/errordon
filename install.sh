@@ -600,8 +600,17 @@ if command -v ollama &> /dev/null; then
     echo "  ✓ Text hate speech detection"
     echo "  ✓ Automatic strike/freeze system"
     echo "  ✓ Admin email alerts"
+    echo "  ✓ IP address logging for law enforcement"
+    echo "  ✓ Domain blocklist (auto-updated daily)"
     echo ""
+    
+    # Initialize blocklist on first install
+    if [ -f "config/errordon/porn_domain_blocklist.txt" ]; then
+        log "Porn domain blocklist: $(wc -l < config/errordon/porn_domain_blocklist.txt) domains"
+    fi
+    
     warn "Configure ERRORDON_NSFW_ADMIN_EMAIL in .env.production!"
+    info "Blocklist auto-updates daily at 3 AM via Sidekiq"
 else
     warn "NSFW-Protect AI not installed"
     echo "  To install later:"
@@ -609,6 +618,13 @@ else
     echo "    ollama pull llava"
     echo "    ollama pull llama3"
     echo "    # Then set ERRORDON_NSFW_PROTECT_ENABLED=true in .env.production"
+fi
+
+# Initialize NSFW-Protect directories
+if [ -d "log" ]; then
+    mkdir -p log/nsfw_protect/admin_reports
+    chmod 700 log/nsfw_protect log/nsfw_protect/admin_reports 2>/dev/null || true
+    log "NSFW-Protect audit log directories created"
 fi
 echo ""
 warn "Reload shell: source ~/.bashrc"

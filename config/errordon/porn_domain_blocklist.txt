@@ -1,0 +1,120 @@
+# Errordon NSFW-Protect Domain Blocklist
+# =======================================
+# This file is auto-updated by BlocklistUpdateWorker
+# Manual entries can be added below (one domain per line)
+# Last updated: Initial seed list
+
+# Major porn sites
+pornhub.com
+xvideos.com
+xnxx.com
+xhamster.com
+redtube.com
+youporn.com
+tube8.com
+spankbang.com
+eporner.com
+porntrex.com
+thumbzilla.com
+pornone.com
+tnaflix.com
+drtuber.com
+txxx.com
+hdzog.com
+hclips.com
+vjav.com
+jizzbunker.com
+anyporn.com
+sunporno.com
+proporn.com
+ashemaletube.com
+shemale.com
+trannytube.tv
+
+# Cam sites
+chaturbate.com
+livejasmin.com
+stripchat.com
+cam4.com
+bongacams.com
+myfreecams.com
+camsoda.com
+flirt4free.com
+imlive.com
+streamate.com
+camster.com
+jerkmate.com
+cams.com
+slutroulette.com
+
+# Premium/paid sites
+onlyfans.com
+fansly.com
+brazzers.com
+bangbros.com
+realitykings.com
+naughtyamerica.com
+digitalplayground.com
+mofos.com
+babes.com
+twistys.com
+wicked.com
+evilangel.com
+julesjordan.com
+blacked.com
+tushy.com
+vixen.com
+deeper.com
+slayed.com
+
+# Hentai/anime
+hentaihaven.xxx
+hanime.tv
+nhentai.net
+hentai-foundry.com
+fakku.net
+hentai2read.com
+tsumino.com
+e-hentai.org
+exhentai.org
+pururin.us
+doujins.com
+
+# Booru/art sites (adult)
+rule34.xxx
+e621.net
+gelbooru.com
+danbooru.donmai.us
+rule34.paheal.net
+rule34hentai.net
+xxx-art.net
+
+# Social/forum with adult content
+4chan.org
+8kun.top
+kiwifarms.net
+reddit.com/r/nsfw
+reddit.com/r/gonewild
+
+# Dating/hookup
+adultfriendfinder.com
+ashleymadison.com
+fetlife.com
+collarspace.com
+alt.com
+seeking.com
+
+# Escorts/prostitution
+backpage.com
+eros.com
+skipthegames.com
+bedpage.com
+megapersonals.com
+
+# Misc adult
+literotica.com
+sexstories.com
+nifty.org
+asstr.org
+imagefap.com
+xpics.me

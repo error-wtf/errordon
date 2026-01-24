@@ -221,8 +221,14 @@ if [ "$INSTALL_OLLAMA" = true ]; then
     echo "  ✓ Ollama installed and running"
     echo "  ✓ llava model (image analysis)"
     echo "  ✓ llama3 model (text analysis)"
+    echo "  ✓ Domain blocklist (auto-updated daily)"
+    echo "  ✓ IP logging for law enforcement"
+    echo "  ✓ Audit trail in log/nsfw_protect/"
     echo ""
     warn "Configure ERRORDON_NSFW_ADMIN_EMAIL in .env.production!"
+    info "Scheduled jobs run via Sidekiq:"
+    echo "    - Blocklist update: daily at 3 AM"
+    echo "    - Freeze cleanup: hourly"
     echo ""
 else
     warn "NSFW-Protect AI not installed"
@@ -234,3 +240,6 @@ else
     echo "       ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434"
     echo ""
 fi
+
+# Create NSFW-Protect log directories
+docker compose run --rm web mkdir -p log/nsfw_protect/admin_reports 2>/dev/null || true

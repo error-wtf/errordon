@@ -4,39 +4,103 @@
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
     .header { background: #ff4444; color: white; padding: 20px; text-align: center; }
+    .header.hate { background: #8B0000; }
+    .header.illegal { background: #000; }
     .content { padding: 20px; }
     .info-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0; }
-    .label { font-weight: bold; color: #666; }
-    .value { margin-left: 10px; }
+    .ip-box { background: #fff3cd; padding: 15px; border-radius: 5px; margin: 15px 0; border: 2px solid #ffc107; }
+    .label { font-weight: bold; color: #666; display: inline-block; width: 160px; }
+    .value { font-family: monospace; }
     .warning { color: #ff4444; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f0f0f0; }
+    .mono { font-family: monospace; }
+    .highlight { background: #ffff99; }
   </style>
 </head>
 <body>
-  <div class="header">
+  <div class="header <%= @strike.strike_type %>">
     <h1>⚠️ NSFW-Protect Alert</h1>
-    <p>New content violation detected</p>
+    <p>Strike #<%= @strike.id %> | <%= @strike.strike_type.upcase %> Violation</p>
   </div>
   
   <div class="content">
+    <h3>📋 Account Information</h3>
     <div class="info-box">
-      <p><span class="label">Account:</span> <span class="value">@<%= @account.username %></span></p>
-      <p><span class="label">Type:</span> <span class="value warning"><%= @strike.strike_type.upcase %></span></p>
-      <p><span class="label">AI Confidence:</span> <span class="value"><%= (@strike.ai_confidence * 100).round(1) %>%</span></p>
-      <p><span class="label">Reason:</span> <span class="value"><%= @strike.ai_reason %></span></p>
-      <p><span class="label">IP Address:</span> <span class="value"><%= @strike.ip_address || 'Unknown' %></span></p>
-      <p><span class="label">Time:</span> <span class="value"><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></span></p>
+      <table>
+        <tr><td class="label">Account ID</td><td class="mono"><%= @account.id %></td></tr>
+        <tr><td class="label">Username</td><td class="mono highlight">@<%= @account.username %></td></tr>
+        <tr><td class="label">Display Name</td><td><%= @account.display_name %></td></tr>
+        <tr><td class="label">Email</td><td class="mono highlight"><%= @account.user&.email || 'N/A' %></td></tr>
+        <tr><td class="label">Account Created</td><td><%= @account.created_at.strftime('%Y-%m-%d %H:%M') %></td></tr>
+      </table>
+    </div>
+
+    <h3>🚨 Violation Details</h3>
+    <div class="info-box">
+      <table>
+        <tr><td class="label">Type</td><td class="warning"><%= @strike.strike_type.upcase %></td></tr>
+        <tr><td class="label">AI Confidence</td><td><%= (@strike.ai_confidence.to_f * 100).round(1) %>%</td></tr>
+        <tr><td class="label">Category</td><td><%= @strike.ai_category %></td></tr>
+        <tr><td class="label">Reason</td><td><%= @strike.ai_reason %></td></tr>
+        <tr><td class="label">Detected At</td><td><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></td></tr>
+      </table>
+    </div>
+
+    <h3>🌐 IP Addresses (for legal action)</h3>
+    <div class="ip-box">
+      <table>
+        <tr><th>Type</th><th>IP Address</th><th>Timestamp</th></tr>
+        <tr>
+          <td><strong>Violation IP</strong></td>
+          <td class="mono highlight"><%= @strike.ip_address || 'Unknown' %></td>
+          <td><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        </tr>
+        <% if @account.user&.sign_up_ip %>
+        <tr>
+          <td>Signup IP</td>
+          <td class="mono"><%= @account.user.sign_up_ip %></td>
+          <td><%= @account.user.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        </tr>
+        <% end %>
+        <% if @account.user&.current_sign_in_ip %>
+        <tr>
+          <td>Current Login</td>
+          <td class="mono"><%= @account.user.current_sign_in_ip %></td>
+          <td><%= @account.user.current_sign_in_at&.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
+
+    <h3>📊 Strike History</h3>
+    <div class="info-box">
+      <p><span class="label">Total Strikes:</span> <strong><%= @account.nsfw_strike_count %></strong></p>
+      <p><span class="label">Porn Strikes:</span> <%= @account.nsfw_porn_strikes %></p>
+      <p><span class="label">Hate Strikes:</span> <%= @account.nsfw_hate_strikes %></p>
     </div>
     
-    <p><span class="label">Total Strikes:</span> <%= @account.nsfw_strike_count %></p>
-    
     <% if @account.nsfw_permanent_freeze? %>
-      <p class="warning">⚠️ Account has been PERMANENTLY FROZEN</p>
+      <div style="background: #ff0000; color: white; padding: 15px; text-align: center; margin: 15px 0;">
+        <strong>⛔ ACCOUNT PERMANENTLY FROZEN</strong>
+      </div>
     <% elsif @account.nsfw_frozen_until.present? %>
-      <p>Account frozen until: <%= @account.nsfw_frozen_until.strftime('%Y-%m-%d %H:%M:%S UTC') %></p>
+      <div style="background: #ff6600; color: white; padding: 15px; text-align: center; margin: 15px 0;">
+        <strong>⏸️ Account frozen until: <%= @account.nsfw_frozen_until.strftime('%Y-%m-%d %H:%M:%S UTC') %></strong>
+      </div>
     <% end %>
+
+    <h3>📎 Content References</h3>
+    <div class="info-box">
+      <p><span class="label">Status ID:</span> <span class="mono"><%= @strike.status_id || 'N/A' %></span></p>
+      <p><span class="label">Media ID:</span> <span class="mono"><%= @strike.media_attachment_id || 'N/A' %></span></p>
+    </div>
     
-    <p>
-      <a href="<%= admin_account_url(@account) %>">View Account in Admin Panel</a>
+    <p style="text-align: center; margin-top: 20px;">
+      <a href="<%= admin_account_url(@account) %>" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+        View Account in Admin Panel
+      </a>
     </p>
   </div>
 </body>
