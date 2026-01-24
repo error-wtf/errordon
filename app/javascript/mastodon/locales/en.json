@@ -66,6 +66,7 @@
   "account.videos": "Videos",
   "account.audio": "Audio",
   "account.images": "Images",
+  "account.media_filter.originals_only": "Originals only",
   "account.mention": "Mention @{name}",
   "account.moved_to": "{name} has indicated that their new account is now:",
   "account.mute": "Mute @{name}",
