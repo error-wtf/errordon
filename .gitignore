@@ -1,0 +1,36 @@
+# Dependencies
+/node_modules/
+/vendor/bundle/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+/log/*
+!/log/.keep
+
+# Temp files
+/tmp/*
+!/tmp/.keep
+
+# Storage
+/public/system/
+/public/assets/
+/public/packs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Coverage
+/coverage/
+
+# Build artifacts
+*.gem
