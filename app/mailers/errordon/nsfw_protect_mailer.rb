@@ -114,23 +114,27 @@ module Errordon
     end
 
     def attach_evidence_package(strike, snapshot, include_media: false)
-      timestamp = strike.created_at.strftime('%Y%m%d_%H%M%S')
+      # Filename format: username_YYYY-MM-DD_HH-MM-SS_strikeID
+      username = sanitize_filename(strike.account.username)
+      date_str = strike.created_at.strftime('%Y-%m-%d')
+      time_str = strike.created_at.strftime('%H-%M-%S')
+      base_name = "#{username}_#{date_str}_#{time_str}_strike#{strike.id}"
       
       # 1. AI Analysis Report (JSON)
-      attachments["evidence_strike_#{strike.id}_#{timestamp}.json"] = {
+      attachments["#{base_name}_evidence.json"] = {
         mime_type: 'application/json',
         content: generate_evidence_json(strike, snapshot)
       }
 
       # 2. Human-readable Report (TXT)
-      attachments["evidence_strike_#{strike.id}_#{timestamp}.txt"] = {
+      attachments["#{base_name}_evidence.txt"] = {
         mime_type: 'text/plain',
         content: generate_evidence_text(strike, snapshot)
       }
 
       # 3. If CSAM or requested, attach the actual media (for law enforcement)
       if include_media && strike.media_attachment.present?
-        attach_media_evidence(strike)
+        attach_media_evidence(strike, base_name)
       end
     rescue StandardError => e
       Rails.logger.error "[NSFW-Protect Mailer] Failed to attach evidence: #{e.message}"
@@ -297,11 +301,10 @@ module Errordon
       {}
     end
 
-    def attach_media_evidence(strike)
+    def attach_media_evidence(strike, base_name)
       attachment = strike.media_attachment
       return unless attachment&.file.present?
 
-      timestamp = strike.created_at.strftime('%Y%m%d_%H%M%S')
       extension = File.extname(attachment.file_file_name)
       
       # Try to read the file
@@ -316,12 +319,20 @@ module Errordon
         return
       end
 
-      attachments["evidence_media_#{strike.id}_#{timestamp}#{extension}"] = {
+      attachments["#{base_name}_media#{extension}"] = {
         mime_type: attachment.file_content_type,
         content: content
       }
     rescue StandardError => e
       Rails.logger.error "[NSFW-Protect Mailer] Failed to attach media: #{e.message}"
+    end
+
+    def sanitize_filename(name)
+      # Remove or replace characters that are problematic in filenames
+      name.to_s
+          .gsub(/[^a-zA-Z0-9_\-]/, '_')
+          .gsub(/_+/, '_')
+          .truncate(30, omission: '')
     end
   end
 end
