@@ -1,0 +1,71 @@
+en:
+  errordon:
+    video_grid:
+      empty: "No videos to display"
+      load_more: "Load more videos"
+    
+    audio_player:
+      play: "Play"
+      pause: "Pause"
+      mute: "Mute"
+      unmute: "Unmute"
+      download: "Download"
+    
+    media_filter:
+      all: "All"
+      videos: "Videos"
+      audio: "Audio"
+      images: "Images"
+      originals: "Originals only"
+      with_alt: "With alt text"
+      public: "Public only"
+    
+    admin:
+      quotas:
+        title: "Storage Quotas"
+        total_storage: "Total Storage Used"
+        active_users: "Active Uploaders"
+        pending_transcodes: "Pending Transcodes"
+        failed_transcodes: "Failed Transcodes"
+        quota_usage: "Avg. Quota Usage"
+        username: "Username"
+        storage_used: "Storage Used"
+        quota: "Quota"
+        usage: "Usage"
+        actions: "Actions"
+        increase_quota: "Increase"
+        decrease_quota: "Decrease"
+        view_media: "View"
+        reset_quota: "Reset"
+        no_users: "No users with media uploads"
+        loading: "Loading quota data..."
+        quota_updated: "Quota updated successfully"
+        exempt_user: "User is exempt from quotas"
+    
+    upload:
+      quota_exceeded: "Storage quota exceeded"
+      rate_limit_exceeded: "Upload rate limit exceeded"
+      daily_limit_exceeded: "Daily upload limit exceeded"
+      file_too_large: "File is too large"
+      transcoding_started: "Video is being processed..."
+      transcoding_complete: "Processing complete"
+      transcoding_failed: "Processing failed"
+    
+    privacy:
+      preset_strict: "Strict privacy mode enabled"
+      preset_standard: "Standard privacy mode"
+      default_unlisted: "Posts default to unlisted"
+      default_private: "Posts default to followers-only"
+    
+    settings:
+      transcoding:
+        title: "Transcoding Settings"
+        enabled: "Enable video transcoding"
+        mobile_variant: "Generate mobile variant (480p)"
+        delete_originals: "Delete original after transcoding"
+      quotas:
+        title: "Quota Settings"
+        enabled: "Enable storage quotas"
+        max_storage: "Max storage per user"
+        max_daily: "Max daily upload size"
+        max_hourly: "Max uploads per hour"

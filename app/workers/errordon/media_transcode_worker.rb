@@ -21,9 +21,11 @@ module Errordon
 
       case @attachment.type
       when 'video'
-        process_video
+        # Use dedicated service class
+        Errordon::VideoTranscoderService.new(@attachment).call
       when 'audio'
-        process_audio
+        # Use dedicated service class
+        Errordon::AudioTranscoderService.new(@attachment).call
       else
         Rails.logger.info "[Errordon] Skipping transcode for type: #{@attachment.type}"
         @attachment.update!(processing_status: 'completed')

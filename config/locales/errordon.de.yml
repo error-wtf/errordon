@@ -1,0 +1,71 @@
+de:
+  errordon:
+    video_grid:
+      empty: "Keine Videos vorhanden"
+      load_more: "Mehr Videos laden"
+    
+    audio_player:
+      play: "Abspielen"
+      pause: "Pause"
+      mute: "Stumm"
+      unmute: "Ton an"
+      download: "Herunterladen"
+    
+    media_filter:
+      all: "Alle"
+      videos: "Videos"
+      audio: "Audio"
+      images: "Bilder"
+      originals: "Nur Originale"
+      with_alt: "Mit Alt-Text"
+      public: "Nur öffentlich"
+    
+    admin:
+      quotas:
+        title: "Speicher-Kontingente"
+        total_storage: "Gesamtspeicher genutzt"
+        active_users: "Aktive Uploader"
+        pending_transcodes: "Ausstehende Transkodierungen"
+        failed_transcodes: "Fehlgeschlagene Transkodierungen"
+        quota_usage: "Durchschn. Kontingent-Nutzung"
+        username: "Benutzername"
+        storage_used: "Speicher genutzt"
+        quota: "Kontingent"
+        usage: "Nutzung"
+        actions: "Aktionen"
+        increase_quota: "Erhöhen"
+        decrease_quota: "Verringern"
+        view_media: "Anzeigen"
+        reset_quota: "Zurücksetzen"
+        no_users: "Keine Benutzer mit Medien-Uploads"
+        loading: "Lade Kontingent-Daten..."
+        quota_updated: "Kontingent erfolgreich aktualisiert"
+        exempt_user: "Benutzer ist von Kontingenten ausgenommen"
+    
+    upload:
+      quota_exceeded: "Speicherkontingent überschritten"
+      rate_limit_exceeded: "Upload-Ratenlimit überschritten"
+      daily_limit_exceeded: "Tägliches Upload-Limit überschritten"
+      file_too_large: "Datei ist zu groß"
+      transcoding_started: "Video wird verarbeitet..."
+      transcoding_complete: "Verarbeitung abgeschlossen"
+      transcoding_failed: "Verarbeitung fehlgeschlagen"
+    
+    privacy:
+      preset_strict: "Strikter Privatsphäre-Modus aktiviert"
+      preset_standard: "Standard Privatsphäre-Modus"
+      default_unlisted: "Beiträge standardmäßig nicht gelistet"
+      default_private: "Beiträge standardmäßig nur für Follower"
+    
+    settings:
+      transcoding:
+        title: "Transkodierungs-Einstellungen"
+        enabled: "Video-Transkodierung aktivieren"
+        mobile_variant: "Mobile Variante generieren (480p)"
+        delete_originals: "Original nach Transkodierung löschen"
+      quotas:
+        title: "Kontingent-Einstellungen"
+        enabled: "Speicher-Kontingente aktivieren"
+        max_storage: "Max. Speicher pro Benutzer"
+        max_daily: "Max. tägliche Upload-Größe"
+        max_hourly: "Max. Uploads pro Stunde"
