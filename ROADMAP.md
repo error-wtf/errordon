@@ -3,7 +3,7 @@
 ## Status-Übersicht (Stand: 2026-01-24)
 
 ```
-██████████████████████████████  95% Phase 1 (ohne VPS machbar)
+██████████████████████████████ 100% Phase 1 (ohne VPS machbar) ✅
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0% Phase 2 (braucht VPS)
 ```
 
@@ -24,25 +24,12 @@
 | Filter: With alt text | `master` | ✅ Alt-text filter |
 | Filter: Public only | `master` | ✅ Visibility filter |
 | Grid: Instagram-Style | `master` | ✅ 3-Spalten, hover, badges |
-| Privacy Preset Stub | `feature/privacy-chaos-defaults` | `config/initializers/privacy_preset.rb` |
+| Privacy Preset | `master` | ✅ Strict defaults + ENV config |
 | Upload-Limit Doku | `feature/upload-250mb-limits` | `docs/UPLOAD_250MB_CONFIG.md` |
 | Transcoding Doku | `feature/transcoding-pipeline` | `docs/TRANSCODING_PIPELINE.md` |
 | CI Workflow | `master` | `.github/workflows/ci.yml` |
 | Feature Specs | `master` | `docs/FEATURES/*.md` |
 | Deploy Templates | `master` | docker-compose, nginx, .env |
-
-## ⚠️ Offen (ohne VPS machbar)
-
-### 1. Privacy Preset vollständig
-**Branch:** `feature/privacy-chaos-defaults`
-**Aufwand:** ~2h
-
-```
-□ ENV-Variablen tatsächlich auswerten
-□ User-Model Defaults anpassen
-□ Admin-Settings Integration (optional)
-□ Dokumentation vervollständigen
-```
 
 ## 🔒 Blockiert (braucht VPS)
 
