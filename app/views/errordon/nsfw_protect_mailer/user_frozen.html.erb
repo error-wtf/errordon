@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: #dc3545; color: #fff; padding: 30px; text-align: center; }
+    .content { padding: 20px; }
+    .warning { color: #dc3545; font-weight: bold; }
+    .info-box { background: #fff5f5; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #dc3545; }
+    .permanent { background: #000; color: #ff0000; padding: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1><%= @freeze.permanent? ? '🚫 ACCOUNT PERMANENTLY FROZEN' : '⏸️ ACCOUNT TEMPORARILY FROZEN' %></h1>
+  </div>
+  
+  <div class="content">
+    <% if @freeze.permanent? %>
+    <div class="permanent">
+      <h2>Your account has been permanently frozen</h2>
+      <p>Due to repeated or severe content policy violations, your account has been permanently restricted.</p>
+    </div>
+    <% else %>
+    <div class="info-box">
+      <p class="warning">Your account has been temporarily frozen until:</p>
+      <p style="font-size: 1.3em; text-align: center;"><strong><%= @freeze.ends_at.strftime('%Y-%m-%d %H:%M UTC') %></strong></p>
+    </div>
+    <% end %>
+
+    <h3>📋 Violation Details</h3>
+    <ul>
+      <li><strong>Violation Type:</strong> <%= @freeze.freeze_type.to_s.humanize %></li>
+      <li><strong>Total Strikes:</strong> <%= @account.nsfw_strike_count %></li>
+      <li><strong>Freeze Duration:</strong> <%= @freeze.permanent? ? 'Permanent' : "#{@freeze.duration_hours} hours" %></li>
+    </ul>
+
+    <h3>⚠️ What This Means</h3>
+    <ul>
+      <li>You cannot post new content with media attachments</li>
+      <li>You cannot upload new media files</li>
+      <li>Text-only posts may still be allowed (depending on violation type)</li>
+    </ul>
+
+    <% unless @freeze.permanent? %>
+    <h3>🔄 How to Restore Access</h3>
+    <p>Your account will be automatically unfrozen at the time shown above. To avoid future freezes:</p>
+    <ul>
+      <li>Review our content policy</li>
+      <li>Do not post adult content without proper content warnings</li>
+      <li>Do not post illegal content</li>
+    </ul>
+    <% end %>
+
+    <h3>📧 Appeal</h3>
+    <p>If you believe this action was taken in error, you can appeal by contacting:</p>
+    <p><strong><%= @config.admin_alert_email || "admin@#{@domain}" %></strong></p>
+  </div>
+  
+  <div style="padding: 15px; background: #f5f5f5; text-align: center; font-size: 12px; color: #666;">
+    NSFW-Protect System | <%= @domain %>
+  </div>
+</body>
+</html>

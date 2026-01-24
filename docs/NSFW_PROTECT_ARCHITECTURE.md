@@ -489,3 +489,107 @@ Prompts optimized for German law compliance:
 - Text analysis prompt (§130, §131 StGB focus)
 - Video frame analysis
 - Confidence calibration guidelines
+
+---
+
+## 16. GDPR Compliance (DSGVO)
+
+### Data Retention Periods
+
+| Data Type | Retention | Legal Basis |
+|-----------|-----------|-------------|
+| IP Addresses | 7 days | Art. 6 Abs. 1 lit. f DSGVO |
+| Session Data | 30 days | Technically required |
+| Regular Strikes | 1 year | Legitimate interest |
+| CSAM Data | 5 years | §184b StGB obligation |
+| Audit Logs | 2 years | Documentation requirement |
+
+### GDPR API Endpoints
+
+```
+GET    /api/v1/errordon/gdpr/export     # Art. 15 - Right of access
+DELETE /api/v1/errordon/gdpr/delete     # Art. 17 - Right to erasure
+GET    /api/v1/errordon/gdpr/info       # Privacy information
+GET    /api/v1/errordon/gdpr/retention  # Retention policy info
+```
+
+### GDPR Rake Tasks
+
+```bash
+rake errordon:gdpr:cleanup              # Manual data retention cleanup
+rake errordon:gdpr:export[account_id]   # Export user data
+rake errordon:gdpr:delete[account_id]   # Delete user data
+rake errordon:gdpr:retention_info[id]   # Show retention info
+rake errordon:gdpr:policy               # Display retention policy
+rake errordon:gdpr:report               # Generate compliance report
+```
+
+### Automated Cleanup
+
+The `GdprCleanupWorker` runs daily at 4 AM to:
+- Anonymize IP addresses older than 7 days
+- Delete expired strikes
+- Rotate audit logs
+
+---
+
+## 17. Matrix Theme
+
+### Activation
+
+- **Keyboard shortcut:** `Ctrl+Shift+M`
+- **localStorage:** `errordon_matrix_theme: "true"`
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| Matrix Rain | Animated canvas background with Japanese katakana |
+| Enter Matrix | Splash screen with terminal prompt on first visit |
+| Semi-transparent UI | Posts/columns with 85-90% opacity |
+| Matrix Green | #00ff00 for headings, usernames, links |
+| White Text | Post content for readability |
+
+### Files
+
+```
+app/javascript/errordon/matrix/
+├── index.js              # Main integration
+├── matrix_background.js  # MatrixRain class
+└── matrix_rain.js        # Original animation
+
+app/javascript/styles/
+└── errordon_matrix.scss  # Theme styles + splash
+
+app/views/layouts/
+└── application.html.haml # Theme init script
+```
+
+---
+
+## 18. Admin Bypass
+
+Admins and moderators are exempt from NSFW-Protect checks to allow testing:
+
+```ruby
+# MediaUploadChecker
+def admin_account?
+  user = @account.user
+  user&.admin? || user&.moderator?
+end
+
+# NsfwStrikeService - strikes logged but not applied
+if admin_account?
+  @strike.update!(resolution_notes: 'Admin/Moderator bypass')
+  return
+end
+```
+
+Configuration: `config/errordon/nsfw_filter_rules.yml`
+```yaml
+exceptions:
+  exempt_roles:
+    - admin
+    - moderator
+  admin_bypass_enabled: true
+```

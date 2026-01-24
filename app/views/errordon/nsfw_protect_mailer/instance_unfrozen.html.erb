@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: #28a745; color: #fff; padding: 30px; text-align: center; }
+    .content { padding: 20px; background: #f0fff0; }
+    .success { color: #28a745; font-weight: bold; }
+    .info-box { background: #e0ffe0; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #28a745; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✅ INSTANCE UNFROZEN</h1>
+    <h2>All Alarms Resolved</h2>
+  </div>
+  
+  <div class="content">
+    <div class="info-box">
+      <p class="success">The instance freeze has been lifted.</p>
+      <p>All active alarms have been resolved or dismissed. Normal operations have resumed.</p>
+    </div>
+
+    <h3>📊 Status</h3>
+    <ul>
+      <li><strong>Instance Status:</strong> Normal</li>
+      <li><strong>Media Uploads:</strong> Enabled for all users</li>
+      <li><strong>Active Alarms:</strong> 0</li>
+    </ul>
+
+    <p>The NSFW-Protect system continues to monitor uploads for policy violations.</p>
+  </div>
+  
+  <div style="padding: 15px; background: #f5f5f5; text-align: center; font-size: 12px; color: #666;">
+    NSFW-Protect System | <%= Rails.configuration.x.local_domain %>
+  </div>
+</body>
+</html>

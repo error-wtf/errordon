@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: #ff6600; color: #fff; padding: 30px; text-align: center; }
+    .content { padding: 20px; background: #fff8f0; }
+    .warning { color: #ff6600; font-weight: bold; }
+    .info-box { background: #fff0e0; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #ff6600; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background: #f5f5f5; }
+    .action-btn { display: inline-block; background: #ff6600; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>⚠️ INSTANCE FROZEN</h1>
+    <h2>NSFW-Protect Alert Threshold Exceeded</h2>
+  </div>
+  
+  <div class="content">
+    <div class="info-box">
+      <p class="warning">The instance has been automatically frozen due to <%= @alarm_count %> active alarms.</p>
+      <p>New media uploads from previously frozen accounts are temporarily blocked until alarms are resolved.</p>
+    </div>
+
+    <h3>📋 Active Alarms (Latest 20)</h3>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Account</th>
+        <th>Type</th>
+        <th>Created</th>
+        <th>Confidence</th>
+      </tr>
+      <% @active_strikes.each do |strike| %>
+      <tr>
+        <td><%= strike.id %></td>
+        <td>@<%= strike.account.username %></td>
+        <td><%= strike.strike_type.upcase %></td>
+        <td><%= strike.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+        <td><%= (strike.ai_confidence * 100).round(1) %>%</td>
+      </tr>
+      <% end %>
+    </table>
+
+    <h3>🔧 Required Actions</h3>
+    <ol>
+      <li>Review each alarm in the admin panel</li>
+      <li>Resolve legitimate violations or dismiss false positives</li>
+      <li>Instance will automatically unfreeze when alarms drop below threshold</li>
+    </ol>
+
+    <p style="text-align: center; margin-top: 20px;">
+      <a href="https://<%= Rails.configuration.x.local_domain %>/admin/nsfw_protect" class="action-btn">Open Admin Panel</a>
+    </p>
+  </div>
+  
+  <div style="padding: 15px; background: #f5f5f5; text-align: center; font-size: 12px; color: #666;">
+    NSFW-Protect System | <%= Rails.configuration.x.local_domain %>
+  </div>
+</body>
+</html>

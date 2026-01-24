@@ -69,3 +69,49 @@ en:
         max_storage: "Max storage per user"
         max_daily: "Max daily upload size"
         max_hourly: "Max uploads per hour"
+    
+    nsfw_protect:
+      title: "NSFW-Protect"
+      enabled: "NSFW-Protect enabled"
+      disabled: "NSFW-Protect disabled"
+      
+      violations:
+        porn: "Pornographic content"
+        hate: "Hate speech"
+        illegal: "Illegal content"
+        csam: "CSAM (Child abuse)"
+        blocked_domain: "Blocked domain"
+      
+      freeze:
+        temporary: "Temporarily frozen"
+        permanent: "Permanently frozen"
+        until: "Frozen until %{time}"
+        reason: "Reason: %{reason}"
+      
+      strikes:
+        count: "%{count} strikes"
+        warning: "Warning"
+        first: "First strike"
+        repeated: "Repeated violation"
+      
+      mailer:
+        user_frozen:
+          subject: "Your account has been frozen"
+        instance_frozen:
+          subject: "Instance frozen - Alarm threshold exceeded"
+        weekly_summary:
+          subject: "NSFW-Protect Weekly Report"
+      
+      admin:
+        alarms: "Active alarms"
+        resolve: "Resolve"
+        dismiss: "Dismiss (False Positive)"
+        stats: "Statistics"
+        config: "Configuration"
+        blocklist: "Manage blocklist"
+        
+      gdpr:
+        export: "Export data"
+        delete: "Delete data"
+        retention: "Retention periods"
+        info: "Privacy information"
