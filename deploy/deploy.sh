@@ -243,3 +243,56 @@ fi
 
 # Create NSFW-Protect log directories
 docker compose run --rm web mkdir -p log/nsfw_protect/admin_reports 2>/dev/null || true
+
+# Initialize NSFW-Protect (blocklist, etc.)
+log "Initializing NSFW-Protect..."
+docker compose exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
+
+# ============================================================================
+# POST-INSTALL VERIFICATION
+# ============================================================================
+echo ""
+log "Running post-install verification..."
+
+# Check services
+echo ""
+log "Service Status:"
+docker compose ps --format "table {{.Name}}\t{{.Status}}" 2>/dev/null || docker compose ps
+
+# Test web endpoint
+echo ""
+if curl -sf --max-time 10 "http://localhost:3000/health" > /dev/null 2>&1; then
+    log "Web health check: ✓ OK"
+else
+    warn "Web health check: Could not reach localhost:3000"
+fi
+
+# Test external
+if curl -sf --max-time 10 "https://$DOMAIN" > /dev/null 2>&1; then
+    log "External access: ✓ https://$DOMAIN reachable"
+else
+    warn "External access: https://$DOMAIN not yet reachable (check nginx/DNS)"
+fi
+
+echo ""
+echo "╔════════════════════════════════════════════════╗"
+echo "║     Post-Install Checklist                     ║"
+echo "╚════════════════════════════════════════════════╝"
+echo ""
+echo "  [ ] Edit .env.production:"
+echo "      - SMTP settings for emails"
+echo "      - ERRORDON_NSFW_ADMIN_EMAIL for alerts"
+echo "  [ ] Create admin user (command above)"
+echo "  [ ] Test login at https://$DOMAIN"
+echo "  [ ] Configure backup (see deploy/backup.sh)"
+echo ""
+
+# Matrix Theme hint
+if grep -q "ERRORDON_MATRIX_THEME_ENABLED=true" .env.production 2>/dev/null; then
+    log "Matrix Theme: ✓ Enabled"
+    echo "  Users can toggle with Ctrl+Shift+M"
+fi
+
+echo ""
+log "Documentation: https://github.com/error-wtf/errordon/blob/main/deploy/README_VPS.md"
+echo ""

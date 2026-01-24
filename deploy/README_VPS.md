@@ -145,6 +145,99 @@ docker compose restart web sidekiq streaming
 docker compose exec web tootctl cache clear
 ```
 
+## NSFW-Protect AI Moderation
+
+### Enable NSFW-Protect
+
+1. **Install Ollama** (on host, not in Docker):
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llava    # Image analysis (3.8GB)
+ollama pull llama3   # Text analysis (4.7GB)
+```
+
+2. **Configure in `.env.production`**:
+```bash
+ERRORDON_NSFW_PROTECT_ENABLED=true
+ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434
+ERRORDON_NSFW_ADMIN_EMAIL=admin@example.com
+```
+
+3. **Initialize NSFW-Protect**:
+```bash
+docker compose exec web bundle exec rake errordon:nsfw_protect:setup
+```
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| AI Image Analysis | Detects porn, CSAM, hate symbols |
+| AI Text Analysis | Detects hate speech, threats |
+| Domain Blocklist | 150k+ porn domains (auto-updated) |
+| Strike System | Escalating bans (warning → freeze → permanent) |
+| Admin Alerts | Email on violations, CSAM, instance freeze |
+| IP Logging | For law enforcement reports |
+| GDPR Compliant | Auto-cleanup of personal data |
+
+### Scheduled Jobs (automatic via Sidekiq)
+
+| Job | Schedule | Purpose |
+|-----|----------|---------|
+| Blocklist Update | 3:00 AM | Update porn domain list |
+| GDPR Cleanup | 4:00 AM | Delete expired data |
+| Freeze Cleanup | Hourly | Unfreeze expired accounts |
+| Weekly Summary | Mon 9 AM | Email stats to admin |
+
+---
+
+## Matrix Theme
+
+Enable the animated Matrix rain background:
+
+```bash
+# In .env.production
+ERRORDON_MATRIX_THEME_ENABLED=true
+```
+
+Or toggle per-user with `Ctrl+Shift+M` in browser.
+
+Features:
+- Animated Matrix rain background
+- "Enter Matrix" splash screen on first visit
+- Semi-transparent UI overlays
+- Matrix green (#00ff00) color scheme
+
+---
+
+## One-Line Install
+
+For a fresh Ubuntu 22.04 VPS:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/deploy/quick-install.sh | bash -s -- --domain your.domain.com
+```
+
+---
+
+## Post-Install Verification
+
+```bash
+# Check all services are running
+docker compose ps
+
+# Test web interface
+curl -I https://your.domain.com
+
+# Check NSFW-Protect (if enabled)
+docker compose exec web bundle exec rake errordon:nsfw_protect:blocklist_stats
+
+# Check Sidekiq jobs
+docker compose exec web bundle exec rake sidekiq:cron:status
+```
+
+---
+
 ## Files
 
 | File | Purpose |
@@ -152,3 +245,6 @@ docker compose exec web tootctl cache clear
 | `docker-compose.yml` | Service definitions |
 | `.env.production` | Configuration |
 | `nginx.conf` | Reverse proxy |
+| `quick-install.sh` | One-line installer |
+| `backup.sh` | Automated backups |
+| `update.sh` | Update script |
