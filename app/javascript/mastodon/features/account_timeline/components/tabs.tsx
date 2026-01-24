@@ -22,6 +22,15 @@ export const AccountTabs: FC<{ acct: string }> = ({ acct }) => {
       <NavLink exact to={`/@${acct}/media`}>
         <FormattedMessage id='account.media' defaultMessage='Media' />
       </NavLink>
+      <NavLink exact to={`/@${acct}/videos`}>
+        <FormattedMessage id='account.videos' defaultMessage='Videos' />
+      </NavLink>
+      <NavLink exact to={`/@${acct}/audio`}>
+        <FormattedMessage id='account.audio' defaultMessage='Audio' />
+      </NavLink>
+      <NavLink exact to={`/@${acct}/images`}>
+        <FormattedMessage id='account.images' defaultMessage='Images' />
+      </NavLink>
     </div>
   );
 };

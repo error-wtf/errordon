@@ -55,14 +55,20 @@ const getAccountGallery = createSelector(
 
 export const AccountGallery: React.FC<{
   multiColumn: boolean;
-}> = ({ multiColumn }) => {
+  mediaType?: 'video' | 'audio' | 'image';
+}> = ({ multiColumn, mediaType }) => {
   const dispatch = useAppDispatch();
   const accountId = useAccountId();
-  const attachments = useAppSelector((state) =>
+  const allAttachments = useAppSelector((state) =>
     accountId
       ? getAccountGallery(state, accountId)
       : ImmutableList<MediaAttachment>(),
   );
+
+  // Filter attachments by media type if specified
+  const attachments = mediaType
+    ? allAttachments.filter((attachment) => attachment.get('type') === mediaType)
+    : allAttachments;
   const isLoading = useAppSelector((state) =>
     (state.timelines as ImmutableMap<string, unknown>).getIn([
       `account:${accountId}:media`,
