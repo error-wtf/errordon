@@ -1,3 +1,5 @@
+import type { FC } from 'react';
+
 import { FormattedMessage } from 'react-intl';
 
 interface MediaFilterBarProps {
@@ -9,7 +11,7 @@ interface MediaFilterBarProps {
   onToggleOnlyPublic: () => void;
 }
 
-export const MediaFilterBar: React.FC<MediaFilterBarProps> = ({
+export const MediaFilterBar: FC<MediaFilterBarProps> = ({
   excludeReblogs,
   onlyWithAlt,
   onlyPublic,
