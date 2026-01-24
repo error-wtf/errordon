@@ -2,7 +2,41 @@
 
 All notable changes to the Errordon fork are documented here.
 
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+---
+
+## [0.3.0] - 2026-01-24
+
+### Fixed
+- **TranscodingController**: Added missing controller for `/api/v1/errordon/transcoding/:media_id/status`
+- **QuotasController**: Fixed to use user settings instead of non-existent database field
+- **QuotaService**: Added support for admin-defined custom quotas per user
+- **Routes**: Errordon routes now properly included in main `routes.rb`
+- **Transcoding Services**: Added missing `require 'open3'` and `require 'fileutils'`
+- **React Components**: Added proper `import type React` for TypeScript compatibility
+
+### Added
+- **Transcoding Status API**: `GET /api/v1/errordon/transcoding/:media_id/status`
+- **Custom Quota Support**: Admins can set per-user storage quotas
+- **Audit Logging**: Quota changes logged via `AuditLogger`
+
+### Changed
+- Version bumped to 0.3.0
+- Improved error handling in controllers
+
+---
+
 ## [0.2.0] - 2026-01-24
+
+### Added - Matrix Theme & Custom Emojis
+- **Matrix Theme**: Cyberpunk green UI with glitch effects
+  - Toggle via `Ctrl+Shift+M`
+  - VT323 hacker font
+  - 100% Fediverse-compatible (opt-in only)
+- **25 Custom Emojis**: Matrix/Hacker/Nerd themed SVGs
+  - Categories: Matrix, Hacker, Nerd
+  - Import via `rails errordon:import_emojis`
 
 ### Added - Phase 2: Uploads & Transcoding
 - **Upload Limits**: Configurable 250MB video/audio uploads via `ERRORDON_UPLOAD_LIMITS=true`
@@ -65,11 +99,14 @@ All notable changes to the Errordon fork are documented here.
 - `deploy/docker-compose.yml` - Docker setup
 - `deploy/.env.example` - Environment template
 
+---
+
 ## Compatibility
 
 - **Base**: Mastodon v4.3.x
 - **Federation**: 100% compatible with Fediverse
 - **API**: Backward compatible, additive changes only
+- **ActivityPub**: No modifications to federation protocol
 
 ## Environment Variables
 
@@ -94,3 +131,42 @@ ERRORDON_QUOTA_ENABLED=true|false
 ERRORDON_MAX_STORAGE_GB=10
 ERRORDON_MAX_UPLOADS_HOUR=20
 ```
+
+### Phase 3 (0.3.0)
+```bash
+ERRORDON_THEME=matrix|default|light
+ERRORDON_AUDIT_FILE=true|false
+ERRORDON_AUDIT_WEBHOOK_URL=https://...
+ERRORDON_SECURITY_STRICT=true|false
+ERRORDON_BLOCK_SUSPICIOUS_IPS=true|false
+```
+
+---
+
+## File Reference
+
+### Controllers
+| File | Purpose |
+|------|--------|
+| `quotas_controller.rb` | Quota management API |
+| `transcoding_controller.rb` | Transcoding status API |
+
+### Services
+| File | Purpose |
+|------|--------|
+| `quota_service.rb` | Storage/rate limit calculations |
+| `security_service.rb` | File validation, malware detection |
+| `audit_logger.rb` | Security event logging |
+| `video_transcoder_service.rb` | ffmpeg video transcoding |
+| `audio_transcoder_service.rb` | ffmpeg audio transcoding |
+| `media_validator.rb` | MIME type validation |
+
+### Initializers
+| File | Purpose |
+|------|--------|
+| `errordon_privacy_preset.rb` | Privacy defaults |
+| `errordon_upload_limits.rb` | File size limits |
+| `errordon_transcoding.rb` | Transcoding config |
+| `errordon_quotas.rb` | Quota settings |
+| `errordon_security.rb` | Security settings |
+| `errordon_theme.rb` | Theme config |
