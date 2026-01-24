@@ -100,4 +100,165 @@ namespace :errordon do
       puts "NSFW-Protect setup complete!"
     end
   end
+
+  # =============================================
+  # DSGVO/GDPR Compliance Tasks
+  # =============================================
+  namespace :gdpr do
+    desc 'Run GDPR data retention cleanup (anonymize/delete expired data)'
+    task cleanup: :environment do
+      puts "Running GDPR data retention cleanup..."
+      result = Errordon::GdprComplianceService.cleanup_expired_data!
+      
+      if result[:actions].any?
+        puts "✓ Cleanup complete:"
+        result[:actions].each do |action|
+          puts "  - #{action[:type]}: #{action[:count]} items"
+        end
+      else
+        puts "✓ No data to clean up"
+      end
+    end
+
+    desc 'Export user data (Art. 15 DSGVO)'
+    task :export, [:account_id] => :environment do |_t, args|
+      account_id = args[:account_id]
+      
+      if account_id.blank?
+        puts "Usage: rake errordon:gdpr:export[account_id]"
+        exit 1
+      end
+
+      puts "Exporting data for Account #{account_id}..."
+      export = Errordon::GdprComplianceService.export_user_data(account_id)
+      
+      # Save to file
+      filename = "gdpr_export_#{account_id}_#{Time.current.strftime('%Y%m%d_%H%M%S')}.json"
+      filepath = Rails.root.join('tmp', filename)
+      File.write(filepath, JSON.pretty_generate(export))
+      
+      puts "✓ Export saved to: #{filepath}"
+    end
+
+    desc 'Delete user data (Art. 17 DSGVO)'
+    task :delete, [:account_id] => :environment do |_t, args|
+      account_id = args[:account_id]
+      
+      if account_id.blank?
+        puts "Usage: rake errordon:gdpr:delete[account_id]"
+        exit 1
+      end
+
+      account = Account.find(account_id)
+      
+      # Check for CSAM
+      if account.nsfw_protect_strikes.where(strike_type: :csam).exists?
+        puts "⚠ WARNUNG: Account hat CSAM-Strikes!"
+        puts "  Diese Daten können aufgrund §184b StGB nicht gelöscht werden."
+        puts "  Kontaktieren Sie den Datenschutzbeauftragten."
+        exit 1
+      end
+
+      print "Wirklich alle Daten für @#{account.username} löschen? (yes/no): "
+      confirm = $stdin.gets.chomp
+      
+      unless confirm == 'yes'
+        puts "Abgebrochen."
+        exit 0
+      end
+
+      puts "Lösche Daten für Account #{account_id}..."
+      result = Errordon::GdprComplianceService.delete_user_data(account_id)
+      
+      puts "✓ Löschung abgeschlossen:"
+      result[:items_deleted].each do |item|
+        puts "  - #{item[:type]}: #{item[:action]} (#{item[:count] || 'n/a'})"
+      end
+    end
+
+    desc 'Show retention info for an account'
+    task :retention_info, [:account_id] => :environment do |_t, args|
+      account_id = args[:account_id]
+      
+      if account_id.blank?
+        puts "Usage: rake errordon:gdpr:retention_info[account_id]"
+        exit 1
+      end
+
+      account = Account.find(account_id)
+      puts "DSGVO Aufbewahrungsinfo für @#{account.username}"
+      puts "=" * 50
+      puts ""
+      puts "Strikes: #{account.nsfw_protect_strikes.count}"
+      
+      account.nsfw_protect_strikes.each do |strike|
+        retention = strike.strike_type&.to_sym == :csam ? 5.years : 1.year
+        delete_at = strike.created_at + retention
+        ip_anon_at = strike.created_at + 7.days
+        
+        puts ""
+        puts "Strike ##{strike.id} (#{strike.strike_type})"
+        puts "  Erstellt: #{strike.created_at}"
+        puts "  IP anonymisiert: #{strike.ip_address.nil? ? '✓ Ja' : ip_anon_at}"
+        puts "  Löschung geplant: #{delete_at}"
+      end
+    end
+
+    desc 'Show GDPR retention policy'
+    task policy: :environment do
+      puts "DSGVO Aufbewahrungsrichtlinien"
+      puts "=" * 50
+      puts ""
+      
+      Errordon::GdprComplianceService::RETENTION_PERIODS.each do |key, duration|
+        if duration.nil?
+          puts "#{key}: unbegrenzt (anonymisiert)"
+        else
+          days = duration.to_i / 1.day
+          puts "#{key}: #{days} Tage"
+        end
+      end
+      
+      puts ""
+      puts "Rechtsgrundlagen:"
+      Errordon::GdprComplianceService::LEGAL_BASIS.each do |key, basis|
+        puts "  #{key}: #{basis}"
+      end
+    end
+
+    desc 'Generate GDPR compliance report'
+    task report: :environment do
+      puts "DSGVO Compliance Report"
+      puts "=" * 50
+      puts "Generiert: #{Time.current}"
+      puts ""
+      
+      # Statistiken
+      total_strikes = NsfwProtectStrike.count
+      strikes_with_ip = NsfwProtectStrike.where.not(ip_address: nil).count
+      old_ips = NsfwProtectStrike.where('created_at < ? AND ip_address IS NOT NULL', 7.days.ago)
+                                 .where.not(strike_type: :csam).count
+      
+      puts "Strike-Statistiken:"
+      puts "  Gesamt: #{total_strikes}"
+      puts "  Mit IP-Adresse: #{strikes_with_ip}"
+      puts "  IPs zur Anonymisierung fällig: #{old_ips}"
+      puts ""
+      
+      # Alte Daten
+      old_strikes = NsfwProtectStrike.where('created_at < ?', 1.year.ago)
+                                     .where.not(strike_type: :csam).count
+      puts "Zur Löschung fällig:"
+      puts "  Reguläre Strikes älter als 1 Jahr: #{old_strikes}"
+      puts ""
+      
+      # Empfehlung
+      if old_ips > 0 || old_strikes > 0
+        puts "⚠ AKTION ERFORDERLICH:"
+        puts "  Führen Sie 'rake errordon:gdpr:cleanup' aus"
+      else
+        puts "✓ Alle Daten entsprechen den Aufbewahrungsfristen"
+      end
+    end
+  end
 end

@@ -40,6 +40,14 @@ namespace :api do
         post 'send_weekly_summary', to: 'nsfw_protect#send_weekly_summary'
       end
 
+      # GDPR/DSGVO Compliance
+      namespace :gdpr do
+        get 'export', to: 'gdpr#export'           # Art. 15 DSGVO
+        delete 'delete', to: 'gdpr#delete'        # Art. 17 DSGVO
+        get 'info', to: 'gdpr#info'               # Datenschutzinfos
+        get 'retention', to: 'gdpr#retention'     # Aufbewahrungsfristen
+      end
+
       # Invite codes
       resources :invite_codes, only: [:index, :create, :destroy] do
         member do

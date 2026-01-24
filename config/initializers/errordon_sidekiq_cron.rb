@@ -32,6 +32,13 @@ Rails.application.config.after_initialize do
           class: 'Errordon::WeeklySummaryWorker'
         )
 
+        # GDPR data retention cleanup - runs daily at 4 AM
+        Sidekiq::Cron::Job.create(
+          name: 'GDPR Data Retention Cleanup - daily',
+          cron: '0 4 * * *',
+          class: 'Errordon::GdprCleanupWorker'
+        )
+
         Rails.logger.info "[Errordon] Scheduled jobs configured via sidekiq-cron"
       else
         # Fallback: use recurring jobs via initializer
