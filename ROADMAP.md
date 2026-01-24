@@ -1,0 +1,155 @@
+# Errordon Roadmap
+
+## Status-Übersicht
+
+```
+██████████████████░░░░░░░░░░░░  60% Phase 1 (ohne VPS machbar)
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0% Phase 2 (braucht VPS)
+```
+
+## ✅ Erledigt
+
+| Task | Branch | Details |
+|------|--------|---------|
+| Repo-Setup | `master` | Fork, upstream, Branching |
+| Upstream Merge | `master` | Mastodon main integriert |
+| Architektur-Doku | `master` | `docs/ARCH_MAP_MEDIA_AND_PROFILE.md` |
+| API: media_type Filter | `feature/profile-media-columns` | `?media_type=video\|audio\|image` |
+| RSpec Tests | `feature/profile-media-columns` | media_type Filter Tests |
+| UI: Profil-Tabs | `feature/profile-media-columns` | Videos/Audio/Images Tabs |
+| UI: Routes | `feature/profile-media-columns` | `/@:acct/videos\|audio\|images` |
+| i18n | `feature/profile-media-columns` | EN Übersetzungen |
+| MediaFilterBar Component | `feature/profile-media-columns` | Grundgerüst erstellt |
+| Privacy Preset Stub | `feature/privacy-chaos-defaults` | `config/initializers/privacy_preset.rb` |
+| Upload-Limit Doku | `feature/upload-250mb-limits` | `docs/UPLOAD_250MB_CONFIG.md` |
+| Transcoding Doku | `feature/transcoding-pipeline` | `docs/TRANSCODING_PIPELINE.md` |
+| CI Workflow | `master` | `.github/workflows/ci.yml` |
+| Feature Specs | `master` | `docs/FEATURES/*.md` |
+
+## ⚠️ Offen (ohne VPS machbar)
+
+### 1. MediaFilterBar Integration
+**Branch:** `feature/profile-media-columns`
+**Aufwand:** ~2h
+
+```
+□ MediaFilterBar in AccountGallery einbinden
+□ State für excludeReblogs hinzufügen
+□ API-Call mit exclude_reblogs Parameter
+□ CSS für .media-filter-bar und .filter-chip
+```
+
+### 2. Grid-Ansichten (Instagram-Style)
+**Branch:** `feature/profile-media-columns`
+**Aufwand:** ~4h
+
+```
+□ Bilder: Grid-Layout (3 Spalten, quadratische Thumbs)
+□ Videos: Cards mit Duration-Badge + Preview
+□ Audio: Player-Cards mit Waveform-Platzhalter
+□ CSS/SCSS für neue Layouts
+```
+
+### 3. Weitere Filter-Optionen
+**Branch:** `feature/media-filters-ui`
+**Aufwand:** ~3h
+
+```
+□ "Nur mit Text" Filter
+□ "Nur Public/Unlisted" Filter  
+□ API: Erweiterte Filter-Parameter
+□ UI: Dropdown oder Chip-Gruppe
+```
+
+### 4. Privacy Preset vollständig
+**Branch:** `feature/privacy-chaos-defaults`
+**Aufwand:** ~2h
+
+```
+□ ENV-Variablen tatsächlich auswerten
+□ User-Model Defaults anpassen
+□ Admin-Settings Integration (optional)
+□ Dokumentation vervollständigen
+```
+
+### 5. Deploy-Ordner vorbereiten
+**Branch:** `feature/deploy-vps-docs` (neu)
+**Aufwand:** ~2h
+
+```
+□ deploy/docker-compose.yml (Template)
+□ deploy/nginx.conf (Template)
+□ deploy/README_VPS.md
+□ deploy/.env.example
+```
+
+## 🔒 Blockiert (braucht VPS)
+
+### Phase 2: Upload-Limits implementieren
+
+```
+□ nginx client_max_body_size ändern
+□ Rails MediaAttachment Validierung
+□ Testen mit echten 250MB Uploads
+□ Storage-Monitoring einrichten
+```
+
+### Phase 2: Transcoding-Pipeline implementieren
+
+```
+□ ffmpeg auf Server installieren
+□ MediaTranscodeWorker implementieren
+□ Sidekiq Queue konfigurieren
+□ Thumbnail-Generierung
+□ Varianten (720p/480p) erstellen
+□ Storage für Varianten
+```
+
+### Phase 3: Production Deployment
+
+```
+□ VPS einrichten
+□ Docker/Compose deployen
+□ SSL/Domain konfigurieren
+□ Monitoring einrichten
+□ Backup-Strategie
+```
+
+## Prioritäten-Matrix
+
+| Prio | Task | Abhängigkeit |
+|------|------|--------------|
+| 🔴 HIGH | MediaFilterBar Integration | Keine |
+| 🔴 HIGH | Grid-Ansichten | Keine |
+| 🟡 MED | Weitere Filter | MediaFilterBar |
+| 🟡 MED | Deploy-Ordner | Keine |
+| 🟢 LOW | Privacy vollständig | Keine |
+| ⬜ BLOCKED | Upload 250MB | VPS |
+| ⬜ BLOCKED | Transcoding | VPS + Upload |
+
+## Empfohlene Reihenfolge
+
+### Jetzt (ohne VPS)
+
+1. **MediaFilterBar Integration** → Sofort nutzbar
+2. **Grid-Ansichten** → Bessere UX
+3. **Deploy-Ordner** → Vorbereitung für VPS
+4. **Weitere Filter** → Nice-to-have
+
+### Später (mit VPS)
+
+5. **Upload 250MB** → Config + Test
+6. **Transcoding** → ffmpeg Pipeline
+7. **Privacy vollständig** → Feintuning
+8. **Production** → Go Live
+
+## Geschätzte Restarbeit
+
+| Phase | Aufwand | Status |
+|-------|---------|--------|
+| Phase 1 (UI) | ~10h | 60% done |
+| Phase 2 (Backend) | ~15h | 0% (blocked) |
+| Phase 3 (Deploy) | ~8h | 0% (blocked) |
+
+**Total ohne VPS:** ~4h verbleibend
+**Total mit VPS:** ~23h verbleibend
