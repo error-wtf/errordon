@@ -211,6 +211,9 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path={['/accounts/:id/followers', '/users/:acct/followers', '/@:acct/followers']} component={Followers} content={children} />
             <WrappedRoute path={['/accounts/:id/following', '/users/:acct/following', '/@:acct/following']} component={Following} content={children} />
             <WrappedRoute path={['/@:acct/media', '/accounts/:id/media']} component={AccountGallery} content={children} />
+            <WrappedRoute path='/@:acct/videos' component={AccountGallery} componentParams={{ mediaType: 'video' }} content={children} />
+            <WrappedRoute path='/@:acct/audio' component={AccountGallery} componentParams={{ mediaType: 'audio' }} content={children} />
+            <WrappedRoute path='/@:acct/images' component={AccountGallery} componentParams={{ mediaType: 'image' }} content={children} />
             <WrappedRoute path='/@:acct/:statusId' exact component={Status} content={children} />
             <WrappedRoute path='/@:acct/:statusId/reblogs' component={Reblogs} content={children} />
             <WrappedRoute path='/@:acct/:statusId/favourites' component={Favourites} content={children} />

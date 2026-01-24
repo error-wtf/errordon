@@ -183,6 +183,8 @@ export const MediaItem: React.FC<{
     <div
       className={classNames('media-gallery__item media-gallery__item--square', {
         'media-gallery__item--error': error,
+        'media-gallery__item--audio': type === 'audio',
+        'media-gallery__item--video': type === 'video',
       })}
     >
       <Blurhash

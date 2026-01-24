@@ -29,9 +29,9 @@ RSpec.describe AccountStatusesFilter do
     end
   end
 
-  def status_with_media_attachment!(visibility)
+  def status_with_media_attachment!(visibility, type = :image)
     Fabricate(:status, account: account, visibility: visibility).tap do |status|
-      Fabricate(:media_attachment, account: account, status: status)
+      Fabricate(:media_attachment, account: account, status: status, type: type)
     end
   end
 
@@ -70,6 +70,38 @@ RSpec.describe AccountStatusesFilter do
         described_class
           .new(account, current_account, params)
           .results
+      end
+    end
+
+    describe 'media_type filter' do
+      let!(:video_status) { status_with_media_attachment!(:public, :video) }
+      let!(:audio_status) { status_with_media_attachment!(:public, :audio) }
+      let!(:image_status) { status_with_media_attachment!(:public, :image) }
+
+      it 'filters by video media type' do
+        results = described_class.new(account, current_account, { media_type: 'video' }).results
+        expect(results).to include(video_status)
+        expect(results).not_to include(audio_status)
+        expect(results).not_to include(image_status)
+      end
+
+      it 'filters by audio media type' do
+        results = described_class.new(account, current_account, { media_type: 'audio' }).results
+        expect(results).to include(audio_status)
+        expect(results).not_to include(video_status)
+        expect(results).not_to include(image_status)
+      end
+
+      it 'filters by image media type' do
+        results = described_class.new(account, current_account, { media_type: 'image' }).results
+        expect(results).to include(image_status)
+        expect(results).not_to include(video_status)
+        expect(results).not_to include(audio_status)
+      end
+
+      it 'returns nothing for invalid media type' do
+        results = described_class.new(account, current_account, { media_type: 'invalid' }).results
+        expect(results).to be_empty
       end
     end
 

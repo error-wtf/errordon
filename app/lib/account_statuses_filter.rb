@@ -5,6 +5,7 @@ class AccountStatusesFilter
     pinned
     tagged
     only_media
+    media_type
     exclude_replies
     exclude_reblogs
   ).freeze
@@ -20,11 +21,12 @@ class AccountStatusesFilter
   def results
     scope = initial_scope
 
-    scope.merge!(pinned_scope)     if pinned?
-    scope.merge!(only_media_scope) if only_media?
-    scope.merge!(no_replies_scope) if exclude_replies?
-    scope.merge!(no_reblogs_scope) if exclude_reblogs?
-    scope.merge!(hashtag_scope)    if tagged?
+    scope.merge!(pinned_scope)      if pinned?
+    scope.merge!(only_media_scope)  if only_media?
+    scope.merge!(media_type_scope)  if media_type?
+    scope.merge!(no_replies_scope)  if exclude_replies?
+    scope.merge!(no_reblogs_scope)  if exclude_reblogs?
+    scope.merge!(hashtag_scope)     if tagged?
 
     scope
   end
@@ -71,6 +73,14 @@ class AccountStatusesFilter
 
   def only_media_scope
     Status.without_empty_attachments.joins(:media_attachments).merge(account.media_attachments).group(Status.arel_table[:id])
+  end
+
+  def media_type_scope
+    type = params[:media_type].to_s.downcase
+    valid_types = %w(video audio image)
+    return Status.none unless valid_types.include?(type)
+
+    Status.joins(:media_attachments).where(media_attachments: { type: type }).group(Status.arel_table[:id])
   end
 
   def no_replies_scope
@@ -133,6 +143,10 @@ class AccountStatusesFilter
 
   def tagged?
     params[:tagged].present?
+  end
+
+  def media_type?
+    params[:media_type].present?
   end
 
   def truthy_param?(key)
