@@ -3,34 +3,196 @@
 [![Fediverse Compatible](https://img.shields.io/badge/Fediverse-Compatible-blueviolet)](https://joinmastodon.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Version](https://img.shields.io/badge/version-0.3.0-green.svg)](https://github.com/error-wtf/errordon)
+[![EU Law Compliant](https://img.shields.io/badge/EU%20Law-Compliant-blue.svg)](https://eur-lex.europa.eu/)
+[![German Law](https://img.shields.io/badge/German%20Law-StGB%20%C2%A7130%2C%20%C2%A7184b%2C%20%C2%A786a-red.svg)](https://www.gesetze-im-internet.de/stgb/)
+[![NSFW-Protect AI](https://img.shields.io/badge/NSFW--Protect-AI%20Powered-ff4444.svg)](docs/NSFW_PROTECT_ARCHITECTURE.md)
 
-A **Mastodon fork** with enhanced media features, cyberpunk aesthetics, and privacy-first defaults.
+---
 
-**Features:**
-- 🎬 **Profile Media Tabs** - Videos/Audio/Images
-- 🎨 **Matrix Theme** - Cyberpunk green UI (opt-in)
-- 😎 **25 Custom Emojis** - Matrix/Hacker/Nerd themed
-- 📤 **250MB Uploads** - With server-side transcoding
-- 🔒 **Privacy-First** - Strict defaults via ENV
-- ✅ **100% Fediverse Compatible**
+<div align="center">
 
-> **Release:** `errordon-0.3.0` - Bug Fixes + API Improvements
+## 🛡️ A Safe Fediverse Instance for European Law Compliance
 
-## ✅ Implemented Features
+**Errordon** is a Mastodon fork designed for instance operators who want to run a **legally compliant** social media platform under **European and German law** — with **AI-assisted content moderation**.
 
-| Feature | Status | Description |
-|---------|--------|-------------|
-| **API: media_type filter** | ✅ | `?media_type=video\|audio\|image` |
-| **Profile Tabs** | ✅ | Videos/Audio/Images tabs on profiles |
-| **MediaFilterBar** | ✅ | Originals only, With alt text, Public only |
-| **Instagram Grid** | ✅ | 3-column layout with hover effects |
-| **Privacy Preset** | ✅ | Strict defaults via ENV config |
-| **Deploy Templates** | ✅ | Docker Compose, Nginx, .env |
-| **Matrix Theme** | ✅ | Cyberpunk green theme (Fediverse-compatible) |
-| **Custom Emojis** | ✅ | 25 Matrix/Hacker/Nerd emojis |
-| **Transcoding API** | ✅ | `/api/v1/errordon/transcoding/:id/status` |
-| **Quota Management** | ✅ | Admin API for user quotas |
-| **Security Layer** | ✅ | File validation, rate limiting, audit logging |
+</div>
+
+---
+
+## 🚫 ZERO TOLERANCE POLICY
+
+<table>
+<tr>
+<td width="33%" align="center">
+
+### 🔞 NO PORN
+Every upload is **automatically scanned** by AI. Pornographic content is **immediately deleted** and accounts are **frozen**.
+
+</td>
+<td width="33%" align="center">
+
+### 🚫 NO HATE
+Hate speech, antisemitism, and incitement (§130 StGB) trigger **automatic review** and **escalating bans**.
+
+</td>
+<td width="33%" align="center">
+
+### ⛔ NO FASCISM
+Nazi symbols, Holocaust denial, and unconstitutional content (§86a StGB) result in **permanent bans**.
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🤖 NSFW-Protect AI System
+
+Errordon includes a revolutionary **AI-powered content moderation system** that helps instance administrators enforce European law with minimal manual effort.
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        NSFW-PROTECT AI PIPELINE                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   📤 UPLOAD                    🤖 AI ANALYSIS                           │
+│   ───────────                  ──────────────                           │
+│   User uploads                 Ollama AI checks:                        │
+│   image/video                  • Pornographic content                   │
+│         │                      • Hate symbols                           │
+│         ▼                      • Illegal material                       │
+│   ┌─────────────┐                     │                                 │
+│   │  INTERCEPT  │────────────────────▶│                                 │
+│   └─────────────┘                     ▼                                 │
+│                              ┌────────────────┐                         │
+│                              │  SAFE? ──▶ ✅   │                         │
+│                              │  PORN? ──▶ 🚫   │──▶ Auto-delete + Strike │
+│                              │  HATE? ──▶ 🚫   │──▶ Review + Strike      │
+│                              │  CSAM? ──▶ 🚨   │──▶ Ban + Authorities    │
+│                              └────────────────┘                         │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Strike System (Escalating Consequences)
+
+| Strike | Porn Violation | Hate Violation |
+|--------|----------------|----------------|
+| 1st | 24 hours freeze | Warning + Review |
+| 2nd | 3 days freeze | 3 days freeze |
+| 3rd | 7 days freeze | 7 days freeze |
+| 4th | 30 days freeze | **PERMANENT** |
+| 5th+ | **PERMANENT** | — |
+
+### Instance-Wide Protection
+
+- **10+ active alarms** → Instance posting freeze for flagged accounts
+- **CSAM detection** → Immediate permanent ban + law enforcement notification
+- **Admin email alerts** → Real-time notifications for all violations
+
+---
+
+## ⚖️ Legal Framework (German/EU Law)
+
+This instance software is designed to help operators comply with:
+
+| Law | Description | Errordon Response |
+|-----|-------------|-------------------|
+| **§130 StGB** | Volksverhetzung (Incitement) | AI detection + auto-ban |
+| **§184b StGB** | Child pornography | Immediate ban + authorities |
+| **§86a StGB** | Unconstitutional symbols | AI detection + permanent ban |
+| **§131 StGB** | Glorification of violence | AI review + escalating bans |
+| **NetzDG** | Network Enforcement Act | IP logging, content removal |
+| **DSGVO/GDPR** | Data protection | Privacy-first defaults |
+
+### Legal Documents Included
+
+- ✅ **Terms of Service** (German law compliant)
+- ✅ **Privacy Policy** (DSGVO/GDPR compliant)
+- ✅ **Community Guidelines** (Clear rules with legal references)
+
+---
+
+## 🔐 Registration Security
+
+Errordon supports **invite-only registration** with mandatory checks:
+
+```
+┌─────────────────────────────────────────┐
+│         REGISTRATION FLOW               │
+├─────────────────────────────────────────┤
+│  1. ✉️  Invite Code Required             │
+│     └─ Max 3 uses per code              │
+│                                         │
+│  2. 🔞 Age Verification                  │
+│     └─ Checkbox: "I am 18 or older"     │
+│                                         │
+│  3. 📜 Legal Acceptance                  │
+│     └─ Terms of Service                 │
+│     └─ Privacy Policy                   │
+│     └─ Community Guidelines             │
+│                                         │
+│  4. ✅ Email Verification                │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Enable NSFW-Protect AI
+
+```bash
+# Install Ollama for AI content moderation
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llava    # Vision model for images/videos
+ollama pull llama3   # Text model for hate speech
+
+# Enable in .env.production
+ERRORDON_NSFW_PROTECT_ENABLED=true
+ERRORDON_NSFW_OLLAMA_ENDPOINT=http://localhost:11434
+ERRORDON_NSFW_ADMIN_EMAIL=admin@your-instance.com
+ERRORDON_INVITE_ONLY=true
+ERRORDON_REQUIRE_AGE_18=true
+```
+
+### One-Line Installation (Ubuntu/Debian)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/install.sh | bash
+```
+
+The installer will ask if you want to enable NSFW-Protect AI.
+
+### Docker Deployment
+
+```bash
+git clone https://github.com/error-wtf/errordon.git
+cd errordon
+cp deploy/.env.example .env.production
+# Edit .env.production with your settings
+./deploy/deploy.sh your-domain.com
+```
+
+---
+
+## ✨ Additional Features
+
+Beyond legal compliance, Errordon includes:
+
+| Feature | Description |
+|---------|-------------|
+| 🎬 **Profile Media Tabs** | Separate Videos/Audio/Images tabs |
+| 🎨 **Matrix Theme** | Cyberpunk green UI (opt-in) |
+| 😎 **25 Custom Emojis** | Matrix/Hacker/Nerd themed |
+| 📤 **250MB Uploads** | With server-side transcoding |
+| 🔒 **Privacy-First** | Strict defaults via ENV |
+| 📊 **Admin Quotas** | Per-user storage limits |
+| 🔍 **Media Filters** | Originals only, Alt text, Public |
+
+---
 
 ## 🎨 Matrix Theme
 
@@ -126,110 +288,64 @@ errordon/
 └── spec/initializers/                   # Tests
 ```
 
-## Branching Strategy
+---
 
-| Branch | Purpose |
-|--------|--------|
-| `main` | Stable release (Phase 1 complete) |
-| `master` | Development mirror |
-| `develop` | Initial blueprint |
+## 📖 Documentation
 
-## Upstream Setup
+| Document | Description |
+|----------|-------------|
+| [NSFW_PROTECT_ARCHITECTURE.md](docs/NSFW_PROTECT_ARCHITECTURE.md) | Technical details of AI moderation |
+| [Terms of Service](public/terms_of_service.md) | Legal terms (DE/EN) |
+| [Privacy Policy](public/privacy_policy.md) | DSGVO/GDPR compliant |
+| [Community Guidelines](public/community_guidelines.md) | Rules with legal references |
 
-This repo tracks the official Mastodon repository as upstream.
+---
 
-### Initial Setup (after cloning)
+## 🏛️ Why This Exists
 
-```bash
-# Add upstream remote
-git remote add upstream https://github.com/mastodon/mastodon.git
+Running a social media instance in Germany/EU comes with **legal responsibilities**:
 
-# Verify remotes
-git remote -v
-# origin    https://github.com/error-wtf/errordon.git (fetch)
-# origin    https://github.com/error-wtf/errordon.git (push)
-# upstream  https://github.com/mastodon/mastodon.git (fetch)
-# upstream  https://github.com/mastodon/mastodon.git (push)
-```
+- **NetzDG** requires removal of illegal content within 24 hours
+- **§184b StGB** criminalizes hosting of CSAM
+- **§130 StGB** prohibits hosting hate speech and incitement
+- Instance operators can be held **personally liable**
 
-### Syncing with Upstream
+**Errordon helps you comply** by automating detection and enforcement — so you can run a safe community without becoming a full-time moderator.
 
-```bash
-# Fetch upstream changes
-git fetch upstream
+---
 
-# Merge upstream into main (preferred for stability)
-git checkout main
-git merge upstream/main
+## 🤝 For Instance Operators
 
-# Or rebase develop onto upstream (cleaner history)
-git checkout develop
-git rebase upstream/main
-```
+This software is for you if:
 
-### Update Policy
+- ✅ You want to run a **safe, family-friendly** Fediverse instance
+- ✅ You want **EU/German law compliance** out of the box
+- ✅ You want **AI assistance** for content moderation
+- ✅ You want **clear legal documents** for your users
+- ✅ You believe in **free speech within the law** (no fascism, no porn, no hate)
 
-- **Weekly**: Check upstream for security patches
-- **Monthly**: Full sync with upstream/main
-- **Before release**: Ensure all feature branches rebase cleanly
-
-## 🚀 Quick Start
-
-### Linux (Ubuntu/Debian) - One-liner
-
-```bash
-curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/install.sh | bash
-```
-
-### Manual Setup
-
-See [docs/DEV_SETUP.md](docs/DEV_SETUP.md) for full instructions.
-
-```bash
-# Clone this repo
-git clone https://github.com/error-wtf/errordon.git
-cd errordon
-
-# Run install script
-chmod +x install.sh
-./install.sh
-
-# Or manually:
-bundle install
-yarn install
-rails db:setup
-foreman start
-```
-
-## 📋 Feature Roadmap
-
-### Phase 1: UI + API ✅ Complete
-- [x] Analyze Mastodon codebase → `docs/ARCH_MAP_MEDIA_AND_PROFILE.md`
-- [x] API filter param `media_type=video|audio|image`
-- [x] Frontend profile tabs: Videos, Audio, Images
-- [x] Filter chips UI (Originals, Alt text, Public)
-- [x] Instagram-style grid layout
-- [x] Privacy preset "strict" via ENV
-
-### Phase 2: Uploads + Transcoding ✅ Code Ready
-- [x] Increase upload limit to 250MB (`config/initializers/errordon_upload_limits.rb`)
-- [x] Server-side transcoding pipeline (`app/workers/errordon/media_transcode_worker.rb`)
-- [x] Output variants: mobile (480p), default (720p)
-- [x] Quota/rate-limit guardrails (`config/initializers/errordon_quotas.rb`)
-- [ ] **Needs VPS to test live**
-
-### Phase 3: Polish ✅ Complete
-- [x] Audio player UX improvements (hover effects, waveform styles)
-- [x] Video grid view (`features/errordon/video_grid.tsx`)
-- [x] Admin UI for quotas (`features/errordon/admin_quotas.tsx`)
+---
 
 ## 📜 License
 
-AGPLv3 - Compatible with Mastodon's license.
+**AGPLv3** - Compatible with Mastodon's license.
 
-## 🔗 References
+All Errordon additions are also AGPLv3.
 
-- [Mastodon GitHub](https://github.com/mastodon/mastodon)
-- [Mastodon Docs](https://docs.joinmastodon.org/)
-- [Media API](https://docs.joinmastodon.org/methods/media/)
-- [Admin Scaling](https://docs.joinmastodon.org/admin/scaling/)
+---
+
+## 🔗 Links
+
+- [Mastodon](https://github.com/mastodon/mastodon) - Upstream project
+- [Ollama](https://ollama.com/) - AI backend for NSFW-Protect
+- [German Criminal Code (StGB)](https://www.gesetze-im-internet.de/stgb/) - Legal framework
+
+---
+
+<div align="center">
+
+**Errordon** — *A Safe Fediverse for Europe* 🇪🇺🇩🇪
+
+*NO PORN • NO HATE • NO FASCISM*
+
+</div>
