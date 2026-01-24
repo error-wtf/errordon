@@ -22,6 +22,7 @@
 | MediaFilterBar | `master` | ✅ Komplett mit CSS |
 | Filter: Originals only | `master` | ✅ Client-side reblog filter |
 | Filter: With alt text | `master` | ✅ Alt-text filter |
+| Filter: Public only | `master` | ✅ Visibility filter |
 | Grid: Instagram-Style | `master` | ✅ 3-Spalten, hover, badges |
 | Privacy Preset Stub | `feature/privacy-chaos-defaults` | `config/initializers/privacy_preset.rb` |
 | Upload-Limit Doku | `feature/upload-250mb-limits` | `docs/UPLOAD_250MB_CONFIG.md` |
@@ -32,16 +33,7 @@
 
 ## ⚠️ Offen (ohne VPS machbar)
 
-### 1. Weitere Filter-Optionen
-**Branch:** `master`
-**Aufwand:** ~1h
-
-```
-□ "Nur Public" Filter
-□ "Nur Unlisted" Filter
-```
-
-### 2. Privacy Preset vollständig
+### 1. Privacy Preset vollständig
 **Branch:** `feature/privacy-chaos-defaults`
 **Aufwand:** ~2h
 
