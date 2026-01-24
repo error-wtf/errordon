@@ -39,6 +39,13 @@ Rails.application.config.after_initialize do
           class: 'Errordon::GdprCleanupWorker'
         )
 
+        # Snapshot cleanup - runs daily at 4:30 AM (delete safe snapshots after 14 days)
+        Sidekiq::Cron::Job.create(
+          name: 'AI Snapshot Cleanup (14 days) - daily',
+          cron: '30 4 * * *',
+          class: 'Errordon::SnapshotCleanupWorker'
+        )
+
         Rails.logger.info "[Errordon] NSFW-Protect scheduled jobs configured"
       else
         # Fallback: use recurring jobs via initializer

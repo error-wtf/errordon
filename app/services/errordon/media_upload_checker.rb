@@ -43,6 +43,12 @@ module Errordon
       # If needs review, flag for manual check but allow upload
       if result.needs_review?
         flag_for_review!(result)
+        create_analysis_snapshot(result)
+      end
+
+      # Create snapshot for SAFE results too (will be auto-deleted after 14 days)
+      if result.safe?
+        create_analysis_snapshot(result)
       end
 
       true
@@ -154,6 +160,9 @@ module Errordon
         ai_reason: result.reason
       )
 
+      # Create analysis snapshot (for violations - kept longer)
+      create_analysis_snapshot(result, strike: strike)
+
       Rails.logger.warn "[NSFW-Protect] Violation detected: Account=#{@account.id}, " \
                         "Type=#{result.category}, Confidence=#{result.confidence}"
 
@@ -187,6 +196,18 @@ module Errordon
       return 2 if result.confidence >= 0.70
 
       1
+    end
+
+    def create_analysis_snapshot(result, strike: nil)
+      NsfwAnalysisSnapshot.create_from_analysis(
+        media_attachment: @attachment,
+        account: @account,
+        result: result,
+        strike: strike
+      )
+    rescue StandardError => e
+      Rails.logger.error "[NSFW-Protect] Failed to create analysis snapshot: #{e.message}"
+      nil
     end
 
     def check_blocked_urls!

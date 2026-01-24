@@ -226,6 +226,70 @@ namespace :errordon do
       end
     end
 
+    desc 'Cleanup expired AI analysis snapshots (14 days for safe results)'
+    task cleanup_snapshots: :environment do
+      puts "AI Analysis Snapshot Cleanup"
+      puts "=" * 50
+      puts ""
+
+      stats = NsfwAnalysisSnapshot.stats
+      puts "Aktuelle Statistiken:"
+      puts "  Gesamt:           #{stats[:total]}"
+      puts "  SAFE:             #{stats[:safe]}"
+      puts "  Violations:       #{stats[:violations]}"
+      puts "  Zur Löschung:     #{stats[:pending_deletion]}"
+      puts ""
+
+      if stats[:pending_deletion] == 0
+        puts "✓ Keine abgelaufenen Snapshots zu löschen"
+        exit 0
+      end
+
+      print "#{stats[:pending_deletion]} Snapshots löschen? [y/N] "
+      confirm = $stdin.gets.chomp.downcase
+
+      unless confirm == 'y'
+        puts "Abgebrochen."
+        exit 0
+      end
+
+      puts ""
+      puts "Lösche abgelaufene Snapshots..."
+
+      deleted = NsfwAnalysisSnapshot.cleanup_expired!
+
+      puts ""
+      puts "✓ #{deleted} Snapshots gelöscht"
+    end
+
+    desc 'Show AI analysis snapshot statistics'
+    task snapshot_stats: :environment do
+      puts "AI Analysis Snapshot Statistiken"
+      puts "=" * 50
+      puts ""
+
+      stats = NsfwAnalysisSnapshot.stats
+
+      puts "Übersicht:"
+      puts "  Gesamt:           #{stats[:total]}"
+      puts "  SAFE:             #{stats[:safe]} (werden nach 14 Tagen gelöscht)"
+      puts "  Violations:       #{stats[:violations]} (werden länger behalten)"
+      puts "  Zur Löschung:     #{stats[:pending_deletion]}"
+      puts ""
+
+      if stats[:by_category].any?
+        puts "Nach Kategorie:"
+        stats[:by_category].each do |cat, count|
+          puts "  #{cat}: #{count}"
+        end
+        puts ""
+      end
+
+      puts "Zeitraum:"
+      puts "  Ältester:         #{stats[:oldest]&.strftime('%Y-%m-%d %H:%M') || '-'}"
+      puts "  Neuester:         #{stats[:newest]&.strftime('%Y-%m-%d %H:%M') || '-'}"
+    end
+
     desc 'Generate GDPR compliance report'
     task report: :environment do
       puts "DSGVO Compliance Report"
