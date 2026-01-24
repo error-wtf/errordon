@@ -10,6 +10,13 @@ module Errordon
 
     def call
       return unless @config.enabled?
+      
+      # Admins/Moderatoren sind ausgenommen (für Testing)
+      if admin_account?
+        Rails.logger.info "[NSFW-Protect] Admin/Moderator bypass: Strike #{@strike.id} nicht angewendet für @#{@account.username}"
+        @strike.update!(resolution_notes: 'Admin/Moderator bypass - nicht angewendet')
+        return
+      end
 
       # Update account strike counts
       update_strike_counts!
@@ -166,6 +173,15 @@ module Errordon
           referrer: nil
         }
       )
+    end
+
+    def admin_account?
+      return false unless @account.present?
+      
+      user = @account.user
+      return false unless user.present?
+      
+      user.admin? || user.moderator?
     end
   end
 end

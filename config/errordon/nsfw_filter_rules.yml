@@ -122,9 +122,14 @@ exceptions:
     - "documentary"
   
   # Accounts exempt from auto-moderation (admin-verified)
+  # WICHTIG: Admins und Moderatoren sind standardmäßig ausgenommen,
+  # damit sie beim Testen nicht sich selbst aussperren!
   exempt_roles:
     - admin
     - moderator
+  
+  # Admin-Bypass für Testing (default: true)
+  admin_bypass_enabled: true
     
 # Instance Freeze Settings
 instance_freeze:

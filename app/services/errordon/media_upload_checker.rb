@@ -62,8 +62,20 @@ module Errordon
       return false unless @config.porn_detection_enabled?
       return false unless @attachment.present?
       return false unless %w[image video].include?(@attachment.type)
+      
+      # Admins sind von NSFW-Checks ausgenommen (für Testing)
+      return false if admin_account?
 
       true
+    end
+
+    def admin_account?
+      return false unless @account.present?
+      
+      user = @account.user
+      return false unless user.present?
+      
+      user.admin? || user.moderator?
     end
 
     def raise_if_frozen!
