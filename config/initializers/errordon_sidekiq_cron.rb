@@ -25,6 +25,13 @@ Rails.application.config.after_initialize do
           class: 'Errordon::NsfwFreezeCleanupWorker'
         )
 
+        # Weekly summary - runs every Monday at 9 AM
+        Sidekiq::Cron::Job.create(
+          name: 'NSFW-Protect Weekly Summary - monday',
+          cron: '0 9 * * 1',
+          class: 'Errordon::WeeklySummaryWorker'
+        )
+
         Rails.logger.info "[Errordon] Scheduled jobs configured via sidekiq-cron"
       else
         # Fallback: use recurring jobs via initializer

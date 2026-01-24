@@ -3,18 +3,21 @@
 module Errordon
   class MediaUploadChecker
     class ViolationError < StandardError
-      attr_reader :analysis_result
+      attr_reader :analysis_result, :violation_type
 
-      def initialize(message, analysis_result)
+      def initialize(message, analysis_result, violation_type: :content)
         super(message)
         @analysis_result = analysis_result
+        @violation_type = violation_type
       end
     end
 
-    def initialize(media_attachment, ip_address: nil)
+    def initialize(media_attachment, ip_address: nil, request: nil)
       @attachment = media_attachment
       @account = media_attachment.account
-      @ip_address = ip_address
+      @ip_address = ip_address || extract_ip_from_request(request)
+      @user_agent = request&.user_agent
+      @request = request
       @config = NsfwProtectConfig.current
       @analyzer = OllamaContentAnalyzer.new
     end
@@ -24,6 +27,9 @@ module Errordon
 
       # Check if account is frozen
       raise_if_frozen!
+
+      # Check for blocked URLs in status text
+      check_blocked_urls! if @attachment.status.present?
 
       # Analyze the media
       result = analyze_media
@@ -169,6 +175,59 @@ module Errordon
       return 2 if result.confidence >= 0.70
 
       1
+    end
+
+    def check_blocked_urls!
+      return unless @attachment.status&.text.present?
+
+      text = @attachment.status.text
+      urls = extract_urls(text)
+
+      urls.each do |url|
+        if Errordon::DomainBlocklistService.check_url(url)
+          handle_blocked_url!(url)
+          raise ViolationError.new(
+            "Blocked domain detected: #{URI.parse(url).host}",
+            nil,
+            violation_type: :blocked_url
+          )
+        end
+      end
+    end
+
+    def extract_urls(text)
+      URI.extract(text, %w[http https])
+    rescue StandardError
+      []
+    end
+
+    def handle_blocked_url!(url)
+      domain = URI.parse(url).host rescue url
+
+      strike = NsfwProtectStrike.create!(
+        account: @account,
+        status: @attachment.status,
+        media_attachment: @attachment,
+        strike_type: :porn,
+        severity: 3,
+        ip_address: @ip_address,
+        ai_analysis_result: nil,
+        ai_confidence: 1.0,
+        ai_category: 'BLOCKED_DOMAIN',
+        ai_reason: "Posted link to blocked porn domain: #{domain}"
+      )
+
+      Rails.logger.warn "[NSFW-Protect] Blocked URL detected: Account=#{@account.id}, Domain=#{domain}"
+
+      strike
+    end
+
+    def extract_ip_from_request(request)
+      return nil unless request
+
+      request.remote_ip || request.ip
+    rescue StandardError
+      nil
     end
   end
 end

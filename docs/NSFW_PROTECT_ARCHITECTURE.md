@@ -308,13 +308,184 @@ Welcome to [Instance Name] - A Safe Space for Adults
    Violations of §130, §184b, §86a StGB are reported to authorities.
 ```
 
-## 9. Implementation Priority
+## 9. Implementation Status ✅
 
-1. **Phase 1**: Database migrations + Account freeze logic
-2. **Phase 2**: Ollama service integration
-3. **Phase 3**: Upload interceptor (porn check on ALL uploads)
-4. **Phase 4**: Report enhancement (AI check on reports)
-5. **Phase 5**: Admin panel UI
-6. **Phase 6**: Registration flow (invite-only, 18+, terms)
-7. **Phase 7**: Legal documents (ToS, Privacy, Rules)
-8. **Phase 8**: Email notifications + Instance freeze logic
+All phases completed:
+
+1. ✅ **Phase 1**: Database migrations + Account freeze logic
+2. ✅ **Phase 2**: Ollama service integration
+3. ✅ **Phase 3**: Upload interceptor (porn check on ALL uploads)
+4. ✅ **Phase 4**: Report enhancement (AI check on reports)
+5. ✅ **Phase 5**: Admin panel UI
+6. ✅ **Phase 6**: Registration flow (invite-only, 18+, terms)
+7. ✅ **Phase 7**: Legal documents (ToS, Privacy, Rules)
+8. ✅ **Phase 8**: Email notifications + Instance freeze logic
+
+---
+
+## 10. Enhanced Admin Reporting (NEW)
+
+### Audit Logging System
+
+All violations are logged to `log/nsfw_protect/`:
+
+```
+log/nsfw_protect/
+├── violations.log       # All violations (JSON per line)
+├── csam_alerts.log      # Critical CSAM alerts only
+└── admin_reports/       # JSON reports for law enforcement
+    └── law_enforcement_*.json
+```
+
+### Law Enforcement Report Contents
+
+```json
+{
+  "report_id": "uuid",
+  "generated_at": "ISO8601",
+  "platform": { "name", "domain", "contact" },
+  "violation": { "id", "type", "ai_confidence", "law_reference" },
+  "suspect_account": {
+    "account_id", "username", "email",
+    "signup_ip", "current_sign_in_ip", "last_sign_in_ip",
+    "violation_ip", "total_strikes"
+  },
+  "ip_history": [...],
+  "previous_violations": [...],
+  "session_info": [...]
+}
+```
+
+### IP Tracking
+
+Every strike records:
+- **Violation IP**: IP at time of content upload
+- **Signup IP**: IP at account creation
+- **Current Login IP**: Most recent login
+- **Last Login IP**: Previous login
+
+---
+
+## 11. Domain Blocklist System (NEW)
+
+### Automatic Updates
+
+The `DomainBlocklistService` fetches from multiple sources:
+
+| Source | Type | URL |
+|--------|------|-----|
+| StevenBlack | hosts | github.com/StevenBlack/hosts |
+| Sinfonietta | hosts | github.com/Sinfonietta/hostfiles |
+| OISD NSFW | domains | nsfw.oisd.nl |
+
+### Hardcoded Domains (always blocked)
+
+100+ critical porn domains including:
+- Major tube sites (pornhub, xvideos, xhamster, etc.)
+- Cam sites (chaturbate, livejasmin, etc.)
+- Premium sites (onlyfans, fansly, brazzers, etc.)
+- Hentai/anime sites
+- Booru/rule34 sites
+
+### Scheduled Updates
+
+```ruby
+# Sidekiq cron jobs:
+# - Blocklist update: daily at 3 AM
+# - Freeze cleanup: hourly
+# - Weekly summary: Mondays at 9 AM
+```
+
+### Rake Tasks
+
+```bash
+rake errordon:nsfw_protect:setup              # Initial setup
+rake errordon:nsfw_protect:update_blocklist   # Manual update
+rake errordon:nsfw_protect:blocklist_stats    # Statistics
+rake errordon:nsfw_protect:check_domain[x.com] # Check domain
+rake errordon:nsfw_protect:violation_summary[30] # Summary
+rake errordon:nsfw_protect:generate_report[123] # Generate report
+```
+
+---
+
+## 12. Admin API Endpoints (Complete)
+
+```
+# Status & Config
+GET  /api/v1/errordon/nsfw_protect/status    # User status
+GET  /api/v1/errordon/nsfw_protect/config    # Admin config
+PUT  /api/v1/errordon/nsfw_protect/config    # Update config
+GET  /api/v1/errordon/nsfw_protect/stats     # Statistics
+
+# Alarms
+GET  /api/v1/errordon/nsfw_protect/alarms           # List alarms
+GET  /api/v1/errordon/nsfw_protect/alarms/:id       # Show alarm
+POST /api/v1/errordon/nsfw_protect/alarms/:id/resolve  # Resolve
+POST /api/v1/errordon/nsfw_protect/alarms/:id/dismiss  # Dismiss (false positive)
+
+# Blocklist
+GET  /api/v1/errordon/nsfw_protect/blocklist        # Stats
+POST /api/v1/errordon/nsfw_protect/blocklist/update # Update now
+GET  /api/v1/errordon/nsfw_protect/blocklist/check?domain=x.com
+
+# Reports & Violators
+GET  /api/v1/errordon/nsfw_protect/report/:strike_id  # Download report
+GET  /api/v1/errordon/nsfw_protect/violators          # Top violators
+POST /api/v1/errordon/nsfw_protect/send_weekly_summary # Send summary
+
+# Ollama
+POST /api/v1/errordon/nsfw_protect/test_ollama      # Test connection
+```
+
+---
+
+## 13. Email Notifications
+
+### Admin Emails
+
+| Email | Trigger | Content |
+|-------|---------|---------|
+| `new_strike` | Any violation | Account, IP, AI analysis |
+| `csam_alert` | CSAM detected | **CRITICAL** - Full account/IP data, BKA contact |
+| `instance_frozen` | 10+ alarms | Active alarm list |
+| `instance_unfrozen` | Alarms resolved | Confirmation |
+| `weekly_summary` | Monday 9 AM | Stats, top violators, blocklist status |
+
+### User Emails
+
+| Email | Trigger | Content |
+|-------|---------|---------|
+| `user_frozen` | Account frozen | Freeze duration, reason, appeal info |
+
+---
+
+## 14. Filter Rules Configuration
+
+Location: `config/errordon/nsfw_filter_rules.yml`
+
+```yaml
+thresholds:
+  auto_delete: 0.90    # Auto-delete + strike
+  auto_flag: 0.75      # Flag for review
+  needs_review: 0.50   # Queue for manual
+  csam_threshold: 0.60 # ANY CSAM = action
+
+text_patterns:
+  hate_speech:         # §130 StGB patterns
+  nazi_symbols:        # §86a StGB patterns
+  holocaust_denial:    # §130 Abs. 3 patterns
+```
+
+---
+
+## 15. AI Persona Prompts
+
+Location: `config/errordon/ai_persona_prompts.yml`
+
+Prompts optimized for German law compliance:
+- System persona for content moderation
+- Image analysis prompt
+- Text analysis prompt (§130, §131 StGB focus)
+- Video frame analysis
+- Confidence calibration guidelines
