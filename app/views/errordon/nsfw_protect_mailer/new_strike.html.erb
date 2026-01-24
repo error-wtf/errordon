@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: #ff4444; color: white; padding: 20px; text-align: center; }
+    .content { padding: 20px; }
+    .info-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0; }
+    .label { font-weight: bold; color: #666; }
+    .value { margin-left: 10px; }
+    .warning { color: #ff4444; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>⚠️ NSFW-Protect Alert</h1>
+    <p>New content violation detected</p>
+  </div>
+  
+  <div class="content">
+    <div class="info-box">
+      <p><span class="label">Account:</span> <span class="value">@<%= @account.username %></span></p>
+      <p><span class="label">Type:</span> <span class="value warning"><%= @strike.strike_type.upcase %></span></p>
+      <p><span class="label">AI Confidence:</span> <span class="value"><%= (@strike.ai_confidence * 100).round(1) %>%</span></p>
+      <p><span class="label">Reason:</span> <span class="value"><%= @strike.ai_reason %></span></p>
+      <p><span class="label">IP Address:</span> <span class="value"><%= @strike.ip_address || 'Unknown' %></span></p>
+      <p><span class="label">Time:</span> <span class="value"><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></span></p>
+    </div>
+    
+    <p><span class="label">Total Strikes:</span> <%= @account.nsfw_strike_count %></p>
+    
+    <% if @account.nsfw_permanent_freeze? %>
+      <p class="warning">⚠️ Account has been PERMANENTLY FROZEN</p>
+    <% elsif @account.nsfw_frozen_until.present? %>
+      <p>Account frozen until: <%= @account.nsfw_frozen_until.strftime('%Y-%m-%d %H:%M:%S UTC') %></p>
+    <% end %>
+    
+    <p>
+      <a href="<%= admin_account_url(@account) %>">View Account in Admin Panel</a>
+    </p>
+  </div>
+</body>
+</html>

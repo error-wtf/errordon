@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: #000; color: #ff0000; padding: 30px; text-align: center; border: 5px solid #ff0000; }
+    .content { padding: 20px; background: #fff5f5; }
+    .critical { color: #ff0000; font-weight: bold; font-size: 1.2em; }
+    .info-box { background: #ffe0e0; padding: 15px; border-radius: 5px; margin: 15px 0; border: 2px solid #ff0000; }
+    .label { font-weight: bold; color: #666; }
+    .value { margin-left: 10px; }
+    .action-required { background: #ff0000; color: white; padding: 15px; text-align: center; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🚨 CRITICAL ALERT 🚨</h1>
+    <h2>CSAM CONTENT DETECTED</h2>
+  </div>
+  
+  <div class="content">
+    <div class="action-required">
+      <strong>IMMEDIATE ACTION REQUIRED</strong><br>
+      This content may need to be reported to law enforcement (§184b StGB)
+    </div>
+    
+    <div class="info-box">
+      <p><span class="label">Account ID:</span> <span class="value"><%= @account.id %></span></p>
+      <p><span class="label">Username:</span> <span class="value">@<%= @account.username %></span></p>
+      <p><span class="label">Email:</span> <span class="value"><%= @account.user&.email || 'N/A' %></span></p>
+      <p><span class="label">IP Address:</span> <span class="value critical"><%= @strike.ip_address || 'Unknown' %></span></p>
+      <p><span class="label">Detection Time:</span> <span class="value"><%= @strike.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') %></span></p>
+      <p><span class="label">AI Confidence:</span> <span class="value"><%= (@strike.ai_confidence * 100).round(1) %>%</span></p>
+    </div>
+    
+    <p class="critical">
+      ⚠️ The account has been PERMANENTLY SUSPENDED.<br>
+      ⚠️ All content has been preserved for potential evidence.<br>
+      ⚠️ Please review and take appropriate legal action.
+    </p>
+    
+    <h3>Legal References (Germany)</h3>
+    <ul>
+      <li>§184b StGB - Verbreitung kinderpornographischer Inhalte</li>
+      <li>Meldepflicht an BKA/NCMEC beachten</li>
+    </ul>
+    
+    <p>
+      <a href="<%= admin_account_url(@account) %>">View Account in Admin Panel</a>
+    </p>
+  </div>
+</body>
+</html>
