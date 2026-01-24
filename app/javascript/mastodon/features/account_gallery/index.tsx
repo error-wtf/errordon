@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -22,6 +22,7 @@ import type { RootState } from 'mastodon/store';
 import { useAppSelector, useAppDispatch } from 'mastodon/store';
 
 import { MediaItem } from './components/media_item';
+import { MediaFilterBar } from './components/media_filter_bar';
 
 const getAccountGallery = createSelector(
   [
@@ -59,6 +60,7 @@ export const AccountGallery: React.FC<{
 }> = ({ multiColumn, mediaType }) => {
   const dispatch = useAppDispatch();
   const accountId = useAccountId();
+  const [excludeReblogs, setExcludeReblogs] = useState(false);
   const allAttachments = useAppSelector((state) =>
     accountId
       ? getAccountGallery(state, accountId)
@@ -66,9 +68,17 @@ export const AccountGallery: React.FC<{
   );
 
   // Filter attachments by media type if specified
-  const attachments = mediaType
+  let attachments = mediaType
     ? allAttachments.filter((attachment) => attachment.get('type') === mediaType)
     : allAttachments;
+
+  // Filter out reblogs if excludeReblogs is true
+  if (excludeReblogs) {
+    attachments = attachments.filter((attachment) => {
+      const status = attachment.get('status') as ImmutableMap<string, unknown> | undefined;
+      return status && !status.get('reblog');
+    });
+  }
   const isLoading = useAppSelector((state) =>
     (state.timelines as ImmutableMap<string, unknown>).getIn([
       `account:${accountId}:media`,
@@ -198,7 +208,15 @@ export const AccountGallery: React.FC<{
         className='account-gallery__container'
         prepend={
           accountId && (
-            <AccountHeader accountId={accountId} hideTabs={forceEmptyState} />
+            <>
+              <AccountHeader accountId={accountId} hideTabs={forceEmptyState} />
+              {!forceEmptyState && (
+                <MediaFilterBar
+                  excludeReblogs={excludeReblogs}
+                  onToggleExcludeReblogs={() => setExcludeReblogs(!excludeReblogs)}
+                />
+              )}
+            </>
           )
         }
         alwaysPrepend
