@@ -142,10 +142,10 @@ foreman start
 - [x] Quota/rate-limit guardrails (`config/initializers/errordon_quotas.rb`)
 - [ ] **Needs VPS to test live**
 
-### Phase 3: Polish
-- [ ] Audio player UX improvements
-- [ ] Video grid view
-- [ ] Admin UI for quotas
+### Phase 3: Polish ✅ Complete
+- [x] Audio player UX improvements (hover effects, waveform styles)
+- [x] Video grid view (`features/errordon/video_grid.tsx`)
+- [x] Admin UI for quotas (`features/errordon/admin_quotas.tsx`)
 
 ## 📜 License
 

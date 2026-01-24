@@ -7399,6 +7399,49 @@ a.status-card {
   border-radius: 8px;
   outline: 1px solid var(--color-border-media);
   outline-offset: -1px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Errordon: Enhanced waveform visualization */
+  &__waveform {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 20px;
+    opacity: 0.8;
+
+    &-bar {
+      flex: 1;
+      max-width: 4px;
+      background: var(--player-accent-color);
+      border-radius: 2px;
+      transition: height 0.1s ease;
+    }
+  }
+
+  /* Errordon: Time display enhancement */
+  &__time-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.9;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+  }
 
   &__controls {
     display: grid;
@@ -7993,6 +8036,262 @@ a.status-card {
     background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark, #6364ff) 100%);
     padding: 8px;
     border-radius: 50%;
+  }
+}
+
+// Errordon: Video Grid View (Masonry-style)
+.errordon-video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 16px;
+
+  &__item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--color-bg-elevated);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+      .errordon-video-grid__overlay {
+        opacity: 1;
+      }
+
+      .errordon-video-grid__play {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+  }
+
+  &__thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      color: var(--color-accent);
+      margin-left: 4px;
+    }
+  }
+
+  &__info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    color: #fff;
+  }
+
+  &__duration {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+}
+
+// Errordon: Admin Quota Dashboard
+.errordon-admin-quotas {
+  padding: 20px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  &__stat-card {
+    background: var(--color-bg-elevated);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--color-border-primary);
+
+    &__label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: 8px;
+    }
+
+    &__value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+
+    &__change {
+      font-size: 12px;
+      margin-top: 4px;
+
+      &--positive {
+        color: var(--color-success);
+      }
+
+      &--negative {
+        color: var(--color-error);
+      }
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-bg-elevated);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-border-primary);
+
+    th,
+    td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border-primary);
+    }
+
+    th {
+      background: var(--color-bg-secondary);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+    }
+
+    td {
+      font-size: 14px;
+      color: var(--color-text-primary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: var(--color-bg-hover);
+    }
+  }
+
+  &__progress {
+    width: 100%;
+    height: 8px;
+    background: var(--color-bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+
+    &-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+
+      &--low {
+        background: var(--color-success);
+      }
+
+      &--medium {
+        background: var(--color-warning);
+      }
+
+      &--high {
+        background: var(--color-error);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &.primary {
+        background: var(--color-accent);
+        color: #fff;
+        border: none;
+
+        &:hover {
+          background: var(--color-accent-dark, #5253cc);
+        }
+      }
+
+      &.secondary {
+        background: transparent;
+        color: var(--color-text-secondary);
+        border: 1px solid var(--color-border-primary);
+
+        &:hover {
+          background: var(--color-bg-hover);
+        }
+      }
+    }
   }
 }
 
