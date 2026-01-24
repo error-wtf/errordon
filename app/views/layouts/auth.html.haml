@@ -1,0 +1,19 @@
+- content_for :header_tags do
+  = vite_typescript_tag 'public.tsx', crossorigin: 'anonymous'
+
+- content_for :content do
+  .container-alt
+    .logo-container
+      %h1
+        - if within_authorization_flow?
+          = logo_as_symbol(:wordmark)
+        - else
+          = link_to root_path do
+            = logo_as_symbol(:wordmark)
+
+    .form-container
+      = render 'flashes'
+
+      = yield
+
+= render template: 'layouts/application'
