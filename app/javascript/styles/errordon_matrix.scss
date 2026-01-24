@@ -1,0 +1,440 @@
+// ERRORDON MATRIX THEME - Part 1: Variables & Animations
+
+// Colors
+$matrix-green: #00ff00;
+$matrix-green-dark: #00cc00;
+$matrix-green-glow: rgba(0, 255, 0, 0.5);
+$matrix-green-subtle: rgba(0, 255, 0, 0.1);
+$matrix-black: #000000;
+$matrix-dark: #0a0a0a;
+$matrix-text: #ffffff;
+$matrix-error: #ff0000;
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Fira+Code&display=swap');
+$font-hacker: 'VT323', monospace;
+$font-code: 'Fira Code', monospace;
+
+// Glitch Animation
+@keyframes glitch {
+  0%, 100% { text-shadow: 2px 0 $matrix-error, -2px 0 cyan; }
+  25% { text-shadow: -2px 0 $matrix-error, 2px 0 cyan; }
+  50% { text-shadow: 2px 2px $matrix-error, -2px -2px cyan; }
+  75% { text-shadow: -2px 2px $matrix-error, 2px -2px cyan; }
+}
+
+@keyframes matrix-glow {
+  0%, 100% { text-shadow: 0 0 10px $matrix-green, 0 0 20px $matrix-green-glow; }
+  50% { text-shadow: 0 0 20px $matrix-green, 0 0 40px $matrix-green-glow; }
+}
+
+@keyframes scanline {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.85; }
+}
+
+// Glitch Class
+.glitch {
+  animation: glitch 0.3s infinite;
+  &:hover { animation-duration: 0.1s; }
+}
+
+.glitch-subtle { animation: flicker 4s infinite; }
+
+// ============================================================================
+// BODY & BASE
+// ============================================================================
+
+body.theme-matrix {
+  background: $matrix-black !important;
+  color: $matrix-text !important;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(transparent, $matrix-green-subtle);
+    animation: scanline 6s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+  }
+}
+
+// ============================================================================
+// NAVIGATION & COLUMNS
+// ============================================================================
+
+.theme-matrix {
+  .ui, .columns-area, .columns-area__panels {
+    background: $matrix-black !important;
+  }
+
+  .column, .drawer {
+    background: $matrix-dark !important;
+  }
+
+  .drawer__inner, .drawer__header, .navigation-panel {
+    background: $matrix-dark !important;
+    border-right: 1px solid rgba(0, 255, 0, 0.2) !important;
+  }
+
+  .column-header {
+    background: $matrix-dark !important;
+    border-bottom: 2px solid $matrix-green !important;
+    
+    &__title {
+      font-family: $font-hacker !important;
+      font-size: 1.5em !important;
+      color: $matrix-green !important;
+      text-shadow: 0 0 10px $matrix-green-glow;
+      letter-spacing: 3px;
+      animation: matrix-glow 3s ease-in-out infinite;
+    }
+    
+    &__button {
+      color: $matrix-green-dark !important;
+      &:hover { color: $matrix-green !important; }
+    }
+  }
+
+  .column-back-button {
+    background: $matrix-dark !important;
+    color: $matrix-green !important;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.2) !important;
+  }
+}
+
+// ============================================================================
+// COMPOSE FORM
+// ============================================================================
+
+.theme-matrix {
+  .compose-form {
+    .autosuggest-textarea__textarea,
+    .compose-form__autosuggest-wrapper {
+      background: $matrix-black !important;
+      border: 1px solid rgba(0, 255, 0, 0.3) !important;
+      color: $matrix-text !important;
+      font-family: $font-code !important;
+      
+      &::placeholder { color: $matrix-green-dark !important; }
+      &:focus {
+        border-color: $matrix-green !important;
+        box-shadow: 0 0 15px $matrix-green-glow !important;
+      }
+    }
+
+    .compose-form__buttons-wrapper {
+      background: $matrix-dark !important;
+    }
+
+    .compose-form__publish .button {
+      background: $matrix-green !important;
+      color: $matrix-black !important;
+      font-family: $font-hacker !important;
+      font-size: 1.2em;
+      letter-spacing: 2px;
+      
+      &:hover {
+        background: $matrix-green-dark !important;
+        box-shadow: 0 0 20px $matrix-green-glow !important;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// STATUSES / POSTS
+// ============================================================================
+
+.theme-matrix {
+  .status, .detailed-status {
+    background: $matrix-dark !important;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.15) !important;
+    
+    &:hover { background: rgba(0, 255, 0, 0.03) !important; }
+  }
+
+  .status__content, .detailed-status__content {
+    color: $matrix-text !important;
+    
+    a {
+      color: $matrix-green !important;
+      &:hover { text-shadow: 0 0 8px $matrix-green-glow; }
+    }
+  }
+
+  .display-name {
+    &__html {
+      font-family: $font-hacker !important;
+      color: $matrix-green !important;
+      font-size: 1.15em;
+      letter-spacing: 1px;
+    }
+    &__account {
+      color: $matrix-green-dark !important;
+      font-family: $font-code !important;
+    }
+  }
+
+  .status__relative-time, time {
+    color: darken($matrix-green, 30%) !important;
+    font-family: $font-code !important;
+  }
+
+  .status__action-bar, .detailed-status__action-bar {
+    .icon-button {
+      color: $matrix-green-dark !important;
+      &:hover, &.active { color: $matrix-green !important; }
+    }
+  }
+}
+
+// ============================================================================
+// MEDIA (Video, Audio, Images)
+// ============================================================================
+
+.theme-matrix {
+  .media-gallery {
+    border: 1px solid rgba(0, 255, 0, 0.3) !important;
+    &:hover { box-shadow: 0 0 15px $matrix-green-glow !important; }
+  }
+
+  .media-gallery__item-thumbnail {
+    filter: saturate(0.7) brightness(0.85);
+    &:hover { filter: saturate(1) brightness(1); }
+  }
+
+  .video-player {
+    border: 2px solid $matrix-green !important;
+    box-shadow: 0 0 10px $matrix-green-glow;
+    
+    .video-player__controls { background: rgba(0, 0, 0, 0.85) !important; }
+    .video-player__seek::before,
+    .video-player__volume::before { background: $matrix-green !important; }
+  }
+
+  .audio-player {
+    background: $matrix-dark !important;
+    border: 2px solid $matrix-green !important;
+    
+    .audio-player__progress { background: $matrix-green !important; }
+  }
+}
+
+// ============================================================================
+// ACCOUNTS & PROFILES
+// ============================================================================
+
+.theme-matrix {
+  .account, .account-card {
+    background: $matrix-dark !important;
+    border: 1px solid rgba(0, 255, 0, 0.2) !important;
+    &:hover { border-color: $matrix-green !important; }
+  }
+
+  .account__header {
+    background: linear-gradient($matrix-dark, $matrix-black) !important;
+    
+    &__image {
+      filter: grayscale(40%) contrast(1.1);
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 50%, $matrix-black);
+      }
+    }
+    
+    &__bar { background: $matrix-dark !important; }
+    
+    &__tabs__name h1 {
+      font-family: $font-hacker !important;
+      color: $matrix-green !important;
+      text-shadow: 0 0 15px $matrix-green-glow;
+      font-size: 2em !important;
+      letter-spacing: 2px;
+      
+      small {
+        color: $matrix-green-dark !important;
+        font-family: $font-code !important;
+      }
+    }
+    
+    &__bio { color: $matrix-text !important; }
+    
+    &__fields {
+      border-color: rgba(0, 255, 0, 0.2) !important;
+      dt { color: $matrix-green !important; font-family: $font-code !important; }
+      dd { color: $matrix-text !important; }
+    }
+  }
+}
+
+// ============================================================================
+// NOTIFICATIONS
+// ============================================================================
+
+.theme-matrix {
+  .notification {
+    border-bottom: 1px solid rgba(0, 255, 0, 0.15) !important;
+    
+    &__message {
+      color: $matrix-green !important;
+      font-family: $font-code !important;
+    }
+  }
+}
+
+// ============================================================================
+// MODALS
+// ============================================================================
+
+.theme-matrix {
+  .modal-root__overlay { background: rgba(0, 0, 0, 0.92) !important; }
+
+  .modal-root__container {
+    .compose-modal,
+    .confirmation-modal,
+    .report-modal,
+    .mute-modal,
+    .block-modal,
+    .boost-modal {
+      background: $matrix-dark !important;
+      border: 2px solid $matrix-green !important;
+      box-shadow: 0 0 40px $matrix-green-glow !important;
+    }
+
+    .confirmation-modal__action-bar,
+    .mute-modal__action-bar,
+    .boost-modal__action-bar {
+      background: $matrix-black !important;
+    }
+  }
+}
+
+// ============================================================================
+// BUTTONS
+// ============================================================================
+
+.theme-matrix {
+  .button {
+    background: $matrix-green !important;
+    color: $matrix-black !important;
+    font-family: $font-hacker !important;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: none !important;
+    
+    &:hover {
+      background: $matrix-green-dark !important;
+      box-shadow: 0 0 15px $matrix-green-glow !important;
+    }
+    
+    &--destructive {
+      background: $matrix-error !important;
+      &:hover { box-shadow: 0 0 15px rgba(255, 0, 0, 0.5) !important; }
+    }
+  }
+
+  .icon-button {
+    color: $matrix-green-dark !important;
+    &:hover, &.active { color: $matrix-green !important; }
+  }
+}
+
+// ============================================================================
+// SCROLLBARS
+// ============================================================================
+
+.theme-matrix {
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: $matrix-black; }
+  ::-webkit-scrollbar-thumb {
+    background: $matrix-green-dark;
+    border-radius: 4px;
+    &:hover { background: $matrix-green; }
+  }
+}
+
+// ============================================================================
+// SEARCH & INPUTS
+// ============================================================================
+
+.theme-matrix {
+  .search__input,
+  .setting-text,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    background: $matrix-black !important;
+    border: 1px solid rgba(0, 255, 0, 0.3) !important;
+    color: $matrix-text !important;
+    font-family: $font-code !important;
+    
+    &::placeholder { color: $matrix-green-dark !important; }
+    &:focus {
+      border-color: $matrix-green !important;
+      box-shadow: 0 0 10px $matrix-green-glow !important;
+    }
+  }
+}
+
+// ============================================================================
+// GLITCH HEADINGS (hover effect)
+// ============================================================================
+
+.theme-matrix {
+  .column-header__title:hover,
+  .account__header__tabs__name h1:hover,
+  .notification__message:hover {
+    animation: glitch 0.2s ease;
+  }
+}
+
+// ============================================================================
+// TABS & NAVIGATION ITEMS
+// ============================================================================
+
+.theme-matrix {
+  .tabs-bar__link,
+  .column-link {
+    color: $matrix-green-dark !important;
+    
+    &:hover, &.active {
+      color: $matrix-green !important;
+      background: rgba(0, 255, 0, 0.1) !important;
+    }
+    
+    &.active {
+      border-bottom: 2px solid $matrix-green !important;
+    }
+  }
+}
+
+// ============================================================================
+// LOADING & EMPTY STATES
+// ============================================================================
+
+.theme-matrix {
+  .loading-indicator {
+    .loading-indicator__figure {
+      border-color: $matrix-green transparent !important;
+    }
+  }
+
+  .empty-column-indicator,
+  .error-column {
+    color: $matrix-green-dark !important;
+    font-family: $font-code !important;
+  }
+}
