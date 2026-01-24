@@ -1,0 +1,144 @@
+# frozen_string_literal: true
+
+# Errordon Security Configuration
+# CYBERSECURITY IS THE TOP PRIORITY
+#
+# ENV variables:
+#   ERRORDON_SECURITY_STRICT - Enable strict security mode (default: true)
+#   ERRORDON_BLOCK_SUSPICIOUS_IPS - Block known malicious IPs (default: true)
+#   ERRORDON_MAX_REQUEST_SIZE - Max request body size (default: 300MB)
+#   ERRORDON_AUDIT_FILE - Write audit log to file (default: true)
+
+Rails.application.config.x.errordon_security = {
+  enabled: true,
+  strict_mode: ENV.fetch('ERRORDON_SECURITY_STRICT', 'true') == 'true',
+
+  # File upload security
+  file_validation: {
+    enabled: true,
+    scan_content: true,
+    verify_mime_type: true,
+    block_executables: true,
+    block_scripts: true,
+    check_magic_bytes: true
+  },
+
+  # Request security
+  request: {
+    max_body_size: ENV.fetch('ERRORDON_MAX_REQUEST_SIZE', '314572800').to_i, # 300MB
+    block_suspicious_user_agents: true,
+    require_user_agent: true,
+    block_empty_referer_on_upload: false
+  },
+
+  # Rate limiting (additional to Rack::Attack)
+  rate_limits: {
+    failed_uploads_per_hour: 10,
+    security_violations_per_day: 5,
+    block_duration_hours: 24
+  },
+
+  # IP blocking
+  ip_blocking: {
+    enabled: ENV.fetch('ERRORDON_BLOCK_SUSPICIOUS_IPS', 'true') == 'true',
+    auto_block_on_violation: true,
+    block_tor_exit_nodes: false,  # Set to true if desired
+    whitelist: ENV.fetch('ERRORDON_IP_WHITELIST', '').split(',').map(&:strip)
+  },
+
+  # Audit logging
+  audit: {
+    enabled: true,
+    file_logging: ENV.fetch('ERRORDON_AUDIT_FILE', 'true') == 'true',
+    log_successful_uploads: true,
+    log_failed_uploads: true,
+    log_security_events: true,
+    webhook_url: ENV['ERRORDON_AUDIT_WEBHOOK_URL']
+  },
+
+  # Content Security
+  content: {
+    strip_exif: true,
+    strip_metadata: true,
+    sanitize_filenames: true,
+    max_filename_length: 255
+  }
+}
+
+# Security headers middleware
+Rails.application.config.middleware.insert_before 0, Rack::Builder do
+  use(Class.new do
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      status, headers, response = @app.call(env)
+
+      # Add security headers for Errordon endpoints
+      if env['PATH_INFO']&.include?('/errordon') || env['PATH_INFO']&.start_with?('/api/')
+        headers['X-Content-Type-Options'] = 'nosniff'
+        headers['X-Frame-Options'] = 'DENY'
+        headers['X-XSS-Protection'] = '1; mode=block'
+        headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+      end
+
+      [status, headers, response]
+    end
+  end)
+end
+
+# Block suspicious requests
+if Rails.application.config.x.errordon_security[:request][:block_suspicious_user_agents]
+  Rails.application.config.to_prepare do
+    if defined?(Rack::Attack)
+      # Block requests with suspicious user agents
+      Rack::Attack.blocklist('errordon/suspicious_ua') do |req|
+        suspicious_patterns = [
+          /sqlmap/i,
+          /nikto/i,
+          /nmap/i,
+          /masscan/i,
+          /zgrab/i,
+          /gobuster/i,
+          /dirbuster/i,
+          /wpscan/i,
+          /nuclei/i,
+          /httpx/i,
+          /curl\/.*libcurl/i,  # Block programmatic curl but not browser
+          /python-requests/i,
+          /go-http-client/i
+        ]
+
+        ua = req.user_agent.to_s
+        suspicious_patterns.any? { |pattern| ua.match?(pattern) }
+      end
+
+      # Block requests without User-Agent on upload endpoints
+      Rack::Attack.blocklist('errordon/no_ua_upload') do |req|
+        if req.path.start_with?('/api/v1/media', '/api/v2/media') && req.post?
+          req.user_agent.blank?
+        end
+      end
+
+      # Exponential backoff for repeated security violations
+      Rack::Attack.blocklist('errordon/security_violations') do |req|
+        # Check Redis for security violations count
+        key = "errordon:security:#{req.ip}"
+        count = Rack::Attack.cache.read(key).to_i
+        count >= Rails.application.config.x.errordon_security[:rate_limits][:security_violations_per_day]
+      end
+
+      Rails.logger.info '[Errordon] Security rate limits configured'
+    end
+  end
+end
+
+# Log security configuration on startup
+Rails.application.config.after_initialize do
+  config = Rails.application.config.x.errordon_security
+  Rails.logger.info "[Errordon::Security] Initialized - Strict mode: #{config[:strict_mode]}"
+  Rails.logger.info "[Errordon::Security] File validation: #{config[:file_validation][:enabled]}"
+  Rails.logger.info "[Errordon::Security] Audit logging: #{config[:audit][:enabled]}"
+end
