@@ -87,8 +87,8 @@ if [ ! -f /etc/os-release ]; then
     error "Unsupported OS. Use Ubuntu 22.04 LTS."
 fi
 . /etc/os-release
-if [ "$ID" != "ubuntu" ] && [ "$ID" != "debian" ]; then
-    error "Unsupported OS: $ID. Use Ubuntu 22.04 or Debian 12."
+if [ "$ID" != "ubuntu" ] && [ "$ID" != "debian" ] && [ "$ID" != "kali" ]; then
+    error "Unsupported OS: $ID. Use Ubuntu 22.04, Debian 12, or Kali."
 fi
 log "Detected: $ID $VERSION_ID"
 
