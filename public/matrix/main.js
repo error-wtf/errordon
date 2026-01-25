@@ -278,8 +278,13 @@ function handleCommand(input) {
         // Open Tetris in overlay iframe
         const overlay = document.getElementById('tetrisOverlay');
         const iframe = document.getElementById('tetrisFrame');
-        iframe.src = `tetris.html?user=${encodeURIComponent(username)}`;
-        overlay.style.display = 'block';
+        if (overlay && iframe) {
+            iframe.src = `/matrix/tetris.html?user=${encodeURIComponent(username)}`;
+            overlay.style.display = 'block';
+            printLine('Tetris opened! Press ESC or click RETURN TO CHAT to exit.', 'output-line');
+        } else {
+            printLine('Error: Tetris overlay not found', 'error-line');
+        }
         return;
     }
     
