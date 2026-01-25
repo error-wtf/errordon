@@ -78,4 +78,10 @@ docker-compose.override.yml
 .rspec-local
 
 *storybook.log
+
+# Errordon NSFW-Protect audit logs (contains sensitive data)
+/log/nsfw_protect/
+
+# Errordon temporary files
+/tmp/errordon/
 storybook-static
