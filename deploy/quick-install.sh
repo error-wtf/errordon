@@ -375,6 +375,10 @@ log "Nginx configured with SSL"
 # ============================================================================
 info "Phase 5: Starting services..."
 
+# Clean up any existing containers and volumes to ensure fresh database with correct user
+log "Cleaning up any existing containers..."
+dc down -v 2>/dev/null || true
+
 # Start db and redis first
 log "Starting database and Redis..."
 dc up -d db redis
