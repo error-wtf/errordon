@@ -38,12 +38,14 @@ info() { echo -e "${BLUE}[i]${NC} $1"; }
 DOMAIN=""
 EMAIL=""
 SKIP_SSL=false
+INSTALL_MATRIX=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         --domain) DOMAIN="$2"; shift 2 ;;
         --email) EMAIL="$2"; shift 2 ;;
         --skip-ssl) SKIP_SSL=true; shift ;;
-        --help) echo "Usage: $0 [--domain example.com] [--email admin@example.com] [--skip-ssl]"; exit 0 ;;
+        --with-matrix) INSTALL_MATRIX=true; shift ;;
+        --help) echo "Usage: $0 [--domain example.com] [--email admin@example.com] [--skip-ssl] [--with-matrix]"; exit 0 ;;
         *) shift ;;
     esac
 done
@@ -637,6 +639,37 @@ RAILS_ENV=production bundle exec rake db:migrate 2>/dev/null || warn "Migration 
 # Initialize blocklists
 log "Initializing blocklists..."
 RAILS_ENV=production bundle exec rake errordon:blocklist:update 2>/dev/null || true
+
+# ============================================================================
+# MATRIX TERMINAL LANDING PAGE
+# ============================================================================
+if [ "$INSTALL_MATRIX" = true ]; then
+    log "Enabling Matrix Terminal landing page..."
+    
+    # Add Matrix config to .env.production
+    if [ -f ".env.production" ]; then
+        if ! grep -q "ERRORDON_MATRIX_LANDING_ENABLED" .env.production; then
+            cat >> .env.production << 'MATRIXEOF'
+
+# ============================================================================
+# MATRIX TERMINAL LANDING PAGE
+# ============================================================================
+ERRORDON_MATRIX_LANDING_ENABLED=true
+MATRIXEOF
+        else
+            sed -i 's/ERRORDON_MATRIX_LANDING_ENABLED=false/ERRORDON_MATRIX_LANDING_ENABLED=true/' .env.production
+        fi
+    fi
+    
+    # Set landing page in database
+    RAILS_ENV=production bundle exec rails runner "Setting.landing_page = 'matrix'" 2>/dev/null || true
+    
+    log "Matrix Terminal: ✓ Enabled as landing page"
+    echo "  - Visitors see interactive terminal first"
+    echo "  - Type 'enter matrix' to access login"
+    echo "  - Commands: tetris, quote, hack, talk <character>"
+    echo "  - Configure in Admin → Server Settings → Branding"
+fi
 
 # ============================================================================
 # CREATE ADMIN ACCOUNT

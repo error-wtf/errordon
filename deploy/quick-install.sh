@@ -235,6 +235,31 @@ if [ "$INSTALL_OLLAMA" = true ]; then
 fi
 
 # ============================================================================
+# PHASE 6B: MATRIX TERMINAL (optional)
+# ============================================================================
+if [ "$INSTALL_MATRIX" = true ]; then
+    info "Enabling Matrix Terminal landing page..."
+    
+    # Add Matrix config to .env.production
+    if ! grep -q "ERRORDON_MATRIX_LANDING_ENABLED" .env.production 2>/dev/null; then
+        cat >> .env.production << 'MATRIXEOF'
+
+# ============================================================================
+# MATRIX TERMINAL LANDING PAGE
+# ============================================================================
+ERRORDON_MATRIX_LANDING_ENABLED=true
+MATRIXEOF
+    else
+        sed -i 's/ERRORDON_MATRIX_LANDING_ENABLED=false/ERRORDON_MATRIX_LANDING_ENABLED=true/' .env.production
+    fi
+    
+    # Set landing page via Rails console
+    docker compose run --rm web bundle exec rails runner "Setting.landing_page = 'matrix'" 2>/dev/null || true
+    
+    log "Matrix Terminal enabled as landing page"
+fi
+
+# ============================================================================
 # PHASE 7: POST-INSTALL SETUP
 # ============================================================================
 info "Phase 7: Post-install setup..."
@@ -325,7 +350,11 @@ if [ "$INSTALL_OLLAMA" = true ]; then
 fi
 
 if [ "$INSTALL_MATRIX" = true ]; then
-    log "Matrix Theme: ✓ Enabled"
+    log "Matrix Terminal: ✓ Enabled as landing page"
+    echo "  - Visitors see interactive terminal first"
+    echo "  - Type 'enter matrix' to access login"
+    echo "  - Commands: tetris, quote, hack, talk"
+    echo "  - Configure in Admin → Server Settings → Branding"
 fi
 
 echo ""

@@ -201,6 +201,55 @@ When violations are detected, admins receive emails with:
 
 ---
 
+## Matrix Terminal Landing Page
+
+An interactive Matrix-style terminal as landing page for new visitors.
+
+### Enable During Installation
+
+```bash
+# Quick install with Matrix Terminal
+curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/deploy/quick-install.sh | bash -s -- --domain your.domain.com --with-matrix
+
+# Or with deploy script
+./deploy.sh  # Answer "y" when asked about Matrix Terminal
+```
+
+### Enable Manually
+
+```bash
+# Via Rails console
+docker compose exec web bundle exec rails runner "Setting.landing_page = 'matrix'"
+
+# Or in Admin UI:
+# Admin → Server Settings → Branding → Landing Page → "Matrix Terminal"
+```
+
+### Terminal Commands
+
+| Command | Action |
+|---------|--------|
+| `enter matrix` | Access login page |
+| `register` | Go to signup |
+| `about` | About Errordon |
+| `tetris` | Play Tetris game |
+| `quote` | Random Matrix quote |
+| `hack` | Hack simulation |
+| `talk <name>` | Chat with Neo, Trinity, Morpheus, Smith, Oracle |
+| `rain` | Toggle Matrix rain |
+| `help` | Show all commands |
+
+### Features
+
+- 🎮 Built-in Tetris game
+- 🌧️ Animated Matrix rain background
+- 💬 Interactive character dialogues
+- 🔓 "enter matrix" command to access network
+- 📝 "register" command for new users
+- ℹ️ "about" command with instance info
+
+---
+
 ## Matrix Theme
 
 Enable the animated Matrix rain background:
@@ -214,7 +263,6 @@ Or toggle per-user with `Ctrl+Shift+M` in browser.
 
 Features:
 - Animated Matrix rain background
-- "Enter Matrix" splash screen on first visit
 - Semi-transparent UI overlays
 - Matrix green (#00ff00) color scheme
 

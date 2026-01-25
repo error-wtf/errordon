@@ -86,6 +86,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     INSTALL_OLLAMA=true
 fi
 
+# Ask about Matrix Terminal
+INSTALL_MATRIX=false
+read -p "Enable Matrix Terminal as landing page? (y/N): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    INSTALL_MATRIX=true
+fi
+
 # Clone or update repo
 INSTALL_DIR="/home/mastodon/errordon"
 if [ ! -d "$INSTALL_DIR" ]; then
@@ -345,6 +353,33 @@ echo "  [ ] Create admin user (command above)"
 echo "  [ ] Test login at https://$DOMAIN"
 echo "  [ ] Configure backup (see deploy/backup.sh)"
 echo ""
+
+# Matrix Terminal setup
+if [ "$INSTALL_MATRIX" = true ]; then
+    log "Enabling Matrix Terminal landing page..."
+    
+    # Add Matrix config
+    if ! grep -q "ERRORDON_MATRIX_LANDING_ENABLED" .env.production 2>/dev/null; then
+        cat >> .env.production << 'MATRIXEOF'
+
+# ============================================================================
+# MATRIX TERMINAL LANDING PAGE
+# ============================================================================
+ERRORDON_MATRIX_LANDING_ENABLED=true
+MATRIXEOF
+    else
+        sed -i 's/ERRORDON_MATRIX_LANDING_ENABLED=false/ERRORDON_MATRIX_LANDING_ENABLED=true/' .env.production
+    fi
+    
+    # Set landing page via Rails
+    docker compose run --rm web bundle exec rails runner "Setting.landing_page = 'matrix'" 2>/dev/null || true
+    
+    log "Matrix Terminal: ✓ Enabled as landing page"
+    echo "  - Visitors see interactive terminal first"
+    echo "  - Type 'enter matrix' to access login"
+    echo "  - Commands: tetris, quote, hack, talk <character>"
+    echo "  - Configure in Admin → Server Settings → Branding"
+fi
 
 # Matrix Theme hint
 if grep -q "ERRORDON_MATRIX_THEME_ENABLED=true" .env.production 2>/dev/null; then
