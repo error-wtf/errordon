@@ -383,7 +383,7 @@ sleep 15
 
 # Check if database is ready
 for i in {1..30}; do
-    if dc exec -T db pg_isready -U postgres &>/dev/null; then
+    if dc exec -T db pg_isready -U mastodon -d mastodon_production &>/dev/null; then
         log "Database is ready"
         break
     fi
@@ -391,15 +391,10 @@ for i in {1..30}; do
     sleep 2
 done
 
-# Setup database
+# Setup database - db:setup creates database and loads schema
 log "Initializing database..."
-dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:create 2>/dev/null || true
-dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:schema:load 2>/dev/null || \
-dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:migrate 2>/dev/null || true
-
-# Precompile assets
-log "Precompiling assets (this takes a while)..."
-dc run --rm web bundle exec rails assets:precompile 2>/dev/null || true
+dc run --rm web bundle exec rails db:setup 2>/dev/null || \
+dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:schema:load 2>/dev/null || true
 
 # Start all services
 log "Starting all services..."
