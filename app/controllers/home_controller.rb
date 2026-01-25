@@ -16,6 +16,7 @@ class HomeController < ApplicationController
     return unless ENV.fetch('ERRORDON_MATRIX_TERMINAL', 'true') == 'true'
     return if session[:matrix_passed]
 
-    redirect_to matrix_path
+    # Redirect to static Matrix Terminal (CSP-safe)
+    redirect_to '/matrix/index.html', allow_other_host: true
   end
 end
