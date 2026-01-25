@@ -1,7 +1,7 @@
 // Errordon Matrix Theme Controller
 // Applies and manages the Matrix cyberpunk theme
 
-const THEME_KEY = 'errordon_theme';
+const THEME_KEY = 'errordon_matrix_theme';
 const MATRIX_CLASS = 'theme-matrix';
 
 export type ThemeName = 'matrix' | 'default' | 'light';

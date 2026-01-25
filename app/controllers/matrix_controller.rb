@@ -2,6 +2,7 @@
 
 class MatrixController < ApplicationController
   skip_before_action :require_functional!
+  skip_before_action :verify_authenticity_token, only: [:pass]
 
   def index
     # Redirect to static Matrix Terminal (CSP-safe)
