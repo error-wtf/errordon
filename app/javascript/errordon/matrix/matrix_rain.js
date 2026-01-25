@@ -328,11 +328,11 @@ let currentTalkNode = null;
 let currentTalkTree = null;
 
 // Load talk databases
-fetch('src/talk_db_neo.json').then(r => r.json()).then(d => talkDB.neo = d);
-fetch('src/talk_db_trinity.json').then(r => r.json()).then(d => talkDB.trinity = d);
-fetch('src/talk_db_morpheus.json').then(r => r.json()).then(d => talkDB.morpheus = d);
-fetch('src/talk_db_smith.json').then(r => r.json()).then(d => talkDB.smith = d);
-fetch('src/talk_db_orakel.json').then(r => r.json()).then(d => talkDB.oracle = d);
+fetch('/matrix/talk_db_neo.json').then(r => r.json()).then(d => talkDB.neo = d);
+fetch('/matrix/talk_db_trinity.json').then(r => r.json()).then(d => talkDB.trinity = d);
+fetch('/matrix/talk_db_morpheus.json').then(r => r.json()).then(d => talkDB.morpheus = d);
+fetch('/matrix/talk_db_smith.json').then(r => r.json()).then(d => talkDB.smith = d);
+fetch('/matrix/talk_db_orakel.json').then(r => r.json()).then(d => talkDB.oracle = d);
 
 function startTalk(character) {
     const validChars = ['neo', 'trinity', 'morpheus', 'smith', 'oracle'];
