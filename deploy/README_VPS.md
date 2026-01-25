@@ -185,9 +185,19 @@ docker compose exec web bundle exec rake errordon:nsfw_protect:setup
 | Job | Schedule | Purpose |
 |-----|----------|---------|
 | Blocklist Update | 3:00 AM | Update porn domain list |
-| GDPR Cleanup | 4:00 AM | Delete expired data |
+| GDPR Cleanup | 4:00 AM | Anonymize IPs, delete expired strikes |
+| AI Snapshot Cleanup | 4:30 AM | Delete SAFE snapshots after 14 days |
+| Video Cleanup | 5:00 AM | Shrink old videos to 480p (if enabled) |
 | Freeze Cleanup | Hourly | Unfreeze expired accounts |
 | Weekly Summary | Mon 9 AM | Email stats to admin |
+
+### Evidence Emails
+
+When violations are detected, admins receive emails with:
+- `{username}_{date}_{time}_evidence.json` - Machine-readable report
+- `{username}_{date}_{time}_evidence.txt` - Human-readable report
+- SHA256 hashes for court-admissibility
+- For CSAM: Original media file attached for BKA reporting
 
 ---
 

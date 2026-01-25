@@ -699,3 +699,23 @@ stats = Errordon::DomainBlocklistService.stats
 #   total_domains: 150350
 # }
 ```
+
+---
+
+## 11. AI Analysis Snapshots & Evidence
+
+Every AI analysis is stored as a forensic snapshot. See [GDPR_COMPLIANCE.md](GDPR_COMPLIANCE.md) for retention periods.
+
+### Evidence Emails
+
+Admins receive evidence packages with:
+- `{username}_{date}_{time}_evidence.json` - Machine-readable
+- `{username}_{date}_{time}_evidence.txt` - Human-readable
+- SHA256/MD5 hashes for court admissibility
+- For CSAM: Original media attached for BKA reporting
+
+### Related Files
+
+- `app/models/nsfw_analysis_snapshot.rb` - Snapshot model
+- `app/mailers/errordon/nsfw_protect_mailer.rb` - Evidence emails
+- `app/workers/errordon/snapshot_cleanup_worker.rb` - Cleanup job

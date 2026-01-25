@@ -86,6 +86,17 @@ Errordon includes a revolutionary **AI-powered content moderation system** that 
 | 4th | 30 days freeze | **PERMANENT** |
 | 5th+ | **PERMANENT** | — |
 
+### Scheduled Jobs (automatic via Sidekiq)
+
+| Job | Schedule | Purpose |
+|-----|----------|---------|
+| Blocklist Update | 3:00 AM | Update porn domain list |
+| GDPR Cleanup | 4:00 AM | Delete expired data, anonymize IPs |
+| AI Snapshot Cleanup | 4:30 AM | Delete SAFE snapshots after 14 days |
+| Video Cleanup | 5:00 AM | Shrink old videos to 480p |
+| Freeze Cleanup | Hourly | Unfreeze expired accounts |
+| Weekly Summary | Mon 9 AM | Email stats to admin |
+
 ### Instance-Wide Protection
 
 - **10+ active alarms** → Instance posting freeze for flagged accounts
@@ -191,6 +202,9 @@ Beyond legal compliance, Errordon includes:
 | 🔒 **Privacy-First** | Strict defaults via ENV |
 | 📊 **Admin Quotas** | Per-user storage limits |
 | 🔍 **Media Filters** | Originals only, Alt text, Public |
+| 📹 **Auto Video Cleanup** | Shrink videos >7 days to 480p |
+| 🗑️ **GDPR Compliance** | Auto-delete expired data |
+| 📧 **Evidence Emails** | Forensic reports for violations |
 
 ---
 
@@ -295,6 +309,9 @@ errordon/
 | Document | Description |
 |----------|-------------|
 | [NSFW_PROTECT_ARCHITECTURE.md](docs/NSFW_PROTECT_ARCHITECTURE.md) | Technical details of AI moderation |
+| [GDPR_COMPLIANCE.md](docs/GDPR_COMPLIANCE.md) | Data retention & privacy |
+| [VIDEO_CLEANUP.md](docs/VIDEO_CLEANUP.md) | Auto video shrinking |
+| [TRANSCODING_PIPELINE.md](docs/TRANSCODING_PIPELINE.md) | Media transcoding |
 | [Terms of Service](public/terms_of_service.md) | Legal terms (DE/EN) |
 | [Privacy Policy](public/privacy_policy.md) | DSGVO/GDPR compliant |
 | [Community Guidelines](public/community_guidelines.md) | Rules with legal references |
