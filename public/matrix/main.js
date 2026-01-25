@@ -156,18 +156,18 @@ function handleCommand(input) {
         return;
     }
     
-    // ENTER MATRIX - Go to actual Mastodon login
+    // ENTER MATRIX - Go to Mastodon
     if (lower === 'enter matrix' || lower === 'entermatrix' || lower === 'login') {
         printLine('[INITIATING NEURAL INTERFACE...]', 'output-line');
         printLine('[CONNECTING TO ERRORDON NETWORK...]', 'output-line');
         setTimeout(() => {
             printLine('[DECRYPTING AUTHENTICATION LAYER...]', 'output-line');
             setTimeout(() => {
-                printLine('[ACCESS GRANTED - REDIRECTING...]', 'output-line');
-                // Set session flag for bot protection
+                printLine('[ACCESS GRANTED - ENTERING THE MATRIX...]', 'output-line');
+                // Set session flag for bot protection, then redirect to home
                 fetch('/matrix/pass', { method: 'POST', credentials: 'same-origin' })
-                    .then(() => { window.location.href = '/auth/sign_in'; })
-                    .catch(() => { window.location.href = '/auth/sign_in'; });
+                    .then(() => { window.location.href = '/'; })
+                    .catch(() => { window.location.href = '/'; });
             }, 800);
         }, 800);
         return;
