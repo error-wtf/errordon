@@ -28,10 +28,19 @@ if [ -z "$DOMAIN" ]; then
     error "Domain is required"
 fi
 
+# Admin account setup
+echo ""
+read -p "Admin username (default: admin): " ADMIN_USER
+ADMIN_USER=${ADMIN_USER:-admin}
+
+read -p "Admin email (default: admin@$DOMAIN): " ADMIN_EMAIL
+ADMIN_EMAIL=${ADMIN_EMAIL:-admin@$DOMAIN}
+
 echo ""
 echo "╔════════════════════════════════════════╗"
 echo "║     Errordon Production Deploy         ║"
 echo "║     Domain: $DOMAIN"
+echo "║     Admin:  $ADMIN_USER"
 echo "╚════════════════════════════════════════╝"
 echo ""
 
@@ -199,6 +208,45 @@ log "Installing systemd services..."
 sudo cp dist/mastodon-*.service /etc/systemd/system/ 2>/dev/null || true
 sudo systemctl daemon-reload
 
+# ============================================================================
+# CREATE ADMIN ACCOUNT
+# ============================================================================
+log "Creating admin account..."
+ADMIN_PASSWORD=$(docker compose exec -T web bin/tootctl accounts create "$ADMIN_USER" --email="$ADMIN_EMAIL" --confirmed --role=Owner 2>&1 | grep -oP 'New password: \K.*' || true)
+
+if [ -n "$ADMIN_PASSWORD" ]; then
+    log "Admin account created successfully!"
+    echo ""
+    echo "╔════════════════════════════════════════════════╗"
+    echo "║  ADMIN CREDENTIALS - SAVE THESE!              ║"
+    echo "╠════════════════════════════════════════════════╣"
+    echo "║  Username: $ADMIN_USER"
+    echo "║  Email:    $ADMIN_EMAIL"
+    echo "║  Password: $ADMIN_PASSWORD"
+    echo "╚════════════════════════════════════════════════╝"
+    echo ""
+    # Save credentials to file
+    INSTALL_DIR=$(pwd)
+    cat > "$INSTALL_DIR/admin_credentials.txt" << CREDS
+Errordon Admin Credentials
+===========================
+Username: $ADMIN_USER
+Email:    $ADMIN_EMAIL
+Password: $ADMIN_PASSWORD
+URL:      https://$DOMAIN
+
+Created: $(date)
+IMPORTANT: Delete this file after saving credentials securely!
+CREDS
+    chmod 600 "$INSTALL_DIR/admin_credentials.txt"
+    warn "Credentials saved to: $INSTALL_DIR/admin_credentials.txt"
+    warn "DELETE THIS FILE after saving credentials securely!"
+else
+    warn "Could not create admin account automatically."
+    log "Create manually with:"
+    echo "  docker compose exec web bin/tootctl accounts create $ADMIN_USER --email=$ADMIN_EMAIL --confirmed --role=Owner"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════╗"
 echo "║     Deployment Complete! ✓             ║"
@@ -209,10 +257,7 @@ echo ""
 log "Useful commands:"
 echo "  docker compose logs -f          # View logs"
 echo "  docker compose restart          # Restart services"
-echo "  docker compose down              # Stop services"
-echo ""
-log "Create admin user:"
-echo "  docker compose run --rm web bin/tootctl accounts create admin --email=admin@$DOMAIN --confirmed --role=Owner"
+echo "  docker compose down             # Stop services"
 echo ""
 
 # NSFW-Protect status

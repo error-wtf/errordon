@@ -61,10 +61,19 @@ if [ -z "$EMAIL" ]; then
     EMAIL="admin@$DOMAIN"
 fi
 
+# Admin account setup
+echo ""
+read -p "Admin username (default: admin): " ADMIN_USER
+ADMIN_USER=${ADMIN_USER:-admin}
+
+read -p "Admin email (default: $EMAIL): " ADMIN_EMAIL
+ADMIN_EMAIL=${ADMIN_EMAIL:-$EMAIL}
+
 echo ""
 echo "╔════════════════════════════════════════════════╗"
 echo "║     Errordon Quick Installer                   ║"
 echo "║     Domain: $DOMAIN"
+echo "║     Admin:  $ADMIN_USER ($ADMIN_EMAIL)"
 echo "╚════════════════════════════════════════════════╝"
 echo ""
 
@@ -247,6 +256,45 @@ docker compose exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/n
 docker compose exec -T web bundle exec rake errordon:blocklist:update 2>/dev/null || true
 
 # ============================================================================
+# CREATE ADMIN ACCOUNT
+# ============================================================================
+info "Creating admin account..."
+ADMIN_PASSWORD=$(docker compose exec -T web bin/tootctl accounts create "$ADMIN_USER" --email="$ADMIN_EMAIL" --confirmed --role=Owner 2>&1 | grep -oP 'New password: \K.*' || true)
+
+if [ -n "$ADMIN_PASSWORD" ]; then
+    log "Admin account created successfully!"
+    echo ""
+    echo "╔════════════════════════════════════════════════╗"
+    echo "║  ADMIN CREDENTIALS - SAVE THESE!              ║"
+    echo "╠════════════════════════════════════════════════╣"
+    echo "║  Username: $ADMIN_USER"
+    echo "║  Email:    $ADMIN_EMAIL"
+    echo "║  Password: $ADMIN_PASSWORD"
+    echo "╚════════════════════════════════════════════════╝"
+    echo ""
+    # Save credentials to file
+    cat > "$INSTALL_DIR/admin_credentials.txt" << CREDS
+Errordon Admin Credentials
+===========================
+Username: $ADMIN_USER
+Email:    $ADMIN_EMAIL
+Password: $ADMIN_PASSWORD
+URL:      https://$DOMAIN
+
+Created: $(date)
+IMPORTANT: Delete this file after saving credentials securely!
+CREDS
+    chmod 600 "$INSTALL_DIR/admin_credentials.txt"
+    warn "Credentials saved to: $INSTALL_DIR/admin_credentials.txt"
+    warn "DELETE THIS FILE after saving credentials securely!"
+else
+    warn "Could not create admin account automatically."
+    log "Create manually with:"
+    echo "  docker compose exec web bin/tootctl accounts create $ADMIN_USER --email=$ADMIN_EMAIL --confirmed --role=Owner"
+fi
+echo ""
+
+# ============================================================================
 # DONE
 # ============================================================================
 echo ""
@@ -255,11 +303,6 @@ echo "║     Installation Complete! ✓                   ║"
 echo "╚════════════════════════════════════════════════╝"
 echo ""
 log "Errordon is running at: https://$DOMAIN"
-echo ""
-
-# Create admin user command
-log "Create admin user:"
-echo "  docker compose exec web tootctl accounts create admin --email=$EMAIL --confirmed --role=Owner"
 echo ""
 
 # Status

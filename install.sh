@@ -637,6 +637,54 @@ RAILS_ENV=production bundle exec rake db:migrate 2>/dev/null || warn "Migration 
 # Initialize blocklists
 log "Initializing blocklists..."
 RAILS_ENV=production bundle exec rake errordon:blocklist:update 2>/dev/null || true
+
+# ============================================================================
+# CREATE ADMIN ACCOUNT
+# ============================================================================
+if [ -n "$DOMAIN" ] && [ -n "$EMAIL" ]; then
+    echo ""
+    read -p "Create admin account now? (Y/n): " -n 1 -r CREATE_ADMIN
+    echo
+    if [[ ! $CREATE_ADMIN =~ ^[Nn]$ ]]; then
+        read -p "Admin username (default: admin): " ADMIN_USER
+        ADMIN_USER=${ADMIN_USER:-admin}
+        
+        log "Creating admin account: $ADMIN_USER"
+        ADMIN_PASSWORD=$(RAILS_ENV=production bin/tootctl accounts create "$ADMIN_USER" --email="$EMAIL" --confirmed --role=Owner 2>&1 | grep -oP 'New password: \K.*' || true)
+        
+        if [ -n "$ADMIN_PASSWORD" ]; then
+            echo ""
+            echo "╔════════════════════════════════════════════════╗"
+            echo "║  ADMIN CREDENTIALS - SAVE THESE!              ║"
+            echo "╠════════════════════════════════════════════════╣"
+            echo "║  Username: $ADMIN_USER"
+            echo "║  Email:    $EMAIL"
+            echo "║  Password: $ADMIN_PASSWORD"
+            echo "╚════════════════════════════════════════════════╝"
+            echo ""
+            # Save credentials to file
+            cat > "admin_credentials.txt" << CREDS
+Errordon Admin Credentials
+===========================
+Username: $ADMIN_USER
+Email:    $EMAIL
+Password: $ADMIN_PASSWORD
+URL:      https://$DOMAIN
+
+Created: $(date)
+IMPORTANT: Delete this file after saving credentials securely!
+CREDS
+            chmod 600 "admin_credentials.txt"
+            warn "Credentials saved to: $(pwd)/admin_credentials.txt"
+            warn "DELETE THIS FILE after saving credentials securely!"
+        else
+            warn "Could not create admin account automatically."
+            log "Create manually with:"
+            echo "  RAILS_ENV=production bin/tootctl accounts create $ADMIN_USER --email=$EMAIL --confirmed --role=Owner"
+        fi
+    fi
+fi
+
 echo ""
 warn "Reload shell: source ~/.bashrc"
 echo ""
