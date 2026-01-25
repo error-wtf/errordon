@@ -220,7 +220,7 @@ else
     git pull origin main || git pull origin master
 fi
 
-cd "$INSTALL_DIR"
+cd "$INSTALL_DIR/deploy"
 
 # ============================================================================
 # PHASE 3: CONFIGURATION
@@ -228,7 +228,7 @@ cd "$INSTALL_DIR"
 info "Phase 3: Configuring environment..."
 
 if [ ! -f ".env.production" ]; then
-    cp deploy/.env.example .env.production
+    cp .env.example .env.production
     
     # Set domain
     sed -i "s/LOCAL_DOMAIN=.*/LOCAL_DOMAIN=$DOMAIN/" .env.production
