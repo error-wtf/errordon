@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --domain DOMAIN    Your domain (required)"
             echo "  --email EMAIL      Admin email for SSL and alerts"
             echo "  --with-ollama      Install Ollama for NSFW-Protect AI"
-            echo "  --with-matrix      Enable Matrix theme"
+            echo "  --with-matrix      Enable Matrix Terminal landing page"
             echo ""
             exit 0
             ;;

@@ -196,7 +196,8 @@ Beyond legal compliance, Errordon includes:
 | Feature | Description |
 |---------|-------------|
 | 🎬 **Profile Media Tabs** | Separate Videos/Audio/Images tabs |
-| 🎨 **Matrix Theme** | Cyberpunk green UI (opt-in) |
+| 🎨 **Matrix Theme** | Cyberpunk green UI (Ctrl+Shift+M) |
+| 🖥️ **Matrix Terminal** | Interactive landing page with games |
 | 😎 **25 Custom Emojis** | Matrix/Hacker/Nerd themed |
 | 📤 **250MB Uploads** | With server-side transcoding |
 | 🔒 **Privacy-First** | Strict defaults via ENV |

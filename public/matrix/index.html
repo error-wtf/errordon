@@ -280,6 +280,7 @@ function handleCommand(input) {
         printLine('║  about         - ℹ️  About Errordon                    ║');
         printLine('╠═══════════════════════════════════════════════════════╣');
         printLine('║  tetris        - 🎮 Play Tetris game                  ║');
+        printLine('║  talk <name>   - 💬 Talk to Matrix characters         ║');
         printLine('║  quote         - 📜 Random Matrix quote               ║');
         printLine('║  hack          - 💻 Hack simulation                   ║');
         printLine('╠═══════════════════════════════════════════════════════╣');
@@ -337,6 +338,27 @@ function handleCommand(input) {
         return;
     }
 
+    // TALK - Interactive conversations with Matrix characters
+    if (cmd === 'talk') {
+        const character = args[0]?.toLowerCase();
+        const characters = ['morpheus', 'neo', 'trinity', 'oracle', 'orakel', 'smith'];
+        if (!character || !characters.includes(character)) {
+            printLine('Usage: talk <character>');
+            printLine('Available: ' + characters.join(', '));
+            return;
+        }
+        printLine('[CONNECTING TO ' + character.toUpperCase() + '...]');
+        fetch('/matrix/talk_db_' + character + '.json')
+            .then(r => r.json())
+            .then(db => {
+                window.talkDb = db;
+                window.talkNode = Object.keys(db)[0];
+                showTalkNode();
+            })
+            .catch(() => printLine('Error: Could not load conversation.'));
+        return;
+    }
+
     // CLEAR
     if (cmd === 'clear') { output.innerHTML = ''; return; }
 
@@ -352,6 +374,11 @@ function handleCommand(input) {
     // LOGOUT
     if (cmd === 'logout' || cmd === 'exit') { logout(); return; }
 
+    // Talk response (1, 2, 3)
+    if (window.talkDb && ['1', '2', '3'].includes(cmd)) {
+        if (handleTalkResponse(cmd)) return;
+    }
+
     // UNKNOWN
     printLine('Unknown command: ' + cmd, 'error-line');
     printLine('Type "help" for available commands');
@@ -361,6 +388,33 @@ function handleCommand(input) {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && tetrisOverlay.style.display === 'block') closeTetris();
 });
+
+// Talk system - show current dialog node
+function showTalkNode() {
+    if (!window.talkDb || !window.talkNode) return;
+    const node = window.talkDb[window.talkNode];
+    if (!node) { printLine('[END OF CONVERSATION]'); window.talkDb = null; return; }
+    printLine('');
+    printLine(node.speaker + ': "' + node.text + '"');
+    if (node.options) {
+        Object.entries(node.options).forEach(([key, opt]) => {
+            printLine('  [' + key + '] ' + opt.text);
+        });
+        printLine('Type a number to respond:');
+    }
+}
+
+// Handle talk responses
+function handleTalkResponse(num) {
+    if (!window.talkDb || !window.talkNode) return false;
+    const node = window.talkDb[window.talkNode];
+    if (!node || !node.options || !node.options[num]) return false;
+    const next = node.options[num].next;
+    if (!next) { printLine('[DISCONNECTED]'); window.talkDb = null; return true; }
+    window.talkNode = next;
+    showTalkNode();
+    return true;
+}
 </script>
 </body>
 </html>
