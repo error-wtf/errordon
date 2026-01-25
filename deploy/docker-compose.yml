@@ -9,10 +9,12 @@ services:
     networks:
       - internal_network
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      test: ['CMD', 'pg_isready', '-U', 'mastodon', '-d', 'mastodon_production']
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
+      POSTGRES_USER: mastodon
+      POSTGRES_DB: mastodon_production
       POSTGRES_HOST_AUTH_METHOD: trust
 
   redis:
