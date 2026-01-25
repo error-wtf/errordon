@@ -379,9 +379,13 @@ info "Phase 5: Starting services..."
 log "Cleaning up any existing containers..."
 dc down -v 2>/dev/null || true
 
+# Clear Docker build cache to prevent stale cached layers
+log "Clearing Docker build cache..."
+docker builder prune -af 2>/dev/null || true
+
 # Build Errordon from source (includes Matrix Terminal and custom features)
 log "Building Errordon from source (this takes 10-20 minutes)..."
-dc build --no-cache
+dc build
 
 # Start db and redis first
 log "Starting database and Redis..."
