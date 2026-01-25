@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-  <rect fill="#1a1a2e" width="36" height="36" rx="4"/>
-  <text fill="#ff79c6" font-family="monospace" font-size="5" x="2" y="10">func</text>
-  <text fill="#8be9fd" font-family="monospace" font-size="5" x="2" y="16">{</text>
-  <text fill="#50fa7b" font-family="monospace" font-size="5" x="4" y="22">return</text>
-  <text fill="#f1fa8c" font-family="monospace" font-size="5" x="4" y="28">true</text>
-  <text fill="#8be9fd" font-family="monospace" font-size="5" x="2" y="34">}</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" fill="#1a1a2e" rx="4"/><g fill="none" stroke-linecap="round" stroke-width="2"><path stroke="#ff79c6" d="M4 8h10"/><path stroke="#8be9fd" d="m4 14 3 4-3 4"/><path stroke="#50fa7b" d="M10 18h12"/><path stroke="#f1fa8c" d="M12 24h8"/><path stroke="#8be9fd" d="m4 30 3-4-3-4"/></g></svg>

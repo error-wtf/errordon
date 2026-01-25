@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-  <rect fill="#000" width="36" height="36" rx="4"/>
-  <rect fill="#003300" x="2" y="2" width="32" height="32" rx="3" stroke="#00ff00" stroke-width="1"/>
-  <text fill="#00ff00" font-family="monospace" font-size="5" font-weight="bold" x="4" y="14">ACCESS</text>
-  <text fill="#00ff00" font-family="monospace" font-size="6" font-weight="bold" x="3" y="24">GRANTED</text>
-  <path fill="#00ff00" d="M14 28l3 3 6-6" stroke="#00ff00" stroke-width="2" fill="none"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" rx="4"/><rect width="32" height="32" x="2" y="2" fill="#030" stroke="#0f0" rx="3"/><circle cx="18" cy="14" r="8" fill="none" stroke="#0f0" stroke-width="2"/><path fill="none" stroke="#0f0" stroke-width="3" d="m12 14 4 4 8-8"/><path fill="#0f0" d="M8 26h20v3H8z"/></svg>

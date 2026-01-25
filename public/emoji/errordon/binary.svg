@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-  <rect fill="#000" width="36" height="36" rx="4"/>
-  <text fill="#00ff00" font-family="monospace" font-size="8" font-weight="bold" x="3" y="13">1010</text>
-  <text fill="#00cc00" font-family="monospace" font-size="8" font-weight="bold" x="3" y="24">0101</text>
-  <text fill="#009900" font-family="monospace" font-size="8" font-weight="bold" x="3" y="35">1100</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" rx="4"/><g fill="#0f0"><path d="M4 4h3v6H4z"/><path d="M12 4h3v6h-3z" opacity=".7"/><path d="M20 4h3v6h-3z"/><path d="M28 4h3v6h-3zM4 14h3v6H4z" opacity=".7"/><path d="M12 14h3v6h-3z"/><path d="M20 14h3v6h-3z" opacity=".7"/><path d="M28 14h3v6h-3zM4 24h3v6H4zm8 0h3v6h-3z"/><path d="M20 24h3v6h-3zm8 0h3v6h-3z" opacity=".5"/></g></svg>

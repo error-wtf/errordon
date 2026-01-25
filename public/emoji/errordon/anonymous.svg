@@ -1,9 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-  <ellipse fill="#F5F8FA" cx="18" cy="20" rx="14" ry="12"/>
-  <path fill="#292F33" d="M4 20c0-6 4-10 4-14h20c0 4 4 8 4 14"/>
-  <ellipse fill="#292F33" cx="11" cy="18" rx="4" ry="2"/>
-  <ellipse fill="#292F33" cx="25" cy="18" rx="4" ry="2"/>
-  <path fill="none" stroke="#CCD6DD" stroke-width="2" d="M8 24c2 3 6 5 10 5s8-2 10-5"/>
-  <path fill="#F5F8FA" d="M14 26c0 0 2-1 4-1s4 1 4 1v4c0 1-2 2-4 2s-4-1-4-2v-4z"/>
-  <path fill="#E1E8ED" d="M18 25l-1 3h2z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><ellipse cx="18" cy="20" fill="#f5f8fa" rx="14" ry="12"/><path fill="#292f33" d="M4 20c0-6 4-10 4-14h20c0 4 4 8 4 14"/><ellipse cx="11" cy="18" fill="#292f33" rx="4" ry="2"/><ellipse cx="25" cy="18" fill="#292f33" rx="4" ry="2"/><path fill="none" stroke="#ccd6dd" stroke-width="2" d="M8 24c2 3 6 5 10 5s8-2 10-5"/><path fill="#f5f8fa" d="M14 26s2-1 4-1 4 1 4 1v4c0 1-2 2-4 2s-4-1-4-2z"/><path fill="#e1e8ed" d="m18 25-1 3h2z"/></svg>
