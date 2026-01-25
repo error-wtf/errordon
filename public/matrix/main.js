@@ -172,12 +172,33 @@ function handleCommand(input) {
         return;
     }
     
-    // Register
+    // Register - requires invitation
     if (lower === 'register' || lower === 'signup') {
-        printLine('[PREPARING REGISTRATION MATRIX...]', 'output-line');
+        printLine('', 'output-line');
+        printLine('[ACCESS DENIED]', 'error-line');
+        printLine('', 'output-line');
+        printLine('Registration requires an invitation link.', 'output-line');
+        printLine('Ask an existing member for an invite.', 'output-line');
+        printLine('', 'output-line');
+        printLine('Already have an invite? Use: invite <code>', 'output-line');
+        return;
+    }
+    
+    // Invite command
+    if (cmd === 'invite' && args.length > 0) {
+        const code = args.join('');
+        printLine('[VALIDATING INVITATION CODE...]', 'output-line');
         setTimeout(() => {
-            window.location.href = '/auth/sign_up';
-        }, 1000);
+            printLine('[ACCESSING REGISTRATION MATRIX...]', 'output-line');
+            setTimeout(() => {
+                window.location.href = '/invite/' + encodeURIComponent(code);
+            }, 800);
+        }, 800);
+        return;
+    }
+    if (cmd === 'invite' && args.length === 0) {
+        printLine('Usage: invite <code>', 'error-line');
+        printLine('Example: invite abc123xyz', 'output-line');
         return;
     }
     
@@ -210,7 +231,7 @@ function handleCommand(input) {
         printLine('║              ERRORDON TERMINAL COMMANDS               ║', 'output-line');
         printLine('╠═══════════════════════════════════════════════════════╣', 'output-line');
         printLine('║  enter matrix  - 🔓 Access Errordon Social Network    ║', 'output-line');
-        printLine('║  register      - 📝 Create new account                ║', 'output-line');
+        printLine('║  invite <code> - 📝 Register with invite code         ║', 'output-line');
         printLine('║  about         - ℹ️  About Errordon                    ║', 'output-line');
         printLine('╠═══════════════════════════════════════════════════════╣', 'output-line');
         printLine('║  tetris        - 🎮 Play Tetris game                  ║', 'output-line');
