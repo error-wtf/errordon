@@ -19,6 +19,17 @@ warn() { echo -e "${YELLOW}[!]${NC} $1"; }
 error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 info() { echo -e "${BLUE}[i]${NC} $1"; }
 
+# Docker Compose wrapper - uses plugin or standalone
+dc() {
+    if docker compose version &> /dev/null; then
+        docker compose "$@"
+    elif command -v docker-compose &> /dev/null; then
+        docker-compose "$@"
+    else
+        error "Docker Compose not found!"
+    fi
+}
+
 # Parse arguments
 DOMAIN=""
 EMAIL=""
@@ -115,10 +126,21 @@ else
     log "Docker already installed"
 fi
 
-# Install Docker Compose plugin
-if ! docker compose version &> /dev/null; then
-    log "Installing Docker Compose plugin..."
-    sudo apt-get install -y -qq docker-compose-plugin
+# Install Docker Compose
+if ! docker compose version &> /dev/null && ! command -v docker-compose &> /dev/null; then
+    log "Installing Docker Compose..."
+    # Try plugin first, then standalone
+    sudo apt-get install -y -qq docker-compose-plugin 2>/dev/null || {
+        # Fallback: Install standalone docker-compose
+        log "Installing standalone Docker Compose..."
+        COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K[^"]+' || echo "v2.24.0")
+        sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        sudo ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
+        # Create compose alias
+        mkdir -p ~/.docker/cli-plugins
+        ln -sf /usr/local/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+    }
 else
     log "Docker Compose already installed"
 fi
@@ -205,7 +227,14 @@ TEMPNGINX
 
 sudo ln -sf /etc/nginx/sites-available/errordon-temp /etc/nginx/sites-enabled/
 sudo mkdir -p /var/www/html
-sudo nginx -t && sudo systemctl reload nginx
+
+# Ensure nginx is running
+sudo nginx -t
+if ! systemctl is-active --quiet nginx; then
+    sudo systemctl start nginx
+else
+    sudo systemctl reload nginx
+fi
 
 # Step 2: Get SSL certificate
 log "Getting SSL certificate..."
@@ -238,20 +267,20 @@ log "Nginx configured with SSL"
 info "Phase 5: Starting services..."
 
 # Start db and redis first
-docker compose up -d db redis
+dc up -d db redis
 sleep 10
 
 # Setup database
 log "Initializing database..."
-docker compose run --rm web bundle exec rake db:setup 2>/dev/null || \
-docker compose run --rm web bundle exec rake db:migrate
+dc run --rm web bundle exec rake db:setup 2>/dev/null || \
+dc run --rm web bundle exec rake db:migrate
 
 # Precompile assets
 log "Precompiling assets (this takes a while)..."
-docker compose run --rm web bundle exec rake assets:precompile
+dc run --rm web bundle exec rake assets:precompile
 
 # Start all services
-docker compose up -d
+dc up -d
 
 # ============================================================================
 # PHASE 6: OLLAMA (optional)
@@ -275,7 +304,7 @@ if [ "$INSTALL_OLLAMA" = true ]; then
     sed -i "s|ERRORDON_NSFW_OLLAMA_ENDPOINT=.*|ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434|" .env.production
     
     # Restart to apply
-    docker compose restart web sidekiq
+    dc restart web sidekiq
     
     log "NSFW-Protect enabled"
 fi
@@ -300,7 +329,7 @@ MATRIXEOF
     fi
     
     # Set landing page via Rails console
-    docker compose run --rm web bundle exec rails runner "Setting.landing_page = 'matrix'" 2>/dev/null || true
+    dc run --rm web bundle exec rails runner "Setting.landing_page = 'matrix'" 2>/dev/null || true
     
     log "Matrix Terminal enabled as landing page"
 fi
@@ -312,25 +341,25 @@ info "Phase 7: Post-install setup..."
 
 # Create Errordon directories
 log "Creating Errordon directories..."
-docker compose exec -T web mkdir -p log/nsfw_protect/admin_reports 2>/dev/null || true
-docker compose exec -T web mkdir -p log/gdpr_audit 2>/dev/null || true
-docker compose exec -T web mkdir -p tmp/errordon_cleanup 2>/dev/null || true
+dc exec -T web mkdir -p log/nsfw_protect/admin_reports 2>/dev/null || true
+dc exec -T web mkdir -p log/gdpr_audit 2>/dev/null || true
+dc exec -T web mkdir -p tmp/errordon_cleanup 2>/dev/null || true
 
 # Run any pending migrations (for Errordon tables)
 log "Running database migrations..."
-docker compose run --rm web bundle exec rake db:migrate 2>/dev/null || true
+dc run --rm web bundle exec rake db:migrate 2>/dev/null || true
 
 # Initialize NSFW-Protect
-docker compose exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
+dc exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
 
 # Initialize blocklists
-docker compose exec -T web bundle exec rake errordon:blocklist:update 2>/dev/null || true
+dc exec -T web bundle exec rake errordon:blocklist:update 2>/dev/null || true
 
 # ============================================================================
 # CREATE ADMIN ACCOUNT
 # ============================================================================
 info "Creating admin account..."
-ADMIN_PASSWORD=$(docker compose exec -T web bin/tootctl accounts create "$ADMIN_USER" --email="$ADMIN_EMAIL" --confirmed --role=Owner 2>&1 | grep -oP 'New password: \K.*' || true)
+ADMIN_PASSWORD=$(dc exec -T web bin/tootctl accounts create "$ADMIN_USER" --email="$ADMIN_EMAIL" --confirmed --role=Owner 2>&1 | grep -oP 'New password: \K.*' || true)
 
 if [ -n "$ADMIN_PASSWORD" ]; then
     log "Admin account created successfully!"
@@ -361,7 +390,7 @@ CREDS
 else
     warn "Could not create admin account automatically."
     log "Create manually with:"
-    echo "  docker compose exec web bin/tootctl accounts create $ADMIN_USER --email=$ADMIN_EMAIL --confirmed --role=Owner"
+    echo "  dc exec web bin/tootctl accounts create $ADMIN_USER --email=$ADMIN_EMAIL --confirmed --role=Owner"
 fi
 echo ""
 
@@ -378,14 +407,14 @@ echo ""
 
 # Status
 log "Service status:"
-docker compose ps --format "table {{.Name}}\t{{.Status}}" 2>/dev/null || docker compose ps
+dc ps --format "table {{.Name}}\t{{.Status}}" 2>/dev/null || dc ps
 
 echo ""
 log "Useful commands:"
 echo "  cd $INSTALL_DIR"
-echo "  docker compose logs -f        # View logs"
-echo "  docker compose restart        # Restart services"
-echo "  docker compose down           # Stop services"
+echo "  dc logs -f        # View logs"
+echo "  dc restart        # Restart services"
+echo "  dc down           # Stop services"
 echo ""
 
 if [ "$INSTALL_OLLAMA" = true ]; then
