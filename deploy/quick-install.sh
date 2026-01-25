@@ -230,6 +230,9 @@ fi
 
 cd "$INSTALL_DIR/deploy"
 
+# Always fetch fresh docker-compose.yml to avoid cache issues
+curl -sSL "https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/docker-compose.yml?v=$(date +%s)" -o docker-compose.yml
+
 # ============================================================================
 # PHASE 3: CONFIGURATION
 # ============================================================================
