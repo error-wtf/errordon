@@ -20,13 +20,24 @@ error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 info() { echo -e "${BLUE}[i]${NC} $1"; }
 
 # Docker Compose wrapper - uses plugin or standalone
+# Detect which method works ONCE at script start
+COMPOSE_CMD=""
+detect_compose() {
+    if docker compose version 2>&1 | grep -q "Docker Compose"; then
+        COMPOSE_CMD="docker compose"
+    elif command -v docker-compose &> /dev/null && docker-compose version &> /dev/null; then
+        COMPOSE_CMD="docker-compose"
+    fi
+}
+
 dc() {
-    if docker compose version &> /dev/null; then
-        docker compose "$@"
-    elif command -v docker-compose &> /dev/null; then
-        docker-compose "$@"
+    if [ -z "$COMPOSE_CMD" ]; then
+        detect_compose
+    fi
+    if [ -n "$COMPOSE_CMD" ]; then
+        $COMPOSE_CMD "$@"
     else
-        error "Docker Compose not found!"
+        error "Docker Compose not found! Install it first."
     fi
 }
 
@@ -169,21 +180,28 @@ sudo systemctl start docker
 
 # Install Docker Compose - ALWAYS check and install standalone for Kali
 log "Checking Docker Compose..."
-if docker compose version &> /dev/null; then
-    log "Docker Compose plugin available"
-elif command -v docker-compose &> /dev/null; then
-    log "Docker Compose standalone available"
+detect_compose
+if [ -n "$COMPOSE_CMD" ]; then
+    log "Docker Compose available: $COMPOSE_CMD"
 else
     log "Installing Docker Compose standalone..."
     COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K[^"]+' 2>/dev/null || echo "v2.27.0")
     sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     sudo ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
-    # Also create as docker plugin
-    mkdir -p ~/.docker/cli-plugins
-    sudo mkdir -p /usr/local/lib/docker/cli-plugins
-    sudo ln -sf /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
-    log "Docker Compose installed: $(docker-compose --version)"
+    # Also try to set up as docker plugin
+    mkdir -p ~/.docker/cli-plugins 2>/dev/null || true
+    ln -sf /usr/local/bin/docker-compose ~/.docker/cli-plugins/docker-compose 2>/dev/null || true
+    sudo mkdir -p /usr/local/lib/docker/cli-plugins 2>/dev/null || true
+    sudo ln -sf /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose 2>/dev/null || true
+    # Re-detect after installation
+    COMPOSE_CMD=""
+    detect_compose
+    if [ -n "$COMPOSE_CMD" ]; then
+        log "Docker Compose installed: $($COMPOSE_CMD version)"
+    else
+        error "Failed to install Docker Compose!"
+    fi
 fi
 
 # ============================================================================
