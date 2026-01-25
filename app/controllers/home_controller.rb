@@ -13,7 +13,7 @@ class HomeController < ApplicationController
   def maybe_redirect_to_matrix
     # Redirect to Matrix Terminal if enabled and user hasn't passed it
     return if user_signed_in?
-    return unless ENV.fetch('ERRORDON_MATRIX_TERMINAL', 'true') == 'true'
+    return unless ENV.fetch('ERRORDON_MATRIX_LANDING_ENABLED', 'true') == 'true'
     return if session[:matrix_passed]
 
     # Redirect to static Matrix Terminal (CSP-safe)

@@ -258,6 +258,8 @@ function handleCommand(input) {
     // ENTER MATRIX
     if (lower === 'enter matrix' || lower === 'entermatrix' || lower === 'login') {
         printLine('[INITIATING NEURAL INTERFACE...]');
+        // Set session flag so user won't be redirected back
+        fetch('/matrix/pass', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
         setTimeout(() => {
             printLine('[CONNECTING TO ERRORDON NETWORK...]');
             setTimeout(() => {
