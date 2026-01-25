@@ -90,7 +90,6 @@ gem 'simple_form', '~> 5.2'
 gem 'simple-navigation', '~> 4.4'
 gem 'stoplight'
 gem 'strong_migrations'
-gem 'sys-filesystem', '~> 1.4'
 gem 'tty-prompt', '~> 0.23', require: false
 gem 'twitter-text', '~> 3.1.0'
 gem 'tzinfo-data', '~> 1.2023'
