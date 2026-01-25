@@ -40,7 +40,7 @@ interface InitialStateMeta {
   remote_topic_feed_access: 'public' | 'authenticated' | 'disabled';
   title: string;
   show_trends: boolean;
-  landing_page: 'about' | 'trends' | 'local_feed';
+  landing_page: 'about' | 'trends' | 'local_feed' | 'matrix';
   use_blurhash: boolean;
   use_pending_items?: boolean;
   version: string;

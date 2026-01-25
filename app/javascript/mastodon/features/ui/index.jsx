@@ -154,6 +154,8 @@ class SwitchingColumnsArea extends PureComponent {
       redirect = <Redirect from='/' to='/explore' exact />;
     } else if (localLiveFeedAccess === 'public' && landingPage === 'local_feed') {
       redirect = <Redirect from='/' to='/public/local' exact />;
+    } else if (landingPage === 'matrix') {
+      redirect = <Redirect from='/' to='/matrix' exact />;
     } else {
       redirect = <Redirect from='/' to='/about' exact />;
     }
