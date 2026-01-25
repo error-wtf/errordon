@@ -153,13 +153,16 @@
     const cmd = lower.split(' ')[0];
     const args = input.split(' ').slice(1);
 
-    if (lower === 'enter matrix' || lower === 'entermatrix' || lower === 'login') {
-      printLine('[INITIATING NEURAL INTERFACE...]');
+    if (lower === 'enter matrix' || lower === 'login' || lower === 'signin') {
+      printLine('[INITIATING MATRIX PROTOCOL...]');
       setTimeout(() => {
         printLine('[CONNECTING TO ERRORDON NETWORK...]');
         setTimeout(() => {
           printLine('[ACCESS GRANTED - REDIRECTING...]');
-          setTimeout(() => { window.location.href = '/auth/sign_in'; }, 800);
+          // Set session flag for bot protection
+          fetch('/matrix/pass', { method: 'POST', credentials: 'same-origin' })
+            .then(() => { window.location.href = '/auth/sign_in'; })
+            .catch(() => { window.location.href = '/auth/sign_in'; });
         }, 800);
       }, 800);
       return;

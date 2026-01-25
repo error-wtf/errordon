@@ -15,6 +15,7 @@ class Auth::SessionsController < Devise::SessionsController
   around_action :preserve_stored_location, only: :destroy, if: :continue_after?
 
   prepend_before_action :check_suspicious!, only: [:create]
+  prepend_before_action :require_matrix_challenge!, only: [:new]
 
   include Auth::TwoFactorAuthenticationConcern
 
@@ -206,5 +207,16 @@ class Auth::SessionsController < Devise::SessionsController
       end
       format.all { super }
     end
+  end
+
+  # Bot protection: Require Matrix Terminal challenge before showing login
+  def require_matrix_challenge!
+    return if user_signed_in?
+    return if session[:matrix_passed]
+
+    # Check if matrix landing page is enabled
+    return unless Setting.landing_page == 'matrix'
+
+    redirect_to '/matrix'
   end
 end

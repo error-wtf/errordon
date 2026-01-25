@@ -18,8 +18,9 @@ end
 Rails.application.routes.draw do
   root 'home#index'
 
-  # Matrix Terminal Landing Page
+  # Matrix Terminal Landing Page (Bot Protection)
   get 'matrix', to: 'matrix#index'
+  post 'matrix/pass', to: 'matrix#pass'
 
   mount LetterOpenerWeb::Engine, at: 'letter_opener' if Rails.env.development?
 

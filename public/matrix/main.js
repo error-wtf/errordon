@@ -164,9 +164,10 @@ function handleCommand(input) {
             printLine('[DECRYPTING AUTHENTICATION LAYER...]', 'output-line');
             setTimeout(() => {
                 printLine('[ACCESS GRANTED - REDIRECTING...]', 'output-line');
-                setTimeout(() => {
-                    window.location.href = '/auth/sign_in';
-                }, 800);
+                // Set session flag for bot protection
+                fetch('/matrix/pass', { method: 'POST', credentials: 'same-origin' })
+                    .then(() => { window.location.href = '/auth/sign_in'; })
+                    .catch(() => { window.location.href = '/auth/sign_in'; });
             }, 800);
         }, 800);
         return;
