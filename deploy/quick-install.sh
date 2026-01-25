@@ -212,12 +212,20 @@ fi
 info "Phase 2: Cloning Errordon..."
 
 INSTALL_DIR="$HOME/errordon"
-if [ ! -d "$INSTALL_DIR" ]; then
-    git clone https://github.com/error-wtf/errordon.git "$INSTALL_DIR"
+if [ -d "$INSTALL_DIR" ]; then
+    # Check if it's a valid git repo
+    if [ -d "$INSTALL_DIR/.git" ]; then
+        log "Errordon directory exists, updating..."
+        cd "$INSTALL_DIR"
+        git pull origin main 2>/dev/null || git pull origin master 2>/dev/null || true
+    else
+        # Not a git repo, remove and re-clone
+        warn "Removing invalid installation directory..."
+        rm -rf "$INSTALL_DIR"
+        git clone https://github.com/error-wtf/errordon.git "$INSTALL_DIR"
+    fi
 else
-    log "Errordon directory exists, updating..."
-    cd "$INSTALL_DIR"
-    git pull origin main || git pull origin master
+    git clone https://github.com/error-wtf/errordon.git "$INSTALL_DIR"
 fi
 
 cd "$INSTALL_DIR/deploy"
