@@ -200,7 +200,7 @@ Beyond legal compliance, Errordon includes:
 | 😎 **25 Custom Emojis** | Matrix/Hacker/Nerd themed |
 | 📤 **250MB Uploads** | With server-side transcoding |
 | 🔒 **Privacy-First** | Strict defaults via ENV |
-| 📊 **Admin Quotas** | Per-user storage limits |
+| 💾 **Dynamic Storage Quota** | 60% disk shared equally, profile display |
 | 🔍 **Media Filters** | Originals only, Alt text, Public |
 | 📹 **Auto Video Cleanup** | Shrink videos >7 days to 480p |
 | 🗑️ **GDPR Compliance** | Auto-delete expired data |
@@ -309,6 +309,7 @@ errordon/
 | Document | Description |
 |----------|-------------|
 | [NSFW_PROTECT_ARCHITECTURE.md](docs/NSFW_PROTECT_ARCHITECTURE.md) | Technical details of AI moderation |
+| [STORAGE_QUOTA.md](docs/STORAGE_QUOTA.md) | Dynamic disk-based quotas |
 | [GDPR_COMPLIANCE.md](docs/GDPR_COMPLIANCE.md) | Data retention & privacy |
 | [VIDEO_CLEANUP.md](docs/VIDEO_CLEANUP.md) | Auto video shrinking |
 | [TRANSCODING_PIPELINE.md](docs/TRANSCODING_PIPELINE.md) | Media transcoding |

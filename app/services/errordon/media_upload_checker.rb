@@ -81,6 +81,9 @@ module Errordon
       return false unless @attachment.present?
       return false unless %w[image video].include?(@attachment.type)
       
+      # Only check local accounts (Fediverse compatibility)
+      return false unless @account&.local?
+      
       # Admins sind von NSFW-Checks ausgenommen (für Testing)
       return false if admin_account?
 
@@ -328,7 +331,7 @@ module Errordon
     end
 
     def check_storage_quota!
-      return unless @account
+      return unless @account&.local?  # Fediverse: only local accounts
 
       file_size = @attachment.file_file_size.to_i
       quota_info = StorageQuotaService.quota_for(@account)
