@@ -28,7 +28,9 @@ services:
       - redis_data:/data
 
   web:
-    image: ghcr.io/mastodon/mastodon:v4.3.0
+    build:
+      context: ..
+      dockerfile: Dockerfile
     restart: always
     env_file: .env.production
     command: bundle exec puma -C config/puma.rb
@@ -46,7 +48,9 @@ services:
       - mastodon_public:/mastodon/public/system
 
   streaming:
-    image: ghcr.io/mastodon/mastodon-streaming:v4.3.0
+    build:
+      context: ..
+      dockerfile: streaming/Dockerfile
     restart: always
     env_file: .env.production
     networks:
@@ -61,7 +65,9 @@ services:
       - redis
 
   sidekiq:
-    image: ghcr.io/mastodon/mastodon:v4.3.0
+    build:
+      context: ..
+      dockerfile: Dockerfile
     restart: always
     env_file: .env.production
     command: bundle exec sidekiq
