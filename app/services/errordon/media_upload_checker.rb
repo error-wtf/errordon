@@ -12,6 +12,15 @@ module Errordon
       end
     end
 
+    class QuotaExceededError < StandardError
+      attr_reader :quota_info
+
+      def initialize(message, quota_info)
+        super(message)
+        @quota_info = quota_info
+      end
+    end
+
     def initialize(media_attachment, ip_address: nil, request: nil)
       @attachment = media_attachment
       @account = media_attachment.account
@@ -27,6 +36,9 @@ module Errordon
 
       # Check if account is frozen
       raise_if_frozen!
+
+      # Check storage quota BEFORE processing upload
+      check_storage_quota!
 
       # Check for blocked URLs in status text
       check_blocked_urls! if @attachment.status.present?
@@ -313,6 +325,24 @@ module Errordon
       request.remote_ip || request.ip
     rescue StandardError
       nil
+    end
+
+    def check_storage_quota!
+      return unless @account
+
+      file_size = @attachment.file_file_size.to_i
+      quota_info = StorageQuotaService.quota_for(@account)
+
+      unless StorageQuotaService.can_upload?(@account, file_size)
+        message = I18n.t(
+          'errordon.quota.exceeded',
+          used: quota_info[:used_human],
+          quota: quota_info[:quota_human],
+          default: "Speicherplatz aufgebraucht (#{quota_info[:used_human]} von #{quota_info[:quota_human]}). " \
+                   "Bitte lösche alte Medien oder teile nur Text/Links."
+        )
+        raise QuotaExceededError.new(message, quota_info)
+      end
     end
   end
 end

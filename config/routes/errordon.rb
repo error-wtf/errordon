@@ -9,6 +9,9 @@ namespace :api do
       # User quota endpoint
       get 'quotas/current', to: 'quotas#current'
 
+      # Storage quota (dynamic disk-based)
+      resource :storage_quota, only: [:show]
+
       # Admin quota management
       resources :quotas, only: [:index, :show, :update]
 
