@@ -1,8 +1,13 @@
 #!/bin/bash
-# Errordon Interactive Installer
+#
+# Errordon Interactive Installer v1.1.0
+# Guided installation wizard for Errordon
+#
+# Usage: curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/interactive-install.sh -o install.sh && chmod +x install.sh && ./install.sh
+#
 set -e
 
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
 log() { echo -e "${GREEN}[✓]${NC} $1"; }
 warn() { echo -e "${YELLOW}[!]${NC} $1"; }
 error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
@@ -21,10 +26,18 @@ dc() {
 clear
 echo -e "${GREEN}"
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║          ERRORDON - Interactive Installer                ║"
-echo "║      A Safe Fediverse: No Porn, No Hate, No Fascism      ║"
+echo "║          ERRORDON - Interactive Installer v1.1.0        ║"
+echo "║      A Safe Fediverse: No Porn, No Hate, No Fascism     ║"
+echo "╠══════════════════════════════════════════════════════════╣"
+echo "║  Features:                                               ║"
+echo "║  • Matrix Terminal landing page                         ║"
+echo "║  • AI content moderation (Ollama)                       ║"
+echo "║  • 250MB upload support                                 ║"
+echo "║  • Privacy-first defaults                               ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
+echo -e "${CYAN}Documentation: https://github.com/error-wtf/errordon/blob/master/deploy/TUTORIALS.md${NC}"
+echo ""
 
 # Check not root
 [ "$EUID" -eq 0 ] && error "Don't run as root. Use a normal user with sudo."
@@ -83,5 +96,19 @@ ARGS="--domain $DOMAIN --email $ADMIN_EMAIL"
 export ADMIN_USER ADMIN_EMAIL SMTP_SERVER SMTP_PORT SMTP_LOGIN SMTP_PASSWORD SMTP_FROM
 
 # Always download fresh quick-install.sh to avoid cache issues
-curl -sSL "https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/quick-install.sh?nocache=$(date +%s)" -o /tmp/quick-install.sh
+echo ""
+log "Downloading latest installer..."
+if ! curl -sSL "https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/quick-install.sh?v=$(date +%s)" -o /tmp/quick-install.sh; then
+    error "Failed to download installer. Check your internet connection."
+fi
+chmod +x /tmp/quick-install.sh
+
+echo ""
+echo -e "${GREEN}━━━ Starting Installation ━━━${NC}"
+echo "This will take 20-40 minutes. You can watch the progress below."
+echo ""
+
 bash /tmp/quick-install.sh $ARGS
+
+# Cleanup
+rm -f /tmp/quick-install.sh

@@ -1,9 +1,16 @@
 #!/bin/bash
 #
-# Errordon Quick Install Script
-# One-line VPS installer for Ubuntu 22.04
+# Errordon Quick Install Script v1.1.0
+# One-line VPS installer for Ubuntu 22.04+, Debian 12+, Kali Linux
 #
-# Usage: curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/deploy/quick-install.sh | bash -s -- --domain your.domain.com
+# Usage: curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/quick-install.sh | bash -s -- --domain your.domain.com
+#
+# Features:
+# - Automatic Docker & Docker Compose installation
+# - PostgreSQL 15 with proper mastodon user setup  
+# - Nginx reverse proxy with Let's Encrypt SSL
+# - Optional Ollama AI for content moderation
+# - Matrix Terminal landing page
 #
 
 set -e
@@ -384,8 +391,19 @@ log "Clearing Docker build cache..."
 docker builder prune -af 2>/dev/null || true
 
 # Build Errordon from source (includes Matrix Terminal and custom features)
-log "Building Errordon from source (this takes 10-20 minutes)..."
-dc build
+log "Building Errordon from source (this takes 15-30 minutes on first run)..."
+log "  - Compiling Ruby 3.4, Node.js 22, FFmpeg 8.0, libvips 8.18"
+log "  - Building assets (JavaScript, CSS)"
+echo ""
+if ! dc build 2>&1 | tee /tmp/errordon-build.log; then
+    error "Docker build failed! Check /tmp/errordon-build.log for details."
+    echo "Common fixes:"
+    echo "  1. Run: docker builder prune -af"
+    echo "  2. Run: git fetch origin && git reset --hard origin/master"
+    echo "  3. Retry: docker compose build"
+    exit 1
+fi
+log "Docker build completed successfully!"
 
 # Start db and redis first
 log "Starting database and Redis..."
