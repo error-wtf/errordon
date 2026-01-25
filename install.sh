@@ -620,12 +620,23 @@ else
     echo "    # Then set ERRORDON_NSFW_PROTECT_ENABLED=true in .env.production"
 fi
 
-# Initialize NSFW-Protect directories
+# Initialize Errordon directories
 if [ -d "log" ]; then
     mkdir -p log/nsfw_protect/admin_reports
+    mkdir -p log/gdpr_audit
+    mkdir -p tmp/errordon_cleanup
     chmod 700 log/nsfw_protect log/nsfw_protect/admin_reports 2>/dev/null || true
-    log "NSFW-Protect audit log directories created"
+    chmod 700 log/gdpr_audit 2>/dev/null || true
+    log "Errordon log directories created"
 fi
+
+# Run Errordon database migrations
+log "Running Errordon database migrations..."
+RAILS_ENV=production bundle exec rake db:migrate 2>/dev/null || warn "Migration may need to run manually"
+
+# Initialize blocklists
+log "Initializing blocklists..."
+RAILS_ENV=production bundle exec rake errordon:blocklist:update 2>/dev/null || true
 echo ""
 warn "Reload shell: source ~/.bashrc"
 echo ""

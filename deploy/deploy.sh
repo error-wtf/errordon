@@ -226,9 +226,13 @@ if [ "$INSTALL_OLLAMA" = true ]; then
     echo "  ✓ Audit trail in log/nsfw_protect/"
     echo ""
     warn "Configure ERRORDON_NSFW_ADMIN_EMAIL in .env.production!"
-    info "Scheduled jobs run via Sidekiq:"
+    info "Scheduled jobs run via Sidekiq (requires sidekiq-cron):"
     echo "    - Blocklist update: daily at 3 AM"
+    echo "    - GDPR cleanup: daily at 4 AM"
+    echo "    - AI Snapshot cleanup: daily at 4:30 AM"
+    echo "    - Video cleanup: daily at 5 AM (if enabled)"
     echo "    - Freeze cleanup: hourly"
+    echo "    - Weekly summary: Monday 9 AM"
     echo ""
 else
     warn "NSFW-Protect AI not installed"
@@ -241,12 +245,22 @@ else
     echo ""
 fi
 
-# Create NSFW-Protect log directories
+# Create Errordon log directories
+log "Creating log directories..."
 docker compose run --rm web mkdir -p log/nsfw_protect/admin_reports 2>/dev/null || true
+docker compose run --rm web mkdir -p log/gdpr_audit 2>/dev/null || true
+docker compose run --rm web mkdir -p tmp/errordon_cleanup 2>/dev/null || true
+
+# Run Errordon database migrations
+log "Running Errordon database migrations..."
+docker compose run --rm web bundle exec rake db:migrate 2>/dev/null || true
 
 # Initialize NSFW-Protect (blocklist, etc.)
 log "Initializing NSFW-Protect..."
 docker compose exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
+
+# Initialize fascism blocklist
+docker compose exec -T web bundle exec rake errordon:blocklist:update 2>/dev/null || true
 
 # ============================================================================
 # POST-INSTALL VERIFICATION

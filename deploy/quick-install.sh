@@ -230,11 +230,21 @@ fi
 # ============================================================================
 info "Phase 7: Post-install setup..."
 
-# Initialize NSFW-Protect directories
+# Create Errordon directories
+log "Creating Errordon directories..."
 docker compose exec -T web mkdir -p log/nsfw_protect/admin_reports 2>/dev/null || true
+docker compose exec -T web mkdir -p log/gdpr_audit 2>/dev/null || true
+docker compose exec -T web mkdir -p tmp/errordon_cleanup 2>/dev/null || true
 
-# Initialize blocklist
+# Run any pending migrations (for Errordon tables)
+log "Running database migrations..."
+docker compose run --rm web bundle exec rake db:migrate 2>/dev/null || true
+
+# Initialize NSFW-Protect
 docker compose exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
+
+# Initialize blocklists
+docker compose exec -T web bundle exec rake errordon:blocklist:update 2>/dev/null || true
 
 # ============================================================================
 # DONE
