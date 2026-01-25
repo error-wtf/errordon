@@ -422,9 +422,10 @@ for i in {1..30}; do
 done
 
 # Setup database - db:setup creates database and loads schema
+# SAFETY_ASSURED=1 bypasses strong_migrations checks for initial setup
 log "Initializing database..."
-dc run --rm web bundle exec rails db:setup 2>/dev/null || \
-dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:schema:load 2>/dev/null || true
+dc run --rm -e SAFETY_ASSURED=1 web bundle exec rails db:setup 2>/dev/null || \
+dc run --rm -e SAFETY_ASSURED=1 -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:migrate 2>/dev/null || true
 
 # Start all services
 log "Starting all services..."

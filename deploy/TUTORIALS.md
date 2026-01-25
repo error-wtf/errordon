@@ -223,6 +223,30 @@ ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434
 
 ---
 
+## 9. Migration-Fehler beheben
+
+### strong_migrations Fehler
+```bash
+# Falls Migration mit "Dangerous operation detected" fehlschlägt:
+cd ~/errordon/deploy
+docker compose run --rm -e SAFETY_ASSURED=1 web bundle exec rails db:migrate
+```
+
+### Datenbank existiert bereits
+```bash
+# Falls "database already exists" Fehler:
+docker compose run --rm -e SAFETY_ASSURED=1 web bundle exec rails db:migrate
+```
+
+### Datenbank komplett neu aufsetzen (ACHTUNG: löscht alle Daten!)
+```bash
+docker compose down -v
+docker compose run --rm -e SAFETY_ASSURED=1 web bundle exec rails db:setup
+docker compose up -d
+```
+
+---
+
 ## Support
 
 - **GitHub Issues:** https://github.com/error-wtf/errordon/issues
