@@ -172,7 +172,7 @@ ERRORDON_REQUIRE_AGE_18=true
 ### One-Line Installation (Ubuntu/Debian)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/install.sh | bash
 ```
 
 The installer will ask if you want to enable NSFW-Protect AI.
@@ -252,6 +252,7 @@ bundle exec rails errordon:import_emojis
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/v1/errordon/quotas/current` | GET | Current user's quota stats |
+| `/api/v1/errordon/storage_quota` | GET | Dynamic disk-based quota |
 | `/api/v1/errordon/quotas` | GET | Admin: All user quotas |
 | `/api/v1/errordon/quotas/:id` | GET/PUT | Admin: User quota details/update |
 | `/api/v1/errordon/transcoding/:media_id/status` | GET | Transcoding status for media |
@@ -278,11 +279,12 @@ errordon/
 │   │   ├── quotas_controller.rb          # Quota management
 │   │   └── transcoding_controller.rb     # Transcoding status
 │   ├── services/errordon/               # Business logic
-│   │   ├── quota_service.rb              # Quota calculations
+│   │   ├── storage_quota_service.rb      # Dynamic disk quotas
+│   │   ├── media_upload_checker.rb       # NSFW-Protect AI
+│   │   ├── domain_blocklist_service.rb   # Porn/fascism blocklist
 │   │   ├── security_service.rb           # File validation
 │   │   ├── audit_logger.rb               # Security logging
-│   │   ├── video_transcoder_service.rb   # Video transcoding
-│   │   └── audio_transcoder_service.rb   # Audio transcoding
+│   │   └── video_transcoder_service.rb   # Video transcoding
 │   ├── workers/errordon/                # Background jobs
 │   │   └── media_transcode_worker.rb     # Sidekiq worker
 │   └── javascript/
