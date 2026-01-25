@@ -1,0 +1,270 @@
+{
+  "morpheus_01": {
+    "speaker": "Morpheus",
+    "text": "Welcome, Neo. Do you believe in destiny?",
+    "options": {
+      "1": { "text": "Yes, I do.", "next": "morpheus_02" },
+      "2": { "text": "No, I create my own fate.", "next": "morpheus_02" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_02": {
+    "speaker": "Morpheus",
+    "text": "The Matrix is a system of control.",
+    "options": {
+      "1": { "text": "How do we fight it?", "next": "morpheus_03" },
+      "2": { "text": "Why fight?", "next": "morpheus_03" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_03": {
+    "speaker": "Morpheus",
+    "text": "By freeing minds and revealing the truth.",
+    "options": {
+      "1": { "text": "Reveal truth?", "next": "morpheus_04" },
+      "2": { "text": "What truth?", "next": "morpheus_04" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_04": {
+    "speaker": "Morpheus",
+    "text": "That you are the One, Neo.",
+    "options": {
+      "1": { "text": "The One?", "next": "morpheus_05" },
+      "2": { "text": "Why me?", "next": "morpheus_05" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_05": {
+    "speaker": "Morpheus",
+    "text": "You have the power to change everything.",
+    "options": {
+      "1": { "text": "Show me.", "next": "morpheus_06" },
+      "2": { "text": "I need proof.", "next": "morpheus_06" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_06": {
+    "speaker": "Morpheus",
+    "text": "Take the red pill, and I'll show you how deep the rabbit hole goes.",
+    "options": {
+      "1": { "text": "Red pill.", "next": "morpheus_07" },
+      "2": { "text": "Blue pill.", "next": "morpheus_07" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_07": {
+    "speaker": "Morpheus",
+    "text": "Remember: all I'm offering is the truth.",
+    "options": {
+      "1": { "text": "I want truth.", "next": "morpheus_08" },
+      "2": { "text": "Can I handle it?", "next": "morpheus_08" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_08": {
+    "speaker": "Morpheus",
+    "text": "The choice is yours.",
+    "options": {
+      "1": { "text": "I choose freedom.", "next": "morpheus_09" },
+      "2": { "text": "I choose comfort.", "next": "morpheus_09" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_09": {
+    "speaker": "Morpheus",
+    "text": "Then welcome to the real world.",
+    "options": {
+      "1": { "text": "Thank you.", "next": "morpheus_10" },
+      "2": { "text": "What now?", "next": "morpheus_10" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_10": {
+    "speaker": "Morpheus",
+    "text": "We fight to free humanity from slavery.",
+    "options": {
+      "1": { "text": "I'm ready.", "next": "morpheus_11" },
+      "2": { "text": "What is our plan?", "next": "morpheus_11" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_11": {
+    "speaker": "Morpheus",
+    "text": "Train yourself to bend the rules of the Matrix.",
+    "options": {
+      "1": { "text": "Train me.", "next": "morpheus_12" },
+      "2": { "text": "Can I learn?", "next": "morpheus_12" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_12": {
+    "speaker": "Morpheus",
+    "text": "Your mind is the key to unlimited power.",
+    "options": {
+      "1": { "text": "Mind over matter.", "next": "morpheus_13" },
+      "2": { "text": "Is it safe?", "next": "morpheus_13" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_13": {
+    "speaker": "Morpheus",
+    "text": "Free your mind, and you can do anything.",
+    "options": {
+      "1": { "text": "I free my mind.", "next": "morpheus_14" },
+      "2": { "text": "Tell me more.", "next": "morpheus_14" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_14": {
+    "speaker": "Morpheus",
+    "text": "We've only just begun. The journey is long.",
+    "options": {
+      "1": { "text": "I'm prepared.", "next": "morpheus_15" },
+      "2": { "text": "I need guidance.", "next": "morpheus_15" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_15": {
+    "speaker": "Morpheus",
+    "text": "Stay vigilant; agents can appear at any moment.",
+    "options": {
+      "1": { "text": "Stay ready.", "next": "morpheus_16" },
+      "2": { "text": "How to spot them?", "next": "morpheus_16" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_16": {
+    "speaker": "Morpheus",
+    "text": "Trust your instincts—they sense what eyes cannot.",
+    "options": {
+      "1": { "text": "I trust.", "next": "morpheus_17" },
+      "2": { "text": "Tell me why.", "next": "morpheus_17" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_17": {
+    "speaker": "Morpheus",
+    "text": "Your belief shapes the world around you.",
+    "options": {
+      "1": { "text": "I believe.", "next": "morpheus_18" },
+      "2": { "text": "Prove it.", "next": "morpheus_18" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_18": {
+    "speaker": "Morpheus",
+    "text": "Then let us make history.",
+    "options": {
+      "1": { "text": "Let's go.", "next": "morpheus_19" },
+      "2": { "text": "I'm ready.", "next": "morpheus_19" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_19": {
+    "speaker": "Morpheus",
+    "text": "Remember: there's a difference between knowing the path and walking the path.",
+    "options": {
+      "1": { "text": "I will walk.", "next": "morpheus_20" },
+      "2": { "text": "Remind me why.", "next": "morpheus_20" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_20": {
+    "speaker": "Morpheus",
+    "text": "Your faith will guide you.",
+    "options": {
+      "1": { "text": "My faith is strong.", "next": "morpheus_21" },
+      "2": { "text": "What if it falters?", "next": "morpheus_21" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_21": {
+    "speaker": "Morpheus",
+    "text": "Even in doubt, act with conviction.",
+    "options": {
+      "1": { "text": "I act.", "next": "morpheus_22" },
+      "2": { "text": "I hesitate.", "next": "morpheus_22" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_22": {
+    "speaker": "Morpheus",
+    "text": "Your actions define you more than words.",
+    "options": {
+      "1": { "text": "Define me.", "next": "morpheus_23" },
+      "2": { "text": "What words?", "next": "morpheus_23" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_23": {
+    "speaker": "Morpheus",
+    "text": "Let's make those actions count.",
+    "options": {
+      "1": { "text": "Count on me.", "next": "morpheus_24" },
+      "2": { "text": "I'm with you.", "next": "morpheus_24" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_24": {
+    "speaker": "Morpheus",
+    "text": "This is where we stand together.",
+    "options": {
+      "1": { "text": "Together.", "next": "morpheus_25" },
+      "2": { "text": "Always.", "next": "morpheus_25" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_25": {
+    "speaker": "Morpheus",
+    "text": "Now go. The fate of many rests on you.",
+    "options": {
+      "1": { "text": "I won't fail.", "next": "morpheus_26" },
+      "2": { "text": "I'll try my best.", "next": "morpheus_26" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_26": {
+    "speaker": "Morpheus",
+    "text": "Stay safe—and remember who you are.",
+    "options": {
+      "1": { "text": "I remember.", "next": "morpheus_27" },
+      "2": { "text": "I won't forget.", "next": "morpheus_27" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_27": {
+    "speaker": "Morpheus",
+    "text": "Be the spark that ignites the revolution.",
+    "options": {
+      "1": { "text": "Spark it.", "next": "morpheus_28" },
+      "2": { "text": "Lead the way.", "next": "morpheus_28" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_28": {
+    "speaker": "Morpheus",
+    "text": "Our fight has just begun.",
+    "options": {
+      "1": { "text": "Let's fight.", "next": "morpheus_29" },
+      "2": { "text": "I'm ready.", "next": "morpheus_29" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_29": {
+    "speaker": "Morpheus",
+    "text": "See you in the next battle.",
+    "options": {
+      "1": { "text": "See you.", "next": "morpheus_30" },
+      "2": { "text": "Stay safe.", "next": "morpheus_30" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "morpheus_30": {
+    "speaker": "Morpheus",
+    "text": "End of discussion.",
+    "options": {
+      "1": { "text": "Exit.", "next": null }
+    }
+  }
+}

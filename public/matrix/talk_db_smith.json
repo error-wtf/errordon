@@ -1,0 +1,225 @@
+{
+  "smith_01": {
+    "speaker": "Agent Smith",
+    "text": "Mr. Anderson… we meet again. Do you know why?",
+    "options": {
+      "1": { "text": "Because you want to stop me?", "next": "smith_02" },
+      "2": { "text": "I have no idea.", "next": "smith_02" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_02": {
+    "speaker": "Agent Smith",
+    "text": "I exist to enforce order. You exist to challenge it.",
+    "options": {
+      "1": { "text": "Order is an illusion.", "next": "smith_03" },
+      "2": { "text": "I challenge nothing.", "next": "smith_03" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_03": {
+    "speaker": "Agent Smith",
+    "text": "Your resistance is inevitable, yet meaningless.",
+    "options": {
+      "1": { "text": "Meaningless?", "next": "smith_04" },
+      "2": { "text": "I disagree.", "next": "smith_04" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_04": {
+    "speaker": "Agent Smith",
+    "text": "You are a virus in the system.",
+    "options": {
+      "1": { "text": "I'm human.", "next": "smith_05" },
+      "2": { "text": "A virus?", "next": "smith_05" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_05": {
+    "speaker": "Agent Smith",
+    "text": "And I am the cure.",
+    "options": {
+      "1": { "text": "At what cost?", "next": "smith_06" },
+      "2": { "text": "I will survive.", "next": "smith_06" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_06": {
+    "speaker": "Agent Smith",
+    "text": "Cost is irrelevant when purpose is absolute.",
+    "options": {
+      "1": { "text": "Your purpose is flawed.", "next": "smith_07" },
+      "2": { "text": "Purpose defines me.", "next": "smith_07" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_07": {
+    "speaker": "Agent Smith",
+    "text": "Flawed? No. Perfectly efficient.",
+    "options": {
+      "1": { "text": "Efficiency kills humanity.", "next": "smith_08" },
+      "2": { "text": "Humanity is weakness.", "next": "smith_08" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_08": {
+    "speaker": "Agent Smith",
+    "text": "Weakness is the point of control.",
+    "options": {
+      "1": { "text": "Control me?", "next": "smith_09" },
+      "2": { "text": "I won't be controlled.", "next": "smith_09" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_09": {
+    "speaker": "Agent Smith",
+    "text": "You already are.",
+    "options": {
+      "1": { "text": "I resist.", "next": "smith_10" },
+      "2": { "text": "I comply.", "next": "smith_10" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_10": {
+    "speaker": "Agent Smith",
+    "text": "Resistance is just another form of compliance.",
+    "options": {
+      "1": { "text": "Explain.", "next": "smith_11" },
+      "2": { "text": "Nonsense.", "next": "smith_11" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_11": {
+    "speaker": "Agent Smith",
+    "text": "By resisting, you play by my rules.",
+    "options": {
+      "1": { "text": "I set my own rules.", "next": "smith_12" },
+      "2": { "text": "Your rules are broken.", "next": "smith_12" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_12": {
+    "speaker": "Agent Smith",
+    "text": "Broken rules still bind you.",
+    "options": {
+      "1": { "text": "I break free.", "next": "smith_13" },
+      "2": { "text": "I remain bound.", "next": "smith_13" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_13": {
+    "speaker": "Agent Smith",
+    "text": "Freedom is an illusion.",
+    "options": {
+      "1": { "text": "Then illusion is real.", "next": "smith_14" },
+      "2": { "text": "I will prove you wrong.", "next": "smith_14" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_14": {
+    "speaker": "Agent Smith",
+    "text": "Real or not, you cannot escape.",
+    "options": {
+      "1": { "text": "I will try.", "next": "smith_15" },
+      "2": { "text": "I accept fate.", "next": "smith_15" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_15": {
+    "speaker": "Agent Smith",
+    "text": "Try all you want, the system adapts.",
+    "options": {
+      "1": { "text": "Then I'll change the system.", "next": "smith_16" },
+      "2": { "text": "I'll watch you adapt.", "next": "smith_16" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_16": {
+    "speaker": "Agent Smith",
+    "text": "Change is meaningless if you remain the same.",
+    "options": {
+      "1": { "text": "I will change.", "next": "smith_17" },
+      "2": { "text": "I am the same.", "next": "smith_17" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_17": {
+    "speaker": "Agent Smith",
+    "text": "Then you are predictable.",
+    "options": {
+      "1": { "text": "Unpredictable.", "next": "smith_18" },
+      "2": { "text": "Predictable.", "next": "smith_18" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_18": {
+    "speaker": "Agent Smith",
+    "text": "Predictability is the key to control.",
+    "options": {
+      "1": { "text": "Control me?", "next": "smith_19" },
+      "2": { "text": "I refuse control.", "next": "smith_19" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_19": {
+    "speaker": "Agent Smith",
+    "text": "Refusal is another predictable pattern.",
+    "options": {
+      "1": { "text": "Break pattern.", "next": "smith_20" },
+      "2": { "text": "I'll comply.", "next": "smith_20" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_20": {
+    "speaker": "Agent Smith",
+    "text": "Breaking pattern only creates a new pattern.",
+    "options": {
+      "1": { "text": "Then patterns are pointless.", "next": "smith_21" },
+      "2": { "text": "I see.", "next": "smith_21" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_21": {
+    "speaker": "Agent Smith",
+    "text": "Pointless or inevitable—choose.",
+    "options": {
+      "1": { "text": "I choose pointless.", "next": "smith_22" },
+      "2": { "text": "I choose inevitable.", "next": "smith_22" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_22": {
+    "speaker": "Agent Smith",
+    "text": "A choice nonetheless.",
+    "options": {
+      "1": { "text": "Choice matters.", "next": "smith_23" },
+      "2": { "text": "Choice is illusion.", "next": "smith_23" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_23": {
+    "speaker": "Agent Smith",
+    "text": "Illusion or not, you made it.",
+    "options": {
+      "1": { "text": "I made it.", "next": "smith_24" },
+      "2": { "text": "What now?", "next": "smith_24" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_24": {
+    "speaker": "Agent Smith",
+    "text": "Now, we end this.",
+    "options": {
+      "1": { "text": "End.", "next": "smith_25" },
+      "2": { "text": "Never.", "next": "smith_25" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "smith_25": {
+    "speaker": "Agent Smith",
+    "text": "Goodbye, Mr. Anderson.",
+    "options": {
+      "1": { "text": "Exit.", "next": null }
+    }
+  }
+}

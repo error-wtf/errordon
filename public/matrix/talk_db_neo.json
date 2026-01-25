@@ -1,0 +1,218 @@
+{
+  "neo_01": {
+    "speaker": "Neo",
+    "text": "Welcome, Neo. Have you ever wondered what is truly real?",
+    "options": {
+      "1": { "text": "Tell me more.", "next": "neo_02" },
+      "2": { "text": "What do you mean by real?", "next": "neo_02" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_02": {
+    "speaker": "Neo",
+    "text": "The Matrix is an illusion that traps us all.",
+    "options": {
+      "1": { "text": "How does it work?", "next": "neo_03" },
+      "2": { "text": "Why an illusion?", "next": "neo_03" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_03": {
+    "speaker": "Neo",
+    "text": "It blinds your senses so you never see the truth.",
+    "options": {
+      "1": { "text": "What truth?", "next": "neo_04" },
+      "2": { "text": "Can I break through it?", "next": "neo_04" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_04": {
+    "speaker": "Neo",
+    "text": "Every person is trapped in the Matrix without knowing it.",
+    "options": {
+      "1": { "text": "How do I escape?", "next": "neo_05" },
+      "2": { "text": "Why us?", "next": "neo_05" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_05": {
+    "speaker": "Neo",
+    "text": "You can free your mind and see the Matrix for what it is.",
+    "options": {
+      "1": { "text": "How do I free my mind?", "next": "neo_06" },
+      "2": { "text": "What do I need to do?", "next": "neo_06" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_06": {
+    "speaker": "Neo",
+    "text": "Believe in yourself, Neo. Your mind shapes your reality.",
+    "options": {
+      "1": { "text": "Explain more.", "next": "neo_07" },
+      "2": { "text": "Is it safe?", "next": "neo_07" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_07": {
+    "speaker": "Neo",
+    "text": "Once you understand the rules, you can break them.",
+    "options": {
+      "1": { "text": "Show me how.", "next": "neo_08" },
+      "2": { "text": "Is it dangerous?", "next": "neo_08" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_08": {
+    "speaker": "Neo",
+    "text": "Practice makes perfect: try jumping beyond the limits!",
+    "options": {
+      "1": { "text": "I'll try.", "next": "neo_09" },
+      "2": { "text": "What happens?", "next": "neo_09" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_09": {
+    "speaker": "Neo",
+    "text": "Every fall is a lesson – stand up again.",
+    "options": {
+      "1": { "text": "I stand.", "next": "neo_10" },
+      "2": { "text": "I give up.", "next": "neo_10" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_10": {
+    "speaker": "Neo",
+    "text": "Are you ready to take the red pill?",
+    "options": {
+      "1": { "text": "Red pill.", "next": "neo_11" },
+      "2": { "text": "Blue pill.", "next": "neo_11" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_11": {
+    "speaker": "Neo",
+    "text": "Money and power may deceive, but freedom is priceless.",
+    "options": {
+      "1": { "text": "Explain freedom.", "next": "neo_12" },
+      "2": { "text": "Is it dangerous?", "next": "neo_12" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_12": {
+    "speaker": "Neo",
+    "text": "Truth can be painful, but it makes you strong.",
+    "options": {
+      "1": { "text": "I'm ready.", "next": "neo_13" },
+      "2": { "text": "I'm afraid.", "next": "neo_13" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_13": {
+    "speaker": "Neo",
+    "text": "Your senses deceive you. Learn to control your perception.",
+    "options": {
+      "1": { "text": "How?", "next": "neo_14" },
+      "2": { "text": "Can I fail?", "next": "neo_14" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_14": {
+    "speaker": "Neo",
+    "text": "Every thought shapes your environment – practice visualization.",
+    "options": {
+      "1": { "text": "Show example.", "next": "neo_15" },
+      "2": { "text": "Is it practical?", "next": "neo_15" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_15": {
+    "speaker": "Neo",
+    "text": "Think of flying – soon you'll do it.",
+    "options": {
+      "1": { "text": "I'll try.", "next": "neo_16" },
+      "2": { "text": "I doubt it.", "next": "neo_16" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_16": {
+    "speaker": "Neo",
+    "text": "There is no spoon. Use your will.",
+    "options": {
+      "1": { "text": "I understand.", "next": "neo_17" },
+      "2": { "text": "Explain again.", "next": "neo_17" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_17": {
+    "speaker": "Neo",
+    "text": "Your journey has only just begun.",
+    "options": {
+      "1": { "text": "What's next?", "next": "neo_18" },
+      "2": { "text": "I'm ready.", "next": "neo_18" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_18": {
+    "speaker": "Neo",
+    "text": "Many are still prisoners in the Matrix.",
+    "options": {
+      "1": { "text": "Can I help them?", "next": "neo_19" },
+      "2": { "text": "Why them?", "next": "neo_19" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_19": {
+    "speaker": "Neo",
+    "text": "You are their key to freedom.",
+    "options": {
+      "1": { "text": "How?", "next": "neo_20" },
+      "2": { "text": "Is there hope?", "next": "neo_20" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_20": {
+    "speaker": "Neo",
+    "text": "Believe in yourself – that's their salvation.",
+    "options": {
+      "1": { "text": "I believe.", "next": "neo_21" },
+      "2": { "text": "Is that enough?", "next": "neo_21" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_21": {
+    "speaker": "Neo",
+    "text": "Your potential is limitless.",
+    "options": {
+      "1": { "text": "I feel it.", "next": "neo_22" },
+      "2": { "text": "Is there a limit?", "next": "neo_23" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_22": {
+    "speaker": "Neo",
+    "text": "Then you will succeed. Take care of yourself.",
+    "options": {
+      "1": { "text": "Thank you.", "next": null },
+      "2": { "text": "I will.", "next": null },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_23": {
+    "speaker": "Neo",
+    "text": "Only your imagination sets the boundary.",
+    "options": {
+      "1": { "text": "Okay, I believe I can do it.", "next": "neo_22" },
+      "2": { "text": "Okay, then I can't do it.", "next": "neo_24" },
+      "3": { "text": "Exit.", "next": null }
+    }
+  },
+  "neo_24": {
+    "speaker": "Neo",
+    "text": "Then you must work on yourself. I believe in you. Take care of yourself.",
+    "options": {
+      "1": { "text": "I'll work on it.", "next": null },
+      "2": { "text": "Thank you.", "next": null },
+      "3": { "text": "Exit.", "next": null }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix-Style Tetris</title>
+    <link rel="stylesheet" href="tetris-style.css">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    
+    <!-- Start Screen (auto-skip if username provided) -->
+    <div id="startScreen" class="start-screen" style="display: none;">
+        <h1 class="matrix-title">MATRIX TETRIS</h1>
+        <div class="start-form">
+            <input type="text" id="playerName" placeholder="Enter your name..." maxlength="20" autocomplete="off">
+            <button onclick="startGame()">START GAME</button>
+        </div>
+        <div class="instructions">
+            <p>← → : Move | ↑ : Rotate | ↓ : Soft Drop</p>
+            <p>Space : Hard Drop | P : Pause</p>
+        </div>
+    </div>
+    
+    <!-- Game Container with Sidebar and Canvas -->
+    <div id="gameContainer" style="display: none;">
+        <!-- Left Sidebar: Highscores -->
+        <div id="leftSidebar" class="sidebar">
+            <div class="ui-panel">
+                <h2>TOP 10</h2>
+                <div id="highscoreList" class="highscore-list"></div>
+            </div>
+        </div>
+        
+        <!-- Game Canvas -->
+        <canvas id="canvas" width="230" height="460"></canvas>
+        
+        <!-- Right Sidebar: Stats and Next -->
+        <div id="rightSidebar" class="sidebar">
+            <div class="ui-panel">
+                <h2>Next</h2>
+                <canvas id="nextCanvas" width="100" height="100"></canvas>
+            </div>
+            
+            <div class="ui-panel">
+                <h2>Stats</h2>
+                <div class="stat">
+                    <span class="label">Player:</span>
+                    <span id="playerNameDisplay" class="value">-</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Score:</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Level:</span>
+                    <span id="level" class="value">1</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Lines:</span>
+                    <span id="lines" class="value">0</span>
+                </div>
+            </div>
+            
+            <div class="ui-panel controls-panel">
+                <h2>Controls</h2>
+                <div class="controls">
+                    <p><span class="key">←→</span> Move</p>
+                    <p><span class="key">↑</span> Rotate</p>
+                    <p><span class="key">↓</span> Drop</p>
+                    <p><span class="key">Space</span> Hard</p>
+                    <p><span class="key">P</span> Pause</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="gameOver" class="game-over">
+        <h1>GAME OVER!</h1>
+        <div class="final-stats">
+            <p>Player: <span id="finalPlayerName"></span></p>
+            <p>Score: <span id="finalScore"></span></p>
+            <p>Level: <span id="finalLevel"></span></p>
+            <p>Lines: <span id="finalLines"></span></p>
+        </div>
+        <button onclick="backToStart()">RESTART</button>
+        <button onclick="returnToChat()">RETURN TO CHAT</button>
+    </div>
+    
+    <div id="glitchOverlay" class="glitch-overlay"></div>
+    
+    <script src="tetris-script.js"></script>
+</body>
+</html>

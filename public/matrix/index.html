@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERRORDON - Enter The Matrix</title>
+    <meta name="description" content="Errordon - A Safe Fediverse Instance. No Porn, No Hate, No Fascism.">
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrixCanvas"></canvas>
+    
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <h1 class="matrix-title">ERRORDON</h1>
+        <p style="color: #0f0; margin-bottom: 10px; font-size: 16px; letter-spacing: 2px;">A Safe Fediverse Instance</p>
+        <p style="color: #0a0; margin-bottom: 25px; font-size: 12px;">🛡️ No Porn • No Hate • No Fascism</p>
+        <div class="login-form">
+            <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="20" autocomplete="off" autofocus>
+            <button onclick="login()">CONNECT</button>
+        </div>
+        <p style="color: #080; margin-top: 20px; font-size: 11px;">Type "enter matrix" after connecting to access the network</p>
+    </div>
+
+    <!-- Terminal Container -->
+    <div id="terminal" class="terminal" style="display: none;">
+        <div class="terminal-header">
+            <span class="terminal-title">ERRORDON TERMINAL v1.0</span>
+            <div class="terminal-buttons">
+                <span class="btn-close" onclick="logout()">×</span>
+                <span class="btn-minimize">−</span>
+                <span class="btn-maximize">□</span>
+            </div>
+        </div>
+        <div id="output" class="terminal-output"></div>
+        <div class="terminal-input-line">
+            <span class="prompt" id="prompt">guest@errordon:~$</span>
+            <input type="text" id="commandInput" class="terminal-input" autocomplete="off">
+        </div>
+    </div>
+
+    <!-- Tetris Overlay -->
+    <div id="tetrisOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background: rgba(0,0,0,0.95);">
+        <iframe id="tetrisFrame" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
