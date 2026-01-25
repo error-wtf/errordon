@@ -72,20 +72,26 @@ if [ -z "$EMAIL" ]; then
     EMAIL="admin@$DOMAIN"
 fi
 
-# Admin account setup
-echo ""
-read -p "Admin username (default: admin): " ADMIN_USER
-ADMIN_USER=${ADMIN_USER:-admin}
+# Admin account setup (use env vars if set, otherwise ask)
+if [ -z "$ADMIN_USER" ]; then
+    echo ""
+    read -p "Admin username (default: admin): " ADMIN_USER
+    ADMIN_USER=${ADMIN_USER:-admin}
+fi
 
-read -p "Admin email (default: $EMAIL): " ADMIN_EMAIL
-ADMIN_EMAIL=${ADMIN_EMAIL:-$EMAIL}
+if [ -z "$ADMIN_EMAIL" ]; then
+    read -p "Admin email (default: $EMAIL): " ADMIN_EMAIL
+    ADMIN_EMAIL=${ADMIN_EMAIL:-$EMAIL}
+fi
 
 echo ""
-echo "╔════════════════════════════════════════════════╗"
-echo "║     Errordon Quick Installer                   ║"
-echo "║     Domain: $DOMAIN"
-echo "║     Admin:  $ADMIN_USER ($ADMIN_EMAIL)"
-echo "╚════════════════════════════════════════════════╝"
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║           Errordon Quick Installer                         ║"
+echo "╠════════════════════════════════════════════════════════════╣"
+echo "║  Domain: $DOMAIN"
+echo "║  Admin:  $ADMIN_USER <$ADMIN_EMAIL>"
+[ -n "$SMTP_SERVER" ] && echo "║  SMTP:   $SMTP_SERVER"
+echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 
 # Check if running as root
@@ -188,6 +194,16 @@ if [ ! -f ".env.production" ]; then
     
     # Set admin email
     sed -i "s/ERRORDON_NSFW_ADMIN_EMAIL=.*/ERRORDON_NSFW_ADMIN_EMAIL=$EMAIL/" .env.production
+    
+    # Configure SMTP if provided via environment
+    if [ -n "$SMTP_SERVER" ]; then
+        log "Configuring SMTP..."
+        sed -i "s/SMTP_SERVER=.*/SMTP_SERVER=$SMTP_SERVER/" .env.production
+        sed -i "s/SMTP_PORT=.*/SMTP_PORT=${SMTP_PORT:-587}/" .env.production
+        sed -i "s/SMTP_LOGIN=.*/SMTP_LOGIN=$SMTP_LOGIN/" .env.production
+        sed -i "s/SMTP_PASSWORD=.*/SMTP_PASSWORD=$SMTP_PASSWORD/" .env.production
+        sed -i "s/SMTP_FROM_ADDRESS=.*/SMTP_FROM_ADDRESS=${SMTP_FROM:-noreply@$DOMAIN}/" .env.production
+    fi
     
     # Enable Matrix theme if requested
     if [ "$INSTALL_MATRIX" = true ]; then
