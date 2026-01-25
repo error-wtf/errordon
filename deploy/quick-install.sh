@@ -356,7 +356,7 @@ log "SSL certificate obtained"
 
 # Step 3: Now install the full HTTPS config
 sudo rm -f /etc/nginx/sites-enabled/errordon-temp
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/errordon
+sudo cp nginx.conf /etc/nginx/sites-available/errordon
 sudo sed -i "s/example.com/$DOMAIN/g" /etc/nginx/sites-available/errordon
 
 # Fix deprecated http2 directive for newer nginx
