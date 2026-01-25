@@ -31,7 +31,7 @@ class NsfwProtectStrike < ApplicationRecord
   belongs_to :report, optional: true
   belongs_to :resolved_by, class_name: 'Account', optional: true
 
-  has_one :freeze, class_name: 'NsfwProtectFreeze', dependent: :nullify
+  has_one :nsfw_freeze, class_name: 'NsfwProtectFreeze', dependent: :nullify
 
   enum :strike_type, {
     porn: 0,
