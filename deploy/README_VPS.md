@@ -2,6 +2,8 @@
 
 **Errordon** is a safe Mastodon fork with AI content moderation, Matrix Terminal landing page, and enhanced privacy features.
 
+> 📚 **[Ausführliche Tutorials & Troubleshooting](TUTORIALS.md)** - Schritt-für-Schritt Anleitungen, häufige Fehler und Lösungen
+
 ## Features
 
 - 🛡️ **NSFW-Protect AI** - Automated content moderation using Ollama (llava + llama3)
