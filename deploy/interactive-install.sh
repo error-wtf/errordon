@@ -7,10 +7,15 @@ log() { echo -e "${GREEN}[✓]${NC} $1"; }
 warn() { echo -e "${YELLOW}[!]${NC} $1"; }
 error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 
+# Docker Compose detection - check exit code AND version pattern
 dc() {
-    if docker compose version &> /dev/null; then docker compose "$@"
-    elif command -v docker-compose &> /dev/null; then docker-compose "$@"
-    else error "Docker Compose not found!"; fi
+    if docker compose version &> /dev/null && docker compose version 2>&1 | grep -qE "v[0-9]+\.[0-9]+"; then
+        docker compose "$@"
+    elif command -v docker-compose &> /dev/null && docker-compose version &> /dev/null; then
+        docker-compose "$@"
+    else
+        error "Docker Compose not found!"
+    fi
 }
 
 clear
@@ -77,8 +82,6 @@ ARGS="--domain $DOMAIN --email $ADMIN_EMAIL"
 
 export ADMIN_USER ADMIN_EMAIL SMTP_SERVER SMTP_PORT SMTP_LOGIN SMTP_PASSWORD SMTP_FROM
 
-if [ -f "$SCRIPT_DIR/quick-install.sh" ]; then
-    bash "$SCRIPT_DIR/quick-install.sh" $ARGS
-else
-    curl -sSL "https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/quick-install.sh" | bash -s -- $ARGS
-fi
+# Always download fresh quick-install.sh to avoid cache issues
+curl -sSL "https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/quick-install.sh?nocache=$(date +%s)" -o /tmp/quick-install.sh
+bash /tmp/quick-install.sh $ARGS
