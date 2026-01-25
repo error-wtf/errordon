@@ -23,8 +23,10 @@ info() { echo -e "${BLUE}[i]${NC} $1"; }
 # Detect which method works ONCE at script start
 COMPOSE_CMD=""
 detect_compose() {
-    if docker compose version 2>&1 | grep -q "Docker Compose"; then
+    # Check plugin first - MUST succeed AND contain version info
+    if docker compose version &> /dev/null && docker compose version 2>&1 | grep -qE "v[0-9]+\.[0-9]+"; then
         COMPOSE_CMD="docker compose"
+    # Check standalone binary
     elif command -v docker-compose &> /dev/null && docker-compose version &> /dev/null; then
         COMPOSE_CMD="docker-compose"
     fi
