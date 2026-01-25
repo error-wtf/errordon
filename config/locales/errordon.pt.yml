@@ -1,0 +1,130 @@
+pt:
+  errordon:
+    video_grid:
+      empty: "Nenhum vídeo para exibir"
+      load_more: "Carregar mais vídeos"
+    
+    audio_player:
+      play: "Reproduzir"
+      pause: "Pausar"
+      mute: "Silenciar"
+      unmute: "Ativar som"
+      download: "Baixar"
+    
+    media_filter:
+      all: "Tudo"
+      videos: "Vídeos"
+      audio: "Áudio"
+      images: "Imagens"
+      originals: "Apenas originais"
+      with_alt: "Com texto alternativo"
+      public: "Apenas público"
+    
+    admin:
+      quotas:
+        title: "Cotas de armazenamento"
+        total_storage: "Armazenamento total usado"
+        active_users: "Usuários ativos"
+        pending_transcodes: "Transcodificações pendentes"
+        failed_transcodes: "Transcodificações falhadas"
+        quota_usage: "Uso médio da cota"
+        username: "Nome de usuário"
+        storage_used: "Armazenamento usado"
+        quota: "Cota"
+        usage: "Uso"
+        actions: "Ações"
+        increase_quota: "Aumentar"
+        decrease_quota: "Diminuir"
+        view_media: "Ver"
+        reset_quota: "Redefinir"
+        no_users: "Sem usuários com uploads"
+        loading: "Carregando dados de cota..."
+        quota_updated: "Cota atualizada com sucesso"
+        exempt_user: "Usuário isento de cotas"
+    
+    upload:
+      quota_exceeded: "Cota de armazenamento excedida"
+      rate_limit_exceeded: "Limite de upload excedido"
+      daily_limit_exceeded: "Limite diário excedido"
+      file_too_large: "Arquivo muito grande"
+      transcoding_started: "Processando vídeo..."
+      transcoding_complete: "Processamento concluído"
+      transcoding_failed: "Processamento falhou"
+    
+    privacy:
+      preset_strict: "Modo de privacidade rigoroso ativado"
+      preset_standard: "Modo de privacidade padrão"
+      default_unlisted: "Publicações não listadas por padrão"
+      default_private: "Publicações privadas por padrão"
+    
+    nsfw_protect:
+      title: "NSFW-Protect"
+      enabled: "NSFW-Protect ativado"
+      disabled: "NSFW-Protect desativado"
+      
+      violations:
+        porn: "Conteúdo pornográfico"
+        hate: "Discurso de ódio"
+        illegal: "Conteúdo ilegal"
+        csam: "CSAM (Abuso infantil)"
+        blocked_domain: "Domínio bloqueado"
+      
+      freeze:
+        temporary: "Temporariamente congelado"
+        permanent: "Permanentemente congelado"
+        until: "Congelado até %{time}"
+        reason: "Motivo: %{reason}"
+      
+      strikes:
+        count: "%{count} advertências"
+        warning: "Advertência"
+        first: "Primeira advertência"
+        repeated: "Violação repetida"
+      
+      mailer:
+        user_frozen:
+          subject: "Sua conta foi congelada"
+        instance_frozen:
+          subject: "Instância congelada - Limite de alarme excedido"
+        weekly_summary:
+          subject: "Relatório semanal NSFW-Protect"
+      
+      admin:
+        alarms: "Alarmes ativos"
+        resolve: "Resolver"
+        dismiss: "Dispensar (Falso positivo)"
+        stats: "Estatísticas"
+        config: "Configuração"
+        blocklist: "Gerenciar lista de bloqueio"
+        
+      gdpr:
+        export: "Exportar dados"
+        delete: "Excluir dados"
+        retention: "Períodos de retenção"
+        info: "Informações de privacidade"
+        
+    blocklist:
+      categories:
+        porn: "Pornografia"
+        hate: "Discurso de ódio"
+        fascism: "Fascismo/Extrema direita"
+        neo_nazi: "Propaganda neonazista"
+        conspiracy: "Teorias da conspiração"
+        
+      warnings:
+        hard_block:
+          porn: "🚫 Conteúdo pornográfico não é permitido nesta instância."
+          fascism: "🚫 Esta URL aponta para um site com conteúdo ilegal. Compartilhar esses links não é permitido."
+        soft_block:
+          fascism: |
+            ⚠️ Esta URL aponta para um site que propaga ódio, fascismo ou 
+            conteúdo de extrema direita.
+            
+            Não queremos dar tráfego a esses sites.
+            
+            📸 Se você quer reportar este site, compartilhe uma captura de tela 
+            em vez de um link direto.
+            
+      screenshot_hint: "Compartilhe uma captura de tela em vez disso"
+      no_traffic: "Não queremos dar tráfego a esses sites"
+      reveal_button: "Revelar link (será marcado como NSFW)"
