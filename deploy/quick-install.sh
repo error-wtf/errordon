@@ -315,18 +315,29 @@ dc up -d
 # PHASE 6: OLLAMA (optional)
 # ============================================================================
 if [ "$INSTALL_OLLAMA" = true ]; then
-    info "Phase 6: Installing Ollama for NSFW-Protect..."
+    info "Phase 6: Installing Ollama for NSFW-Protect AI..."
     
     if ! command -v ollama &> /dev/null; then
+        log "Installing Ollama..."
         curl -fsSL https://ollama.com/install.sh | sh
         sleep 3
+        sudo systemctl enable ollama
+        sudo systemctl start ollama
+        sleep 5
     fi
     
-    log "Pulling llava model (image analysis)..."
-    ollama pull llava || warn "llava pull failed"
+    log "Downloading AI models (this may take a while)..."
+    echo ""
+    echo "  📦 Model 1/3: llava:7b (Image analysis, ~4.7GB)"
+    ollama pull llava:7b || warn "llava:7b pull failed"
     
-    log "Pulling llama3 model (text analysis)..."
-    ollama pull llama3 || warn "llama3 pull failed"
+    echo "  📦 Model 2/3: llama3.2:3b (Fast text moderation, ~2GB)"
+    ollama pull llama3.2:3b || warn "llama3.2:3b pull failed"
+    
+    echo "  📦 Model 3/3: llama3:8b (Advanced text analysis, ~4.7GB)"
+    ollama pull llama3:8b || warn "llama3:8b pull failed"
+    
+    log "AI models downloaded"
     
     # Enable NSFW-Protect
     sed -i "s/ERRORDON_NSFW_PROTECT_ENABLED=false/ERRORDON_NSFW_PROTECT_ENABLED=true/" .env.production
