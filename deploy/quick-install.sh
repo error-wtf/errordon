@@ -379,6 +379,10 @@ info "Phase 5: Starting services..."
 log "Cleaning up any existing containers..."
 dc down -v 2>/dev/null || true
 
+# Build Errordon from source (includes Matrix Terminal and custom features)
+log "Building Errordon from source (this takes 10-20 minutes)..."
+dc build --no-cache
+
 # Start db and redis first
 log "Starting database and Redis..."
 dc up -d db redis
