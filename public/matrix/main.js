@@ -60,7 +60,7 @@ function login() {
     }
     
     loginScreen.style.display = 'none';
-    terminal.style.display = 'flex';
+    terminal.classList.add('active');
     promptEl.textContent = `${username}@errordon:~$`;
     commandInput.focus();
     
@@ -78,7 +78,7 @@ function login() {
 }
 
 function logout() {
-    terminal.style.display = 'none';
+    terminal.classList.remove('active');
     loginScreen.style.display = 'block';
     output.innerHTML = '';
     usernameInput.value = '';

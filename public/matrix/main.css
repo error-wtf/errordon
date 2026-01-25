@@ -89,7 +89,11 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 30px #0f0;
     flex-direction: column;
-    /* display is controlled by JavaScript - don't set here */
+    display: none; /* Hidden by default, JS shows it */
+}
+
+.terminal.active {
+    display: flex !important;
 }
 
 .terminal-header {
