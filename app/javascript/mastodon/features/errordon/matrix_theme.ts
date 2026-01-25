@@ -35,8 +35,11 @@ export const getStoredTheme = (): ThemeName => {
   if (stored && stored in themes) {
     return stored as ThemeName;
   }
-  // Default to standard Mastodon theme for Fediverse compatibility
-  // Users can opt-in to Matrix theme via Ctrl+Shift+M or settings
+  // If no localStorage preference, check if server enabled Matrix theme
+  // Server adds 'theme-matrix' class when ERRORDON_MATRIX_THEME_ENABLED=true
+  if (document.body.classList.contains('theme-matrix')) {
+    return 'matrix';
+  }
   return 'default';
 };
 
