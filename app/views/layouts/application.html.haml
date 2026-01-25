@@ -42,15 +42,27 @@
 
     = yield :header_tags
 
-  %body{ class: body_classes }
+  -# Errordon: Add theme-matrix class if enabled via ENV or localStorage
+  - matrix_enabled = ENV['ERRORDON_MATRIX_THEME_ENABLED'] == 'true'
+  - body_class_list = body_classes
+  - body_class_list = "#{body_class_list} theme-matrix" if matrix_enabled
+  %body{ class: body_class_list }
     -# Errordon Matrix Theme - Rain Background Canvas (inserted via JS)
     = javascript_tag nonce: request.content_security_policy_nonce do
       :plain
         // Errordon Matrix Theme Auto-Init
         (function() {
+          var envEnabled = #{matrix_enabled};
+          var userPref = localStorage.getItem('errordon_matrix_theme');
+          // ENV enables by default, user can override via Ctrl+Shift+M
+          if (envEnabled && userPref === null) {
+            localStorage.setItem('errordon_matrix_theme', 'true');
+          }
           var matrixEnabled = localStorage.getItem('errordon_matrix_theme') === 'true';
-          if (matrixEnabled) {
+          if (matrixEnabled && !document.body.classList.contains('theme-matrix')) {
             document.body.classList.add('theme-matrix');
+          } else if (!matrixEnabled && document.body.classList.contains('theme-matrix')) {
+            document.body.classList.remove('theme-matrix');
           }
         })();
     = content_for?(:content) ? yield(:content) : yield
