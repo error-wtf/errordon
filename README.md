@@ -198,7 +198,7 @@ Beyond legal compliance, Errordon includes:
 | 🎬 **Profile Media Tabs** | Separate Videos/Audio/Images tabs |
 | 🎨 **Matrix Theme** | Cyberpunk green UI (Ctrl+Shift+M) |
 | 🖥️ **Matrix Terminal** | Interactive landing page with games |
-| 😎 **25 Custom Emojis** | Matrix/Hacker/Nerd themed |
+| 😎 **63 Custom Emojis** | Matrix/Hacker/Nerd/CCC/Cyberpunk themed |
 | 📤 **250MB Uploads** | With server-side transcoding |
 | 🔒 **Privacy-First** | Strict defaults via ENV |
 | 💾 **Dynamic Storage Quota** | 60% disk shared equally, profile display |
@@ -232,13 +232,18 @@ ERRORDON_THEME=matrix  # Options: matrix, default, light
 
 ## 😎 Custom Emojis
 
-25 Matrix/Hacker/Nerd themed emojis in 3 categories:
+63 Matrix/Hacker/Nerd/CCC/Cyberpunk themed emojis in 8 categories:
 
 | Category | Emojis |
 |----------|--------|
-| **Matrix** | `:matrix_code:` `:red_pill:` `:blue_pill:` `:skull_matrix:` `:matrix_cat:` `:glitch:` |
-| **Hacker** | `:hacker:` `:terminal:` `:binary:` `:encrypt:` `:access_granted:` `:access_denied:` `:anonymous:` `:wifi_hack:` `:firewall:` `:sudo:` |
-| **Nerd** | `:nerd:` `:keyboard:` `:code:` `:bug:` `:cyber_eye:` `:robot:` `:coffee_code:` `:git:` `:loading:` |
+| **Matrix** | `:matrix_code:` `:red_pill:` `:blue_pill:` `:skull_matrix:` `:matrix_cat:` `:glitch:` `:neon:` `:synthwave:` `:hologram:` |
+| **Hacker** | `:hacker:` `:terminal:` `:binary:` `:encrypt:` `:access_granted:` `:access_denied:` `:anonymous:` `:wifi_hack:` `:firewall:` `:sudo:` `:tor:` `:vpn:` `:ssh:` `:darknet:` `:exploit:` `:overflow:` `:injection:` `:phishing:` |
+| **Nerd** | `:nerd:` `:keyboard:` `:code:` `:bug:` `:cyber_eye:` `:robot:` `:coffee_code:` `:git:` `:loading:` `:hacker_cat:` `:night_owl:` `:headphones:` |
+| **Coding** | `:python:` `:javascript:` `:rust:` `:docker:` `:linux:` `:vim:` `:emacs:` `:api:` `:json:` `:regex:` `:null:` `:undefined:` `:commit:` `:merge:` `:branch:` `:pull_request:` `:opensource:` `:foss:` `:debug:` `:segfault:` `:bash:` `:zsh:` `:root:` `:chmod:` `:ping:` `:404:` `:500:` `:200:` |
+| **Hardware** | `:cpu:` `:ram:` `:gpu:` `:server:` `:database:` `:raspberry_pi:` `:arduino:` `:usb:` `:ethernet:` |
+| **Coffee** | `:coffee:` `:espresso:` `:latte:` `:energy_drink:` `:pizza:` |
+| **CCC** | `:ccc:` `:chaos:` `:hackspace:` `:soldering:` |
+| **Cyberpunk** | `:cyborg:` `:ai:` `:neural:` `:blockchain:` `:crypto:` `:vr:` `:retro:` `:pixel:` `:arcade:` `:gamepad:` |
 
 ### Import Emojis
 
@@ -298,7 +303,7 @@ errordon/
 │   ├── initializers/errordon_*.rb       # Feature configs
 │   ├── routes/errordon.rb               # API routes
 │   └── locales/errordon.*.yml           # Translations
-├── public/emoji/errordon/               # 25 custom SVG emojis
+├── public/emoji/errordon/               # 63 custom SVG emojis
 ├── lib/tasks/errordon_emojis.rake       # Emoji import task
 ├── deploy/                              # Production configs
 ├── docs/                                # Documentation
