@@ -1,0 +1,145 @@
+fr:
+  errordon:
+    video_grid:
+      empty: "Aucune vidéo à afficher"
+      load_more: "Charger plus de vidéos"
+    
+    audio_player:
+      play: "Lecture"
+      pause: "Pause"
+      mute: "Muet"
+      unmute: "Son"
+      download: "Télécharger"
+    
+    media_filter:
+      all: "Tout"
+      videos: "Vidéos"
+      audio: "Audio"
+      images: "Images"
+      originals: "Originaux uniquement"
+      with_alt: "Avec texte alternatif"
+      public: "Public uniquement"
+    
+    admin:
+      quotas:
+        title: "Quotas de stockage"
+        total_storage: "Stockage total utilisé"
+        active_users: "Utilisateurs actifs"
+        pending_transcodes: "Transcodages en attente"
+        failed_transcodes: "Transcodages échoués"
+        quota_usage: "Utilisation moyenne du quota"
+        username: "Nom d'utilisateur"
+        storage_used: "Stockage utilisé"
+        quota: "Quota"
+        usage: "Utilisation"
+        actions: "Actions"
+        increase_quota: "Augmenter"
+        decrease_quota: "Diminuer"
+        view_media: "Voir"
+        reset_quota: "Réinitialiser"
+        no_users: "Aucun utilisateur avec des téléchargements"
+        loading: "Chargement des données de quota..."
+        quota_updated: "Quota mis à jour avec succès"
+        exempt_user: "Utilisateur exempté des quotas"
+    
+    upload:
+      quota_exceeded: "Quota de stockage dépassé"
+      rate_limit_exceeded: "Limite de téléchargement dépassée"
+      daily_limit_exceeded: "Limite quotidienne dépassée"
+      file_too_large: "Fichier trop volumineux"
+      transcoding_started: "Traitement de la vidéo en cours..."
+      transcoding_complete: "Traitement terminé"
+      transcoding_failed: "Échec du traitement"
+    
+    privacy:
+      preset_strict: "Mode de confidentialité strict activé"
+      preset_standard: "Mode de confidentialité standard"
+      default_unlisted: "Publications non listées par défaut"
+      default_private: "Publications privées par défaut"
+    
+    settings:
+      transcoding:
+        title: "Paramètres de transcodage"
+        enabled: "Activer le transcodage vidéo"
+        mobile_variant: "Générer une variante mobile (480p)"
+        delete_originals: "Supprimer l'original après transcodage"
+      quotas:
+        title: "Paramètres de quota"
+        enabled: "Activer les quotas de stockage"
+        max_storage: "Stockage maximum par utilisateur"
+        max_daily: "Taille maximale quotidienne"
+        max_hourly: "Téléchargements maximum par heure"
+    
+    nsfw_protect:
+      title: "NSFW-Protect"
+      enabled: "NSFW-Protect activé"
+      disabled: "NSFW-Protect désactivé"
+      
+      violations:
+        porn: "Contenu pornographique"
+        hate: "Discours de haine"
+        illegal: "Contenu illégal"
+        csam: "CSAM (Abus d'enfants)"
+        blocked_domain: "Domaine bloqué"
+      
+      freeze:
+        temporary: "Temporairement gelé"
+        permanent: "Définitivement gelé"
+        until: "Gelé jusqu'à %{time}"
+        reason: "Raison: %{reason}"
+      
+      strikes:
+        count: "%{count} avertissements"
+        warning: "Avertissement"
+        first: "Premier avertissement"
+        repeated: "Violation répétée"
+      
+      mailer:
+        user_frozen:
+          subject: "Votre compte a été gelé"
+        instance_frozen:
+          subject: "Instance gelée - Seuil d'alarme dépassé"
+        weekly_summary:
+          subject: "Rapport hebdomadaire NSFW-Protect"
+      
+      admin:
+        alarms: "Alarmes actives"
+        resolve: "Résoudre"
+        dismiss: "Rejeter (Faux positif)"
+        stats: "Statistiques"
+        config: "Configuration"
+        blocklist: "Gérer la liste de blocage"
+        
+      gdpr:
+        export: "Exporter les données"
+        delete: "Supprimer les données"
+        retention: "Durées de conservation"
+        info: "Informations de confidentialité"
+        
+    blocklist:
+      categories:
+        porn: "Pornographie"
+        hate: "Discours de haine"
+        fascism: "Fascisme/Extrémisme de droite"
+        neo_nazi: "Propagande néo-nazie"
+        conspiracy: "Théories du complot"
+        
+      warnings:
+        hard_block:
+          porn: "🚫 Le contenu pornographique n'est pas autorisé sur cette instance."
+          fascism: "🚫 Cette URL renvoie vers un site web avec du contenu illégal (propagande néo-nazie, négationnisme, terrorisme). Le partage de tels liens n'est pas autorisé."
+        soft_block:
+          fascism: |
+            ⚠️ Cette URL renvoie vers un site web qui propage la haine, le fascisme ou 
+            du contenu d'extrême droite.
+            
+            Nous ne voulons pas donner de trafic à ces sites.
+            
+            📸 Si vous souhaitez signaler ce site, partagez plutôt une capture d'écran 
+            au lieu d'un lien direct.
+            
+            Vous pouvez révéler manuellement le lien, mais il sera marqué comme NSFW.
+            
+      screenshot_hint: "Partagez plutôt une capture d'écran"
+      no_traffic: "Nous ne voulons pas donner de trafic à ces sites"
+      reveal_button: "Révéler le lien (sera marqué comme NSFW)"
