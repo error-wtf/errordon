@@ -25,8 +25,15 @@ Rails.application.config.x.errordon_nsfw_protect = {
 }
 
 # Initialize default config in database after Rails loads (if tables exist)
+# Skip during asset precompilation or when database is not available
 Rails.application.config.after_initialize do
-  if ActiveRecord::Base.connection.table_exists?('nsfw_protect_configs')
+  # Skip if we're precompiling assets or running rake tasks without DB
+  next if ENV['SECRET_KEY_BASE_DUMMY'].present?
+  next unless ActiveRecord::Base.connected?
+  
+  begin
+    next unless ActiveRecord::Base.connection.table_exists?('nsfw_protect_configs')
+    
     config = NsfwProtectConfig.current
 
     # Sync ENV settings to database on startup (only if not already configured)
@@ -45,7 +52,7 @@ Rails.application.config.after_initialize do
 
     Rails.logger.info "[NSFW-Protect] System #{config.enabled? ? 'ENABLED' : 'DISABLED'}"
     Rails.logger.info "[NSFW-Protect] Ollama endpoint: #{config.ollama_endpoint}" if config.enabled?
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, PG::ConnectionBad => e
+    Rails.logger.debug "[NSFW-Protect] Skipping init (DB not ready): #{e.message}"
   end
-rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid => e
-  Rails.logger.debug "[NSFW-Protect] Skipping init (DB not ready): #{e.message}"
 end
