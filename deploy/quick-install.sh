@@ -115,6 +115,14 @@ else
     log "Docker already installed"
 fi
 
+# Install Docker Compose plugin
+if ! docker compose version &> /dev/null; then
+    log "Installing Docker Compose plugin..."
+    sudo apt-get install -y -qq docker-compose-plugin
+else
+    log "Docker Compose already installed"
+fi
+
 # ============================================================================
 # PHASE 2: CLONE ERRORDON
 # ============================================================================
@@ -174,17 +182,55 @@ fi
 # ============================================================================
 info "Phase 4: Configuring nginx and SSL..."
 
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/errordon
-sudo sed -i "s/example.com/$DOMAIN/g" /etc/nginx/sites-available/errordon
-sudo ln -sf /etc/nginx/sites-available/errordon /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
+sudo rm -f /etc/nginx/sites-enabled/errordon
 
+# Step 1: Create temporary HTTP-only config for certbot
+cat << TEMPNGINX | sudo tee /etc/nginx/sites-available/errordon-temp > /dev/null
+server {
+    listen 80;
+    listen [::]:80;
+    server_name $DOMAIN;
+    
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+    
+    location / {
+        return 200 'Errordon Setup in Progress';
+        add_header Content-Type text/plain;
+    }
+}
+TEMPNGINX
+
+sudo ln -sf /etc/nginx/sites-available/errordon-temp /etc/nginx/sites-enabled/
+sudo mkdir -p /var/www/html
 sudo nginx -t && sudo systemctl reload nginx
 
+# Step 2: Get SSL certificate
 log "Getting SSL certificate..."
-sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --email "$EMAIL" || {
-    warn "Certbot failed. Run manually: sudo certbot --nginx -d $DOMAIN"
-}
+if [ -n "$EMAIL" ]; then
+    sudo certbot certonly --webroot -w /var/www/html -d "$DOMAIN" --non-interactive --agree-tos --email "$EMAIL" || {
+        warn "Certbot failed. Run manually: sudo certbot certonly --webroot -w /var/www/html -d $DOMAIN"
+    }
+else
+    sudo certbot certonly --webroot -w /var/www/html -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email || {
+        warn "Certbot failed. Run manually: sudo certbot certonly --webroot -w /var/www/html -d $DOMAIN"
+    }
+fi
+
+# Step 3: Now install the full HTTPS config
+sudo rm -f /etc/nginx/sites-enabled/errordon-temp
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/errordon
+sudo sed -i "s/example.com/$DOMAIN/g" /etc/nginx/sites-available/errordon
+
+# Fix deprecated http2 directive for newer nginx
+sudo sed -i 's/listen 443 ssl http2;/listen 443 ssl;\n    http2 on;/' /etc/nginx/sites-available/errordon
+sudo sed -i 's/listen \[::\]:443 ssl http2;/listen [::]:443 ssl;/' /etc/nginx/sites-available/errordon
+
+sudo ln -sf /etc/nginx/sites-available/errordon /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+log "Nginx configured with SSL"
 
 # ============================================================================
 # PHASE 5: DATABASE & SERVICES
