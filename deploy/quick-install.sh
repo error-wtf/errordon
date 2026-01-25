@@ -110,17 +110,48 @@ fi
 log "Detected: $ID $VERSION_ID"
 
 # ============================================================================
-# PHASE 1: SYSTEM PACKAGES
+# PHASE 1: SYSTEM PACKAGES & DEPENDENCIES
 # ============================================================================
-info "Phase 1: Installing system packages..."
+info "Phase 1: Installing system packages and dependencies..."
 
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
     curl \
+    wget \
     git \
     nginx \
     certbot \
-    python3-certbot-nginx
+    python3-certbot-nginx \
+    fail2ban \
+    ufw \
+    htop \
+    unzip \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    cron \
+    logrotate
+
+log "System packages installed"
+
+# Configure and enable firewall
+log "Configuring firewall..."
+sudo ufw default deny incoming 2>/dev/null || true
+sudo ufw default allow outgoing 2>/dev/null || true
+sudo ufw allow ssh 2>/dev/null || true
+sudo ufw allow http 2>/dev/null || true
+sudo ufw allow https 2>/dev/null || true
+sudo ufw --force enable 2>/dev/null || true
+log "Firewall configured (SSH, HTTP, HTTPS allowed)"
+
+# Enable and start essential services
+log "Enabling system services..."
+sudo systemctl enable nginx
+sudo systemctl enable fail2ban
+sudo systemctl enable cron
+sudo systemctl start fail2ban 2>/dev/null || true
+sudo systemctl start cron 2>/dev/null || true
+log "System services enabled"
 
 # Install Docker
 if ! command -v docker &> /dev/null; then
@@ -131,6 +162,10 @@ if ! command -v docker &> /dev/null; then
 else
     log "Docker already installed"
 fi
+
+# Enable Docker service permanently
+sudo systemctl enable docker
+sudo systemctl start docker
 
 # Install Docker Compose - ALWAYS check and install standalone for Kali
 log "Checking Docker Compose..."
@@ -394,6 +429,79 @@ dc exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
 
 # Initialize blocklists
 dc exec -T web bundle exec rake errordon:blocklist:update 2>/dev/null || true
+
+# ============================================================================
+# PHASE 8: SYSTEMD SERVICE & AUTO-START
+# ============================================================================
+info "Phase 8: Configuring auto-start services..."
+
+# Create systemd service for Errordon
+log "Creating Errordon systemd service..."
+sudo tee /etc/systemd/system/errordon.service > /dev/null << SYSTEMD
+[Unit]
+Description=Errordon Mastodon Instance
+Requires=docker.service
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=$INSTALL_DIR/deploy
+ExecStart=/usr/bin/docker compose up -d
+ExecStop=/usr/bin/docker compose down
+ExecReload=/usr/bin/docker compose restart
+User=$USER
+Group=$USER
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+SYSTEMD
+
+# Fix for docker-compose standalone
+if ! docker compose version &> /dev/null; then
+    sudo sed -i 's|/usr/bin/docker compose|/usr/local/bin/docker-compose|g' /etc/systemd/system/errordon.service
+fi
+
+sudo systemctl daemon-reload
+sudo systemctl enable errordon
+log "Errordon will auto-start on boot"
+
+# Setup automatic SSL renewal
+log "Configuring SSL auto-renewal..."
+(sudo crontab -l 2>/dev/null | grep -v certbot; echo "0 3 * * * certbot renew --quiet --post-hook 'systemctl reload nginx'") | sudo crontab -
+log "SSL certificates will auto-renew"
+
+# Setup log rotation
+log "Configuring log rotation..."
+sudo tee /etc/logrotate.d/errordon > /dev/null << LOGROTATE
+$INSTALL_DIR/deploy/logs/*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+}
+LOGROTATE
+
+# Setup automatic database backups
+log "Configuring daily database backups..."
+mkdir -p "$INSTALL_DIR/backups"
+cat > "$INSTALL_DIR/backup.sh" << 'BACKUP'
+#!/bin/bash
+BACKUP_DIR="$HOME/errordon/backups"
+DATE=$(date +%Y%m%d_%H%M%S)
+cd $HOME/errordon/deploy
+docker compose exec -T db pg_dump -U postgres mastodon | gzip > "$BACKUP_DIR/db_$DATE.sql.gz"
+# Keep only last 7 days
+find "$BACKUP_DIR" -name "db_*.sql.gz" -mtime +7 -delete
+BACKUP
+chmod +x "$INSTALL_DIR/backup.sh"
+(crontab -l 2>/dev/null | grep -v backup.sh; echo "0 4 * * * $INSTALL_DIR/backup.sh") | crontab -
+log "Daily database backups configured"
 
 # ============================================================================
 # CREATE ADMIN ACCOUNT
