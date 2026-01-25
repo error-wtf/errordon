@@ -132,23 +132,23 @@ else
     log "Docker already installed"
 fi
 
-# Install Docker Compose
-if ! docker compose version &> /dev/null && ! command -v docker-compose &> /dev/null; then
-    log "Installing Docker Compose..."
-    # Try plugin first, then standalone
-    sudo apt-get install -y -qq docker-compose-plugin 2>/dev/null || {
-        # Fallback: Install standalone docker-compose
-        log "Installing standalone Docker Compose..."
-        COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K[^"]+' || echo "v2.24.0")
-        sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-        sudo ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
-        # Create compose alias
-        mkdir -p ~/.docker/cli-plugins
-        ln -sf /usr/local/bin/docker-compose ~/.docker/cli-plugins/docker-compose
-    }
+# Install Docker Compose - ALWAYS check and install standalone for Kali
+log "Checking Docker Compose..."
+if docker compose version &> /dev/null; then
+    log "Docker Compose plugin available"
+elif command -v docker-compose &> /dev/null; then
+    log "Docker Compose standalone available"
 else
-    log "Docker Compose already installed"
+    log "Installing Docker Compose standalone..."
+    COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K[^"]+' 2>/dev/null || echo "v2.27.0")
+    sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    sudo ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
+    # Also create as docker plugin
+    mkdir -p ~/.docker/cli-plugins
+    sudo mkdir -p /usr/local/lib/docker/cli-plugins
+    sudo ln -sf /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+    log "Docker Compose installed: $(docker-compose --version)"
 fi
 
 # ============================================================================
@@ -220,8 +220,9 @@ fi
 # ============================================================================
 info "Phase 4: Configuring nginx and SSL..."
 
-sudo rm -f /etc/nginx/sites-enabled/default
-sudo rm -f /etc/nginx/sites-enabled/errordon
+# CRITICAL: Remove ALL existing nginx configs first
+sudo rm -f /etc/nginx/sites-enabled/*
+sudo rm -f /etc/nginx/sites-available/errordon*
 
 # Step 1: Create temporary HTTP-only config for certbot
 cat << TEMPNGINX | sudo tee /etc/nginx/sites-available/errordon-temp > /dev/null
@@ -254,15 +255,27 @@ fi
 
 # Step 2: Get SSL certificate
 log "Getting SSL certificate..."
+SSL_SUCCESS=false
 if [ -n "$EMAIL" ]; then
-    sudo certbot certonly --webroot -w /var/www/html -d "$DOMAIN" --non-interactive --agree-tos --email "$EMAIL" || {
-        warn "Certbot failed. Run manually: sudo certbot certonly --webroot -w /var/www/html -d $DOMAIN"
-    }
+    if sudo certbot certonly --webroot -w /var/www/html -d "$DOMAIN" --non-interactive --agree-tos --email "$EMAIL"; then
+        SSL_SUCCESS=true
+    fi
 else
-    sudo certbot certonly --webroot -w /var/www/html -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email || {
-        warn "Certbot failed. Run manually: sudo certbot certonly --webroot -w /var/www/html -d $DOMAIN"
-    }
+    if sudo certbot certonly --webroot -w /var/www/html -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email; then
+        SSL_SUCCESS=true
+    fi
 fi
+
+if [ "$SSL_SUCCESS" = false ]; then
+    warn "Certbot failed. Trying standalone method..."
+    sudo systemctl stop nginx 2>/dev/null || true
+    if sudo certbot certonly --standalone -d "$DOMAIN" --non-interactive --agree-tos --email "${EMAIL:-admin@$DOMAIN}"; then
+        SSL_SUCCESS=true
+    else
+        error "SSL certificate failed. Run manually: sudo certbot certonly --standalone -d $DOMAIN"
+    fi
+fi
+log "SSL certificate obtained"
 
 # Step 3: Now install the full HTTPS config
 sudo rm -f /etc/nginx/sites-enabled/errordon-temp
