@@ -71,9 +71,4 @@
       = inline_svg_tag 'logo-symbol-icon.svg'
       = inline_svg_tag 'logo-symbol-wordmark.svg'
     
-    -# Errordon Matrix Theme JavaScript (optional, graceful fallback if not built)
-    - if ENV['ERRORDON_MATRIX_THEME_ENABLED'] != 'false'
-      - begin
-        = vite_javascript_tag 'errordon/matrix/index.js', crossorigin: 'anonymous'
-      - rescue ViteRuby::MissingEntrypointError
-        -# Matrix theme JS not available, skipping
+    -# Errordon Matrix Theme JavaScript is loaded via common.ts entrypoint
