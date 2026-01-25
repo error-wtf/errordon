@@ -201,7 +201,7 @@ module Errordon
       end
 
       # Check for image with embedded HTML
-      if header.match?(/\A(GIF8|\x89PNG|\xff\xd8\xff)/) && header.match?(/<html/i)
+      if header.match?(/\A(GIF8|\x89PNG|\xff\xd8\xff)/n) && header.match?(/<html/i)
         @violations << "Potential polyglot file detected (image+HTML)"
       end
     end
