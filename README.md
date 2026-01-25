@@ -198,7 +198,7 @@ Beyond legal compliance, Errordon includes:
 | 🎬 **Profile Media Tabs** | Separate Videos/Audio/Images tabs |
 | 🎨 **Matrix Theme** | Cyberpunk green UI (Ctrl+Shift+M) |
 | 🖥️ **Matrix Terminal** | Interactive landing page with games |
-| 😎 **63 Custom Emojis** | Matrix/Hacker/Nerd/CCC/Cyberpunk themed |
+| 😎 **127 Custom Emojis** | Matrix/Hacker/Nerd/CCC/DevOps/Security themed |
 | 📤 **250MB Uploads** | With server-side transcoding |
 | 🔒 **Privacy-First** | Strict defaults via ENV |
 | 💾 **Dynamic Storage Quota** | 60% disk shared equally, profile display |
@@ -232,7 +232,7 @@ ERRORDON_THEME=matrix  # Options: matrix, default, light
 
 ## 😎 Custom Emojis
 
-63 Matrix/Hacker/Nerd/CCC/Cyberpunk themed emojis in 8 categories:
+127 Matrix/Hacker/Nerd/CCC/DevOps/Security themed emojis in 14 categories:
 
 | Category | Emojis |
 |----------|--------|
@@ -303,7 +303,7 @@ errordon/
 │   ├── initializers/errordon_*.rb       # Feature configs
 │   ├── routes/errordon.rb               # API routes
 │   └── locales/errordon.*.yml           # Translations
-├── public/emoji/errordon/               # 63 custom SVG emojis
+├── public/emoji/errordon/               # 127 custom SVG emojis
 ├── lib/tasks/errordon_emojis.rake       # Emoji import task
 ├── deploy/                              # Production configs
 ├── docs/                                # Documentation

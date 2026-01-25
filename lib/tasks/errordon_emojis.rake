@@ -109,7 +109,11 @@ namespace :errordon do
       { shortcode: 'ccc', file: 'ccc.svg', category: 'CCC' },
       { shortcode: 'chaos', file: 'chaos.svg', category: 'CCC' },
       { shortcode: 'hackspace', file: 'hackspace.svg', category: 'CCC' },
+      { shortcode: 'hackerspace', file: 'hackerspace.svg', category: 'CCC' },
       { shortcode: 'soldering', file: 'soldering.svg', category: 'CCC' },
+      { shortcode: 'mate', file: 'mate.svg', category: 'CCC' },
+      { shortcode: 'c64', file: 'c64.svg', category: 'CCC' },
+      { shortcode: 'floppy', file: 'floppy.svg', category: 'CCC' },
       
       # Cyberpunk / Gaming
       { shortcode: 'cyborg', file: 'cyborg.svg', category: 'Cyberpunk' },
@@ -122,6 +126,46 @@ namespace :errordon do
       { shortcode: 'pixel', file: 'pixel.svg', category: 'Cyberpunk' },
       { shortcode: 'arcade', file: 'arcade.svg', category: 'Cyberpunk' },
       { shortcode: 'gamepad', file: 'gamepad.svg', category: 'Cyberpunk' },
+      
+      # Security
+      { shortcode: 'ddos', file: 'ddos.svg', category: 'Security' },
+      { shortcode: 'firewall_on', file: 'firewall_on.svg', category: 'Security' },
+      { shortcode: 'backdoor', file: 'backdoor.svg', category: 'Security' },
+      { shortcode: 'zerodey', file: 'zerodey.svg', category: 'Security' },
+      { shortcode: 'pwned', file: 'pwned.svg', category: 'Security' },
+      { shortcode: 'leet', file: 'leet.svg', category: 'Security' },
+      { shortcode: 'root_access', file: 'root_access.svg', category: 'Security' },
+      { shortcode: 'packet', file: 'packet.svg', category: 'Security' },
+      
+      # Symbols
+      { shortcode: 'semicolon', file: 'semicolon.svg', category: 'Symbols' },
+      { shortcode: 'curly', file: 'curly.svg', category: 'Symbols' },
+      { shortcode: 'infinity_loop', file: 'infinity_loop.svg', category: 'Symbols' },
+      { shortcode: 'hash', file: 'hash.svg', category: 'Symbols' },
+      { shortcode: 'lambda', file: 'lambda.svg', category: 'Symbols' },
+      { shortcode: 'ctrl_c', file: 'ctrl_c.svg', category: 'Symbols' },
+      
+      # Platforms
+      { shortcode: 'github', file: 'github.svg', category: 'Platforms' },
+      { shortcode: 'gitlab', file: 'gitlab.svg', category: 'Platforms' },
+      { shortcode: 'mastodon', file: 'mastodon.svg', category: 'Platforms' },
+      { shortcode: 'stackoverflow', file: 'stackoverflow.svg', category: 'Platforms' },
+      
+      # FOSS Mascots
+      { shortcode: 'tux', file: 'tux.svg', category: 'FOSS' },
+      { shortcode: 'gnu', file: 'gnu.svg', category: 'FOSS' },
+      
+      # DevOps
+      { shortcode: 'kubernetes', file: 'kubernetes.svg', category: 'DevOps' },
+      { shortcode: 'ansible', file: 'ansible.svg', category: 'DevOps' },
+      { shortcode: 'terraform', file: 'terraform.svg', category: 'DevOps' },
+      { shortcode: 'prometheus', file: 'prometheus.svg', category: 'DevOps' },
+      { shortcode: 'grafana', file: 'grafana.svg', category: 'DevOps' },
+      { shortcode: 'cloud', file: 'cloud.svg', category: 'DevOps' },
+      
+      # Network
+      { shortcode: 'wifi', file: 'wifi.svg', category: 'Network' },
+      { shortcode: 'bluetooth', file: 'bluetooth.svg', category: 'Network' },
     ]
 
     created = 0
@@ -190,8 +234,14 @@ namespace :errordon do
       404 500 200
       cpu ram gpu server database raspberry_pi arduino usb ethernet
       coffee espresso latte energy_drink pizza
-      ccc chaos hackspace soldering
+      ccc chaos hackspace hackerspace soldering mate c64 floppy
       cyborg ai neural blockchain crypto vr retro pixel arcade gamepad
+      ddos firewall_on backdoor zerodey pwned leet root_access packet
+      semicolon curly infinity_loop hash lambda ctrl_c
+      github gitlab mastodon stackoverflow
+      tux gnu
+      kubernetes ansible terraform prometheus grafana cloud
+      wifi bluetooth
     ]
 
     puts "Removing Errordon custom emojis..."
@@ -200,7 +250,7 @@ namespace :errordon do
     puts "Deleted #{deleted.count} emojis"
 
     # Clean up empty categories
-    CustomEmojiCategory.where(name: %w[Matrix Hacker Nerd Coding Hardware Coffee CCC Cyberpunk]).each do |cat|
+    CustomEmojiCategory.where(name: %w[Matrix Hacker Nerd Coding Hardware Coffee CCC Cyberpunk Security Symbols Platforms FOSS DevOps Network]).each do |cat|
       cat.destroy if cat.custom_emojis.count.zero?
     end
   end
