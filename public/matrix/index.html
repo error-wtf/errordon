@@ -1,16 +1,364 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>ERRORDON</title>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<style>*{margin:0;padding:0}body{background:#000;color:#0f0;font-family:monospace;overflow:hidden}#c{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}#L{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;text-align:center;background:rgba(0,0,0,.95);padding:40px;border:2px solid #0f0;box-shadow:0 0 30px #0f0}#L h1{color:#0f0;font-size:36px;margin-bottom:20px;text-shadow:0 0 10px #0f0}#L input{width:100%;padding:12px;margin:10px 0;background:rgba(0,255,0,.1);border:2px solid #0f0;color:#0f0;font-size:16px;text-align:center}#L button{width:100%;padding:12px;background:#0f0;color:#000;border:none;font-size:16px;font-weight:bold;cursor:pointer}#T{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;width:80%;max-width:900px;height:70vh;background:rgba(0,0,0,.9);border:2px solid #0f0;box-shadow:0 0 30px #0f0;flex-direction:column}.th{background:#0f0;color:#000;padding:10px 15px;font-weight:bold}#O{flex:1;overflow-y:auto;padding:15px;font-size:13px}.il{display:flex;padding:10px 15px;border-top:1px solid #0f0}#P{margin-right:8px;font-weight:bold}#I{flex:1;background:transparent;border:none;color:#0f0;font-family:monospace;outline:none}</style></head>
-<body><canvas id="c"></canvas>
-<div id="L"><h1>ERRORDON</h1><p style="color:#0f0;margin:10px 0">A Safe Fediverse</p><input id="U" placeholder="Name..." maxlength="20" autofocus><button onclick="go()">CONNECT</button><p style="color:#080;margin-top:15px;font-size:11px">Type "enter matrix" after connecting</p></div>
-<div id="T"><div class="th">ERRORDON TERMINAL v1.0</div><div id="O"></div><div class="il"><span id="P">guest@errordon:~$</span><input id="I" autocomplete="off"></div></div>
-<script>var cv=document.getElementById('c'),cx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;var ch='アァカサ0123456789ABC',fs=16,co=Math.floor(cv.width/fs),dr=[];for(var i=0;i<co;i++)dr[i]=Math.random()*cv.height/fs;setInterval(function(){cx.fillStyle='rgba(0,0,0,0.05)';cx.fillRect(0,0,cv.width,cv.height);cx.fillStyle='#0F0';cx.font=fs+'px monospace';for(var i=0;i<co;i++){cx.fillText(ch[Math.floor(Math.random()*ch.length)],i*fs,dr[i]*fs);if(dr[i]*fs>cv.height&&Math.random()>0.975)dr[i]=0;dr[i]+=0.5;}},50);
-var u='guest',O=document.getElementById('O'),I=document.getElementById('I'),T=document.getElementById('T'),L=document.getElementById('L'),U=document.getElementById('U'),P=document.getElementById('P');
-function w(t){var d=document.createElement('div');d.style.color='#0f0';d.style.margin='3px 0';d.textContent=t;O.appendChild(d);O.scrollTop=O.scrollHeight;}
-function go(){u=U.value.trim().toLowerCase().replace(/[^a-z0-9]/g,'')||'guest';L.style.display='none';T.style.display='flex';P.textContent=u+'@errordon:~$';I.focus();w('Welcome to ERRORDON - A Safe Fediverse');w('Type "enter matrix" to access the network');w('Type "help" for commands');}
-U.onkeydown=function(e){if(e.key==='Enter')go();};
-I.onkeydown=function(e){if(e.key==='Enter'&&I.value.trim()){var c=I.value.trim(),l=c.toLowerCase();w(u+'@errordon:~$ '+c);I.value='';if(l==='enter matrix'||l==='login'){w('[ENTERING THE MATRIX...]');setTimeout(function(){window.location.href='/';},1000);}else if(l==='help'){w('Commands: enter matrix, help, clear, date, whoami, tetris');}else if(l==='clear'){O.innerHTML='';}else if(l==='date'){w(new Date().toString());}else if(l==='whoami'){w(u);}else if(l==='tetris'){w('Loading Tetris...');window.open('/matrix/tetris.html','_blank');}else{w('Unknown: '+c);}}};
-</script></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>ERRORDON - Enter The Matrix</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; }
+        #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        
+        /* Login Screen */
+        #loginScreen {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 100; text-align: center; background: rgba(0,0,0,0.95);
+            padding: 60px; border: 2px solid #0f0; border-radius: 10px; box-shadow: 0 0 40px #0f0;
+        }
+        .matrix-title { color: #0f0; font-size: 48px; margin-bottom: 40px; text-shadow: 0 0 20px #0f0; letter-spacing: 8px; }
+        .login-form input {
+            width: 100%; padding: 15px; margin-bottom: 20px; background: rgba(0,255,0,0.1);
+            border: 2px solid #0f0; color: #0f0; font-family: 'Courier New', monospace;
+            font-size: 18px; text-align: center;
+        }
+        .login-form input::placeholder { color: rgba(0,255,0,0.5); }
+        .login-form button {
+            width: 100%; padding: 15px; background: #0f0; color: #000; border: none;
+            font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; cursor: pointer;
+        }
+        .login-form button:hover { background: #0c0; box-shadow: 0 0 20px #0f0; }
+        
+        /* Terminal */
+        #terminal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; width: 85%; max-width: 1000px; height: 80vh;
+            background: rgba(0,0,0,0.9); border: 2px solid #0f0; border-radius: 8px;
+            box-shadow: 0 0 30px #0f0; flex-direction: column;
+        }
+        .terminal-header {
+            background: #0f0; color: #000; padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center; border-radius: 6px 6px 0 0;
+        }
+        .terminal-title { font-weight: bold; font-size: 16px; letter-spacing: 2px; }
+        .terminal-buttons span { margin-left: 15px; cursor: pointer; font-size: 20px; font-weight: bold; }
+        .terminal-buttons span:hover { color: #300; }
+        #output { flex: 1; overflow-y: auto; padding: 20px; color: #0f0; font-size: 14px; line-height: 1.8; }
+        .terminal-input-line { display: flex; align-items: center; padding: 15px 20px; border-top: 1px solid #0f0; }
+        #prompt { color: #0f0; margin-right: 10px; font-weight: bold; }
+        #commandInput {
+            flex: 1; background: transparent; border: none; color: #0f0;
+            font-family: 'Courier New', monospace; font-size: 14px; outline: none;
+        }
+        .command-line { color: #0c0; font-weight: bold; }
+        .output-line { color: #0f0; margin: 5px 0; }
+        .error-line { color: #f00; }
+        
+        /* Tetris Overlay */
+        #tetrisOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000; background: rgba(0,0,0,0.98);
+        }
+        #tetrisOverlay iframe { width: 100%; height: 100%; border: none; }
+        #tetrisClose {
+            position: fixed; top: 20px; right: 30px; z-index: 1001;
+            background: #0f0; color: #000; border: none; padding: 10px 20px;
+            font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; cursor: pointer;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #0f0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <h1 class="matrix-title">ERRORDON</h1>
+        <p style="color: #0f0; margin-bottom: 10px; font-size: 16px; letter-spacing: 2px;">A Safe Fediverse Instance</p>
+        <p style="color: #0a0; margin-bottom: 25px; font-size: 12px;">🛡️ No Porn • No Hate • No Fascism</p>
+        <div class="login-form">
+            <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="20" autocomplete="off" autofocus>
+            <button id="connectBtn">CONNECT</button>
+        </div>
+        <p style="color: #080; margin-top: 20px; font-size: 11px;">Type "enter matrix" after connecting to access the network</p>
+    </div>
+
+    <!-- Terminal -->
+    <div id="terminal">
+        <div class="terminal-header">
+            <span class="terminal-title">ERRORDON TERMINAL v1.0</span>
+            <div class="terminal-buttons">
+                <span id="logoutBtn" title="Disconnect">×</span>
+            </div>
+        </div>
+        <div id="output"></div>
+        <div class="terminal-input-line">
+            <span id="prompt">guest@errordon:~$</span>
+            <input type="text" id="commandInput" autocomplete="off">
+        </div>
+    </div>
+
+    <!-- Tetris Overlay -->
+    <div id="tetrisOverlay">
+        <button id="tetrisClose">← RETURN TO TERMINAL</button>
+        <iframe id="tetrisFrame" src=""></iframe>
+    </div>
+
+<script>
+// ============================================================================
+// MATRIX RAIN
+// ============================================================================
+const matrixCanvas = document.getElementById('matrixCanvas');
+const matrixCtx = matrixCanvas.getContext('2d');
+matrixCanvas.width = window.innerWidth;
+matrixCanvas.height = window.innerHeight;
+
+const MATRIX_CHARS = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const fontSize = 16;
+let columns = Math.floor(matrixCanvas.width / fontSize);
+let drops = Array.from({ length: columns }, () => Math.random() * matrixCanvas.height / fontSize);
+
+function drawMatrixRain() {
+    matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+    matrixCtx.fillStyle = '#0F0';
+    matrixCtx.font = fontSize + 'px monospace';
+    for (let i = 0; i < columns; i++) {
+        const text = MATRIX_CHARS.charAt(Math.floor(Math.random() * MATRIX_CHARS.length));
+        matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.3 + Math.random() * 0.4;
+    }
+}
+setInterval(drawMatrixRain, 50);
+
+window.addEventListener('resize', () => {
+    matrixCanvas.width = window.innerWidth;
+    matrixCanvas.height = window.innerHeight;
+    columns = Math.floor(matrixCanvas.width / fontSize);
+    drops = Array.from({ length: columns }, () => Math.random() * matrixCanvas.height / fontSize);
+});
+
+// ============================================================================
+// TERMINAL SYSTEM
+// ============================================================================
+const output = document.getElementById('output');
+const commandInput = document.getElementById('commandInput');
+const terminal = document.getElementById('terminal');
+const loginScreen = document.getElementById('loginScreen');
+const usernameInput = document.getElementById('usernameInput');
+const promptEl = document.getElementById('prompt');
+const tetrisOverlay = document.getElementById('tetrisOverlay');
+const tetrisFrame = document.getElementById('tetrisFrame');
+const tetrisClose = document.getElementById('tetrisClose');
+
+let username = 'guest';
+
+// Login
+function login() {
+    const name = usernameInput.value.trim();
+    if (name) {
+        username = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        localStorage.setItem('matrixUsername', username);
+    }
+    loginScreen.style.display = 'none';
+    terminal.style.display = 'flex';
+    promptEl.textContent = username + '@errordon:~$';
+    commandInput.focus();
+    
+    printLine('╔════════════════════════════════════════════════════════════╗');
+    printLine('║         WELCOME TO ERRORDON - A SAFE FEDIVERSE             ║');
+    printLine('║  🛡️  NO PORN • NO HATE • NO FASCISM                         ║');
+    printLine('╠════════════════════════════════════════════════════════════╣');
+    printLine('║  Type "enter matrix" to access the social network          ║');
+    printLine('║  Type "help" for all available commands                    ║');
+    printLine('╚════════════════════════════════════════════════════════════╝');
+    printLine('');
+    printLine('Connected as: ' + username);
+}
+
+function logout() {
+    terminal.style.display = 'none';
+    loginScreen.style.display = 'block';
+    output.innerHTML = '';
+    usernameInput.value = '';
+    usernameInput.focus();
+}
+
+function printLine(text, className) {
+    const line = document.createElement('div');
+    line.className = className || 'output-line';
+    line.textContent = text;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+}
+
+// Event Listeners
+document.getElementById('connectBtn').addEventListener('click', login);
+usernameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+document.getElementById('logoutBtn').addEventListener('click', logout);
+
+// Tetris close
+tetrisClose.addEventListener('click', closeTetris);
+window.addEventListener('message', (e) => { if (e.data === 'closeTetris') closeTetris(); });
+
+function closeTetris() {
+    tetrisOverlay.style.display = 'none';
+    tetrisFrame.src = '';
+    commandInput.focus();
+}
+
+// Command Input
+commandInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        const cmd = commandInput.value.trim();
+        if (cmd) {
+            printLine(username + '@errordon:~$ ' + cmd, 'command-line');
+            handleCommand(cmd);
+        }
+        commandInput.value = '';
+    }
+});
+
+// Auto-focus
+window.addEventListener('load', () => {
+    const stored = localStorage.getItem('matrixUsername');
+    if (stored) usernameInput.value = stored;
+});
+
+// ============================================================================
+// COMMANDS
+// ============================================================================
+const quotes = [
+    "There is no spoon.",
+    "You take the red pill — you stay in Wonderland.",
+    "I know kung fu.",
+    "Welcome to the real world.",
+    "Unfortunately, no one can be told what the Matrix is.",
+    "Welcome to the desert of the real.",
+    "I can only show you the door. You're the one that has to walk through it.",
+    "Neo, sooner or later you're going to realize there's a difference between knowing the path and walking the path.",
+    "Free your mind.",
+    "The Matrix has you Neo."
+];
+
+function handleCommand(input) {
+    const lower = input.toLowerCase();
+    const parts = input.split(' ');
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    // ENTER MATRIX
+    if (lower === 'enter matrix' || lower === 'entermatrix' || lower === 'login') {
+        printLine('[INITIATING NEURAL INTERFACE...]');
+        setTimeout(() => {
+            printLine('[CONNECTING TO ERRORDON NETWORK...]');
+            setTimeout(() => {
+                printLine('[ACCESS GRANTED - ENTERING THE MATRIX...]');
+                setTimeout(() => { window.location.href = '/'; }, 800);
+            }, 600);
+        }, 600);
+        return;
+    }
+
+    // HELP
+    if (cmd === 'help') {
+        printLine('');
+        printLine('╔═══════════════════════════════════════════════════════╗');
+        printLine('║              ERRORDON TERMINAL COMMANDS               ║');
+        printLine('╠═══════════════════════════════════════════════════════╣');
+        printLine('║  enter matrix  - 🔓 Access Errordon Social Network    ║');
+        printLine('║  about         - ℹ️  About Errordon                    ║');
+        printLine('╠═══════════════════════════════════════════════════════╣');
+        printLine('║  tetris        - 🎮 Play Tetris game                  ║');
+        printLine('║  quote         - 📜 Random Matrix quote               ║');
+        printLine('║  hack          - 💻 Hack simulation                   ║');
+        printLine('╠═══════════════════════════════════════════════════════╣');
+        printLine('║  clear         - 🧹 Clear screen                      ║');
+        printLine('║  date          - 📅 Show date/time                    ║');
+        printLine('║  whoami        - 👤 Show current user                 ║');
+        printLine('║  echo <text>   - 📢 Echo text                         ║');
+        printLine('║  logout        - 🚪 Disconnect                        ║');
+        printLine('╚═══════════════════════════════════════════════════════╝');
+        return;
+    }
+
+    // ABOUT
+    if (cmd === 'about') {
+        printLine('');
+        printLine('ERRORDON - A Safe Fediverse Instance');
+        printLine('=====================================');
+        printLine('🛡️  AI-Powered Content Moderation (NSFW-Protect)');
+        printLine('🚫  Zero Tolerance: No Porn, No Hate, No Fascism');
+        printLine('🌐  Fediverse Compatible (ActivityPub)');
+        printLine('🎨  Matrix Theme');
+        printLine('');
+        printLine('Type "enter matrix" to join the network.');
+        return;
+    }
+
+    // TETRIS
+    if (cmd === 'tetris') {
+        printLine('Loading Tetris...');
+        tetrisFrame.src = '/matrix/tetris.html?user=' + encodeURIComponent(username);
+        tetrisOverlay.style.display = 'block';
+        printLine('Tetris opened! Click RETURN TO TERMINAL or press ESC to exit.');
+        return;
+    }
+
+    // QUOTE
+    if (cmd === 'quote') {
+        printLine(quotes[Math.floor(Math.random() * quotes.length)]);
+        return;
+    }
+
+    // HACK
+    if (cmd === 'hack') {
+        const msgs = [
+            "[ACCESSING MAINFRAME...]", "[ENCRYPTION BYPASS INITIATED...]",
+            "[CRYPTO-BARRIER BREACHED]", "[LOGGING IN AS ROOT...]",
+            "[KEYSTREAM ALIGNMENT: OK]", "[DATA LINK ESTABLISHED]",
+            "[TRINITY: 'I'm inside.']", "[MISSION COMPLETE]"
+        ];
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < msgs.length) { printLine(msgs[i++]); }
+            else { clearInterval(interval); printLine('[ACCESS GRANTED]'); }
+        }, 400);
+        return;
+    }
+
+    // CLEAR
+    if (cmd === 'clear') { output.innerHTML = ''; return; }
+
+    // DATE
+    if (cmd === 'date') { printLine(new Date().toString()); return; }
+
+    // WHOAMI
+    if (cmd === 'whoami') { printLine(username); return; }
+
+    // ECHO
+    if (cmd === 'echo') { printLine(args.join(' ')); return; }
+
+    // LOGOUT
+    if (cmd === 'logout' || cmd === 'exit') { logout(); return; }
+
+    // UNKNOWN
+    printLine('Unknown command: ' + cmd, 'error-line');
+    printLine('Type "help" for available commands');
+}
+
+// ESC to close Tetris
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && tetrisOverlay.style.display === 'block') closeTetris();
+});
+</script>
+</body>
+</html>

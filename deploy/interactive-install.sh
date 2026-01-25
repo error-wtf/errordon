@@ -70,9 +70,11 @@ fi
 
 # STEP 4: Features
 echo -e "\n${BLUE}━━━ STEP 4/5: Features ━━━${NC}"
-read -p "Enable Matrix Terminal landing page? (Y/n): " yn
+echo -e "${GREEN}Matrix Terminal:${NC} Cyberpunk-style landing page with terminal interface"
+read -p "Enable Matrix Terminal? (Y/n): " yn
 [[ "$yn" =~ ^[Nn]$ ]] && INSTALL_MATRIX=false || INSTALL_MATRIX=true
 
+echo -e "${GREEN}Ollama AI:${NC} NSFW-Protect AI moderation (requires 8GB+ RAM)"
 read -p "Install Ollama for AI content moderation? (y/N): " yn
 [[ "$yn" =~ ^[Yy]$ ]] && INSTALL_OLLAMA=true || INSTALL_OLLAMA=false
 
