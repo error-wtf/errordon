@@ -1,13 +1,52 @@
 # Errordon VPS Deployment Guide
 
+**Errordon** is a safe Mastodon fork with AI content moderation, Matrix Terminal landing page, and enhanced privacy features.
+
+## Features
+
+- 🛡️ **NSFW-Protect AI** - Automated content moderation using Ollama (llava + llama3)
+- 🖥️ **Matrix Terminal** - Interactive cyberpunk landing page for visitors
+- 🎨 **Matrix Theme** - Animated Matrix rain background
+- 📹 **250MB Uploads** - Large video/audio file support
+- 🔒 **Privacy First** - No porn, no hate, no fascism
+
+---
+
 ## Requirements
 
-- **VPS**: 4+ CPU cores, 8GB+ RAM (transcoding needs CPU)
-- **OS**: Ubuntu 22.04 LTS recommended
-- **Domain**: Point DNS A record to VPS IP
-- **Storage**: 100GB+ SSD (or S3 for media)
+| Requirement | Minimum | Recommended |
+|-------------|---------|-------------|
+| **CPU** | 4 cores | 8+ cores |
+| **RAM** | 8 GB | 16+ GB (for AI) |
+| **Storage** | 50 GB SSD | 100+ GB SSD |
+| **OS** | Ubuntu 22.04, Debian 12, Kali | Ubuntu 22.04 LTS |
+| **Domain** | A record pointing to VPS IP | |
 
-## Quick Start
+---
+
+## 🚀 One-Line Install (Recommended)
+
+For a fresh VPS, use the interactive installer:
+
+```bash
+curl -sSL "https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/interactive-install.sh" -o install.sh && chmod +x install.sh && ./install.sh
+```
+
+This will:
+1. Install all dependencies (Docker, nginx, certbot)
+2. Configure firewall (SSH, HTTP, HTTPS)
+3. **Build Errordon from source** (includes Matrix Terminal features)
+4. Setup SSL certificates
+5. Initialize database
+6. Create admin account
+7. Optionally install Ollama AI models for content moderation
+8. Enable Matrix Terminal landing page
+
+**Build time:** ~15-25 minutes (compiling Ruby, Node, assets)
+
+---
+
+## Manual Installation
 
 ### 1. Install Docker
 
@@ -20,29 +59,26 @@ sudo usermod -aG docker $USER
 ### 2. Clone & Configure
 
 ```bash
-git clone https://github.com/error-wtf/errordon.git
-cd errordon/deploy
+git clone https://github.com/error-wtf/errordon.git ~/errordon
+cd ~/errordon/deploy
 cp .env.example .env.production
-
-# Edit configuration
-nano .env.production
+nano .env.production  # Edit domain, SMTP, etc.
 ```
 
-### 3. Generate Secrets
+### 3. Build from Source
+
+**Important:** Errordon is built from source to include Matrix Terminal and custom features.
 
 ```bash
-# Generate SECRET_KEY_BASE and OTP_SECRET
-docker run --rm -it ghcr.io/mastodon/mastodon:v4.3.0 bundle exec rake secret
-
-# Generate VAPID keys
-docker run --rm -it ghcr.io/mastodon/mastodon:v4.3.0 bundle exec rake mastodon:webpush:generate_vapid_key
+docker compose build --no-cache  # Takes 15-25 minutes
 ```
 
 ### 4. Initialize Database
 
 ```bash
 docker compose up -d db redis
-docker compose run --rm web bundle exec rake db:setup
+sleep 15
+docker compose run --rm web bundle exec rails db:setup
 ```
 
 ### 5. Start Services
@@ -54,25 +90,19 @@ docker compose up -d
 ### 6. Setup nginx & SSL
 
 ```bash
-# Install nginx
 sudo apt install nginx certbot python3-certbot-nginx
-
-# Copy config
 sudo cp nginx.conf /etc/nginx/sites-available/errordon
+sudo sed -i "s/example.com/YOUR_DOMAIN/g" /etc/nginx/sites-available/errordon
 sudo ln -s /etc/nginx/sites-available/errordon /etc/nginx/sites-enabled/
-
-# Get SSL certificate
-sudo certbot --nginx -d errordon.example.com
-
-# Test & reload
-sudo nginx -t
-sudo systemctl reload nginx
+sudo certbot --nginx -d YOUR_DOMAIN
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ### 7. Create Admin User
 
 ```bash
-docker compose exec web tootctl accounts create admin --email=admin@example.com --confirmed --role=Owner
+docker compose exec web tootctl accounts create admin \
+  --email=admin@example.com --confirmed --role=Owner
 ```
 
 ## Errordon-Specific Settings
