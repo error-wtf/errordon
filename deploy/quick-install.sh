@@ -365,20 +365,45 @@ log "Nginx configured with SSL"
 info "Phase 5: Starting services..."
 
 # Start db and redis first
+log "Starting database and Redis..."
 dc up -d db redis
-sleep 10
+log "Waiting for database to be ready..."
+sleep 15
+
+# Check if database is ready
+for i in {1..30}; do
+    if dc exec -T db pg_isready -U postgres &>/dev/null; then
+        log "Database is ready"
+        break
+    fi
+    echo "  Waiting for database... ($i/30)"
+    sleep 2
+done
 
 # Setup database
 log "Initializing database..."
-dc run --rm web bundle exec rake db:setup 2>/dev/null || \
-dc run --rm web bundle exec rake db:migrate
+dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:create 2>/dev/null || true
+dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:schema:load 2>/dev/null || \
+dc run --rm -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bundle exec rails db:migrate 2>/dev/null || true
 
 # Precompile assets
 log "Precompiling assets (this takes a while)..."
-dc run --rm web bundle exec rake assets:precompile
+dc run --rm web bundle exec rails assets:precompile 2>/dev/null || true
 
 # Start all services
+log "Starting all services..."
 dc up -d
+
+# Wait for web to be healthy
+log "Waiting for web service to start..."
+for i in {1..60}; do
+    if dc exec -T web wget -q --spider localhost:3000/health 2>/dev/null; then
+        log "Web service is healthy!"
+        break
+    fi
+    echo "  Waiting for web service... ($i/60)"
+    sleep 5
+done
 
 # ============================================================================
 # PHASE 6: OLLAMA (optional)
@@ -390,32 +415,55 @@ if [ "$INSTALL_OLLAMA" = true ]; then
         log "Installing Ollama..."
         curl -fsSL https://ollama.com/install.sh | sh
         sleep 3
-        sudo systemctl enable ollama
-        sudo systemctl start ollama
-        sleep 5
     fi
     
-    log "Downloading AI models (this may take a while)..."
+    # Ensure Ollama service is running
+    log "Starting Ollama service..."
+    sudo systemctl enable ollama 2>/dev/null || true
+    sudo systemctl start ollama 2>/dev/null || true
+    
+    # Wait for Ollama to be ready
+    log "Waiting for Ollama to be ready..."
+    for i in {1..30}; do
+        if curl -s http://localhost:11434/api/tags &>/dev/null; then
+            log "Ollama is ready"
+            break
+        fi
+        echo "  Waiting for Ollama... ($i/30)"
+        sleep 2
+    done
+    
+    log "Downloading AI models (this may take 10-20 minutes)..."
     echo ""
     echo "  📦 Model 1/3: llava:7b (Image analysis, ~4.7GB)"
-    ollama pull llava:7b || warn "llava:7b pull failed"
+    ollama pull llava:7b || warn "llava:7b pull failed - you can retry later with: ollama pull llava:7b"
     
     echo "  📦 Model 2/3: llama3.2:3b (Fast text moderation, ~2GB)"
-    ollama pull llama3.2:3b || warn "llama3.2:3b pull failed"
+    ollama pull llama3.2:3b || warn "llama3.2:3b pull failed - you can retry later with: ollama pull llama3.2:3b"
     
     echo "  📦 Model 3/3: llama3:8b (Advanced text analysis, ~4.7GB)"
-    ollama pull llama3:8b || warn "llama3:8b pull failed"
+    ollama pull llama3:8b || warn "llama3:8b pull failed - you can retry later with: ollama pull llama3:8b"
     
     log "AI models downloaded"
     
-    # Enable NSFW-Protect
-    sed -i "s/ERRORDON_NSFW_PROTECT_ENABLED=false/ERRORDON_NSFW_PROTECT_ENABLED=true/" .env.production
-    sed -i "s|ERRORDON_NSFW_OLLAMA_ENDPOINT=.*|ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434|" .env.production
+    # Enable NSFW-Protect in config
+    log "Configuring NSFW-Protect..."
+    if ! grep -q "ERRORDON_NSFW_PROTECT_ENABLED" .env.production; then
+        cat >> .env.production << 'NSFWEOF'
+
+# NSFW-Protect AI Configuration
+ERRORDON_NSFW_PROTECT_ENABLED=true
+ERRORDON_NSFW_OLLAMA_ENDPOINT=http://host.docker.internal:11434
+NSFWEOF
+    else
+        sed -i "s/ERRORDON_NSFW_PROTECT_ENABLED=false/ERRORDON_NSFW_PROTECT_ENABLED=true/" .env.production
+    fi
     
     # Restart to apply
+    log "Restarting services with NSFW-Protect..."
     dc restart web sidekiq
     
-    log "NSFW-Protect enabled"
+    log "NSFW-Protect AI enabled"
 fi
 
 # ============================================================================
