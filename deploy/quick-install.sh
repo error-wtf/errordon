@@ -247,6 +247,20 @@ if [ ! -f ".env.production" ]; then
         echo "$VAPID_OUTPUT" >> .env.production
     fi
     
+    # Generate Active Record Encryption keys (required since Mastodon 4.3)
+    log "Generating encryption keys..."
+    AR_PRIMARY_KEY=$(openssl rand -hex 32)
+    AR_DETERMINISTIC_KEY=$(openssl rand -hex 32)
+    AR_KEY_DERIVATION_SALT=$(openssl rand -hex 32)
+    
+    cat >> .env.production << ARKEYS
+
+# Active Record Encryption (Mastodon 4.3+)
+ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=$AR_PRIMARY_KEY
+ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=$AR_DETERMINISTIC_KEY
+ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=$AR_KEY_DERIVATION_SALT
+ARKEYS
+    
     # Set admin email
     sed -i "s/ERRORDON_NSFW_ADMIN_EMAIL=.*/ERRORDON_NSFW_ADMIN_EMAIL=$EMAIL/" .env.production
     
