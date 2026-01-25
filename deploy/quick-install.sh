@@ -221,7 +221,7 @@ if [ -d "$INSTALL_DIR" ]; then
     else
         # Not a git repo, remove and re-clone
         warn "Removing invalid installation directory..."
-        rm -rf "$INSTALL_DIR"
+        sudo rm -rf "$INSTALL_DIR"
         git clone https://github.com/error-wtf/errordon.git "$INSTALL_DIR"
     fi
 else
