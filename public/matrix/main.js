@@ -60,8 +60,7 @@ function login() {
     }
     
     loginScreen.style.display = 'none';
-    terminal.removeAttribute('style');
-    terminal.style.display = 'flex';
+    terminal.style.cssText = 'display: flex !important;';
     promptEl.textContent = `${username}@errordon:~$`;
     commandInput.focus();
     
