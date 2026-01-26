@@ -235,15 +235,10 @@ BEGIN
   END IF;
 END
 \$\$;
-
-DO \$\$
-BEGIN
-  IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'mastodon_production') THEN
-    CREATE DATABASE mastodon_production OWNER mastodon;
-  END IF;
-END
-\$\$;
 SQL"
+
+# CREATE DATABASE cannot be executed inside a DO block; do it conditionally at shell level
+sudo docker compose exec -T db sh -lc "psql -U postgres -tAc \"SELECT 1 FROM pg_database WHERE datname='mastodon_production'\" | grep -q 1 || createdb -U postgres -O mastodon mastodon_production"
 
 log "Setting up database..."
 sudo docker compose run --rm web bundle exec rails db:setup RAILS_ENV=production 2>/dev/null || \
