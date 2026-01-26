@@ -90,6 +90,33 @@ if [ -n "$DOMAIN" ] && [ -z "$EMAIL" ]; then
     fi
 fi
 
+# SMTP Configuration
+SMTP_SERVER=""
+SMTP_PORT=""
+SMTP_USER=""
+SMTP_PASS=""
+SMTP_FROM=""
+
+if [ -n "$DOMAIN" ]; then
+    echo ""
+    echo -e "${BLUE}[?]${NC} SMTP Configuration (for sending emails):"
+    echo "    Examples: smtp.mailgun.org, smtp.sendgrid.net, mail.your-server.com"
+    read -p "    SMTP Server: " SMTP_SERVER
+    
+    if [ -n "$SMTP_SERVER" ]; then
+        read -p "    SMTP Port (default 587): " SMTP_PORT
+        SMTP_PORT=${SMTP_PORT:-587}
+        read -p "    SMTP Username: " SMTP_USER
+        read -s -p "    SMTP Password: " SMTP_PASS
+        echo
+        read -p "    From Address (default: $EMAIL): " SMTP_FROM
+        SMTP_FROM=${SMTP_FROM:-$EMAIL}
+    else
+        warn "No SMTP configured - emails will not work!"
+        warn "Configure SMTP_* variables in .env.production later"
+    fi
+fi
+
 # Ask about Matrix Terminal
 if [ "$INSTALL_MATRIX" = false ]; then
     echo ""
@@ -110,6 +137,11 @@ echo "╠═══════════════════════�
 if [ -n "$DOMAIN" ]; then
     echo "║  Domain:         $DOMAIN"
     echo "║  Email:          $EMAIL"
+    if [ -n "$SMTP_SERVER" ]; then
+        echo "║  SMTP:           $SMTP_SERVER:$SMTP_PORT"
+    else
+        echo "║  SMTP:           Not configured"
+    fi
 else
     echo "║  Mode:           Local Development"
 fi
@@ -317,10 +349,45 @@ if [ ! -f ".env.production" ]; then
     sed -i "s/SECRET_KEY_BASE=/SECRET_KEY_BASE=$SECRET_KEY/" .env.production
     sed -i "s/OTP_SECRET=/OTP_SECRET=$OTP_SECRET/" .env.production
     
+    # Set domain if provided
+    if [ -n "$DOMAIN" ]; then
+        sed -i "s/LOCAL_DOMAIN=.*/LOCAL_DOMAIN=$DOMAIN/" .env.production
+        sed -i "s/# LOCAL_DOMAIN=.*/LOCAL_DOMAIN=$DOMAIN/" .env.production
+    fi
+    
+    # Configure SMTP if provided
+    if [ -n "$SMTP_SERVER" ]; then
+        log "Configuring SMTP..."
+        sed -i "s/SMTP_SERVER=.*/SMTP_SERVER=$SMTP_SERVER/" .env.production
+        sed -i "s/SMTP_PORT=.*/SMTP_PORT=$SMTP_PORT/" .env.production
+        sed -i "s/SMTP_LOGIN=.*/SMTP_LOGIN=$SMTP_USER/" .env.production
+        sed -i "s/SMTP_PASSWORD=.*/SMTP_PASSWORD=$SMTP_PASS/" .env.production
+        sed -i "s/SMTP_FROM_ADDRESS=.*/SMTP_FROM_ADDRESS=$SMTP_FROM/" .env.production
+        # Also set uncommented versions
+        if ! grep -q "^SMTP_SERVER=" .env.production; then
+            cat >> .env.production << SMTPEOF
+
+# SMTP Configuration
+SMTP_SERVER=$SMTP_SERVER
+SMTP_PORT=$SMTP_PORT
+SMTP_LOGIN=$SMTP_USER
+SMTP_PASSWORD=$SMTP_PASS
+SMTP_FROM_ADDRESS=$SMTP_FROM
+SMTP_AUTH_METHOD=plain
+SMTP_OPENSSL_VERIFY_MODE=none
+SMTP_ENABLE_STARTTLS=auto
+SMTPEOF
+        fi
+        log "SMTP configured: $SMTP_SERVER:$SMTP_PORT"
+    fi
+    
     # Generate VAPID keys
     bundle exec rake mastodon:webpush:generate_vapid_key >> .env.production
     
-    warn "Edit .env.production with your domain and database settings!"
+    if [ -z "$SMTP_SERVER" ]; then
+        warn "SMTP not configured - emails will not work!"
+        warn "Edit SMTP_* variables in .env.production"
+    fi
 fi
 
 # ============================================================================
