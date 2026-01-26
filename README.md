@@ -172,8 +172,11 @@ ERRORDON_REQUIRE_AGE_18=true
 ### One-Line Installation (Docker-based)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/develop/install-docker.sh | bash
+curl -fsSL https://raw.githubusercontent.com/error-wtf/errordon/main/install-docker.sh -o install-docker.sh
+bash install-docker.sh
 ```
+
+Why this way: piping into `bash` can break interactive prompts on some terminals because `stdin` is not a TTY (you can end up typing into your shell instead of the installer). Downloading first keeps the installer fully interactive and makes failures (like 404) obvious.
 
 **Interactive prompts for:**
 - Domain & Admin Email
