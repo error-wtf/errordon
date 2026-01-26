@@ -231,7 +231,7 @@ sudo docker compose exec -T db sh -lc "psql -U postgres -v ON_ERROR_STOP=1 <<'SQ
 DO \$\$
 BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'mastodon') THEN
-    CREATE ROLE mastodon LOGIN PASSWORD '${DB_PASS}';
+    CREATE ROLE mastodon LOGIN CREATEDB PASSWORD '${DB_PASS}';
   END IF;
 END
 \$\$;
@@ -241,8 +241,8 @@ SQL"
 sudo docker compose exec -T db sh -lc "psql -U postgres -tAc \"SELECT 1 FROM pg_database WHERE datname='mastodon_production'\" | grep -q 1 || createdb -U postgres -O mastodon mastodon_production"
 
 log "Setting up database..."
-sudo docker compose run --rm web bundle exec rails db:setup RAILS_ENV=production 2>/dev/null || \
-sudo docker compose run --rm web bundle exec rails db:migrate RAILS_ENV=production
+sudo docker compose run --rm -e STRONG_MIGRATIONS_DISABLE=1 web bundle exec rails db:setup RAILS_ENV=production 2>/dev/null || \
+sudo docker compose run --rm -e STRONG_MIGRATIONS_DISABLE=1 web bundle exec rails db:migrate RAILS_ENV=production
 
 log "Precompiling assets (this takes a while)..."
 sudo docker compose run --rm web bundle exec rails assets:precompile RAILS_ENV=production
