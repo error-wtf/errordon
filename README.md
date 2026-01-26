@@ -169,22 +169,25 @@ ERRORDON_INVITE_ONLY=true
 ERRORDON_REQUIRE_AGE_18=true
 ```
 
-### One-Line Installation (Ubuntu/Debian)
+### One-Line Installation (Docker-based)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/develop/install-docker.sh | bash
 ```
 
-The installer will ask if you want to enable NSFW-Protect AI.
+**Interactive prompts for:**
+- Domain & Admin Email
+- Admin Username
+- SMTP Configuration
+- Matrix Terminal Theme
+- Ollama AI (NSFW-Protect)
 
-### Docker Deployment
+### Manual Docker Setup
 
 ```bash
 git clone https://github.com/error-wtf/errordon.git
 cd errordon
-cp deploy/.env.example .env.production
-# Edit .env.production with your settings
-./deploy/deploy.sh your-domain.com
+bash install-docker.sh
 ```
 
 ---
