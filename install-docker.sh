@@ -16,6 +16,12 @@ echo ""
 
 [ "$EUID" -eq 0 ] && error "Don't run as root. Use: bash install-docker.sh"
 
+# When executed via `curl | bash`, stdin is not a TTY and `read` will fail.
+# If /dev/tty is available, use it for interactive prompts.
+if [ ! -t 0 ] && [ -r /dev/tty ]; then
+    exec < /dev/tty
+fi
+
 # ══════════════════════════════════════════════════════════
 # INTERACTIVE CONFIGURATION
 # ══════════════════════════════════════════════════════════
@@ -44,10 +50,12 @@ if [ -n "$SMTP_SERVER" ]; then
 fi
 
 echo ""
+MATRIX_R=""
 read -p "[?] Install Matrix Terminal theme? (y/N): " -n1 MATRIX_R
 echo ""
 MATRIX_ENABLED=$([[ $MATRIX_R =~ ^[Yy]$ ]] && echo "true" || echo "false")
 
+OLLAMA_R=""
 read -p "[?] Install Ollama AI for NSFW moderation? (Y/n): " -n1 OLLAMA_R
 echo ""
 OLLAMA_ENABLED=$([[ ! $OLLAMA_R =~ ^[Nn]$ ]] && echo "true" || echo "false")
