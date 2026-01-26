@@ -84,10 +84,10 @@ else
     error "Cannot detect OS. This script supports Ubuntu/Debian."
 fi
 
-# Check supported OS
+# Check supported OS (Kali is Debian-based)
 case "$OS" in
-    ubuntu|debian) log "Detected: $OS $VERSION" ;;
-    *) error "Unsupported OS: $OS. Use Ubuntu 20.04+ or Debian 11+" ;;
+    ubuntu|debian|kali) log "Detected: $OS $VERSION" ;;
+    *) error "Unsupported OS: $OS. Use Ubuntu 20.04+, Debian 11+, or Kali Linux" ;;
 esac
 
 # Check disk space
