@@ -56,6 +56,10 @@ OLLAMA_ENABLED=$([[ ! $OLLAMA_R =~ ^[Nn]$ ]] && echo "true" || echo "false")
 SECRET_KEY=$(openssl rand -hex 64)
 OTP_SECRET=$(openssl rand -hex 64)
 DB_PASS=$(openssl rand -hex 16)
+# Active Record Encryption (required since Mastodon 4.x)
+AR_ENCRYPTION_PRIMARY=$(openssl rand -base64 32)
+AR_ENCRYPTION_DETERMINISTIC=$(openssl rand -base64 32)
+AR_ENCRYPTION_SALT=$(openssl rand -base64 32)
 
 echo ""
 echo "── Summary ────────────────────────────────────────────"
@@ -115,6 +119,11 @@ SINGLE_USER_MODE=false
 # Security Keys
 SECRET_KEY_BASE=$SECRET_KEY
 OTP_SECRET=$OTP_SECRET
+
+# Active Record Encryption (required since Mastodon 4.x)
+ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=$AR_ENCRYPTION_PRIMARY
+ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=$AR_ENCRYPTION_DETERMINISTIC
+ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=$AR_ENCRYPTION_SALT
 
 # Database
 DB_HOST=db
