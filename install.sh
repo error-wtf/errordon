@@ -231,6 +231,12 @@ sudo apt-get install -y -qq \
     libpq-dev \
     libxml2-dev \
     libxslt1-dev \
+    libyaml-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libncurses5-dev \
+    autoconf \
+    bison \
     imagemagick \
     ffmpeg \
     libvips-dev \
