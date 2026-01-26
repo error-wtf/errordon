@@ -20,6 +20,16 @@ echo "╚═══════════════════════�
 echo ""
 
 [ "$EUID" -eq 0 ] && error "Don't run as root. Use: bash install-docker.sh"
+if [ -r /dev/tty ] && [ -w /dev/tty ]; then
+  exec </dev/tty >/dev/tty
+fi
+
+if [ -r /dev/tty ] && [ -w /dev/tty ]; then
+    exec 3</dev/tty
+    exec 4>/dev/tty
+else
+    error "Interactive terminal required. Run: curl -fsSL https://raw.githubusercontent.com/error-wtf/errordon/main/install-docker.sh -o install-docker.sh && bash install-docker.sh"
+fi
 
 # When executed via `curl | bash`, stdin is not a TTY and `read` will fail.
 # If /dev/tty is available, use it for interactive prompts.
