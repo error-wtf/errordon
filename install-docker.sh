@@ -120,6 +120,11 @@ fi
 log "Phase 2: Repository Setup"
 
 INSTALL_DIR="$HOME/errordon"
+if [ -d "$INSTALL_DIR" ] && [ ! -d "$INSTALL_DIR/.git" ]; then
+    warn "Existing $INSTALL_DIR is not a git repository. Moving it aside..."
+    TS=$(date +%Y%m%d-%H%M%S)
+    sudo mv "$INSTALL_DIR" "${INSTALL_DIR}.broken-${TS}" || true
+fi
 if [ ! -d "$INSTALL_DIR" ]; then
     log "Cloning Errordon..."
     git clone https://github.com/error-wtf/errordon.git "$INSTALL_DIR"
@@ -128,6 +133,13 @@ else
     cd "$INSTALL_DIR" && git pull origin master || true
 fi
 cd "$INSTALL_DIR"
+
+# Ensure we can write files even if previous runs created root-owned dirs
+if [ ! -w "$INSTALL_DIR" ]; then
+    warn "Fixing permissions for $INSTALL_DIR..."
+    sudo chown -R "$USER":"$USER" "$INSTALL_DIR" || true
+    sudo chmod -R u+rwX "$INSTALL_DIR" || true
+fi
 
 # ══════════════════════════════════════════════════════════
 # PHASE 3: CREATE .env.production
