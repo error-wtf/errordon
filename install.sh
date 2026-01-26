@@ -152,21 +152,35 @@ if ! command -v node &> /dev/null; then
     log "Installing Node.js 20.x..."
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt-get install -y -qq nodejs
+    hash -r  # Refresh PATH
 else
     NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
     if [ "$NODE_VERSION" -lt 18 ]; then
         warn "Node.js version too old. Upgrading..."
         curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
         sudo apt-get install -y -qq nodejs
+        hash -r  # Refresh PATH
     else
         log "Node.js $(node -v) already installed"
     fi
 fi
 
-# Install Yarn
+# Ensure npm is available (Kali/Debian may have node without npm)
+if ! command -v npm &> /dev/null; then
+    log "Installing npm..."
+    sudo apt-get install -y -qq npm
+    hash -r
+fi
+
+# Install Yarn via corepack (modern method) or npm fallback
 if ! command -v yarn &> /dev/null; then
     log "Installing Yarn..."
-    sudo npm install -g yarn
+    if command -v corepack &> /dev/null; then
+        sudo corepack enable
+        corepack prepare yarn@stable --activate 2>/dev/null || sudo npm install -g yarn
+    else
+        sudo npm install -g yarn
+    fi
 else
     log "Yarn $(yarn -v) already installed"
 fi
