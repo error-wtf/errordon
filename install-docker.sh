@@ -7,6 +7,11 @@ log(){ echo -e "\033[0;32m[✓]\033[0m $1"; }
 warn(){ echo -e "\033[1;33m[⚠]\033[0m $1"; }
 error(){ echo -e "\033[0;31m[✗]\033[0m $1"; exit 1; }
 
+# Avoid `set -u` crashes if `read` fails (e.g., `curl | bash` without a TTY)
+MATRIX_R=""
+OLLAMA_R=""
+CONFIRM=""
+
 echo ""
 echo "╔═══════════════════════════════════════════════╗"
 echo "║     Errordon Docker Installation v3.0         ║"
@@ -19,7 +24,7 @@ echo ""
 # When executed via `curl | bash`, stdin is not a TTY and `read` will fail.
 # If /dev/tty is available, use it for interactive prompts.
 if [ ! -t 0 ] && [ -r /dev/tty ]; then
-    exec < /dev/tty
+    exec < /dev/tty || true
 fi
 
 # ══════════════════════════════════════════════════════════
