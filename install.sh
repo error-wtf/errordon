@@ -72,6 +72,60 @@ echo "╚═══════════════════════�
 echo ""
 
 # ============================================================================
+# INTERACTIVE CONFIGURATION
+# ============================================================================
+if [ -z "$DOMAIN" ]; then
+    echo -e "${BLUE}[?]${NC} Enter your domain (e.g., social.example.com):"
+    read -p "    Domain: " DOMAIN
+    if [ -z "$DOMAIN" ]; then
+        warn "No domain provided - will configure for local development only"
+    fi
+fi
+
+if [ -n "$DOMAIN" ] && [ -z "$EMAIL" ]; then
+    echo -e "${BLUE}[?]${NC} Enter admin email for SSL certificate and notifications:"
+    read -p "    Email: " EMAIL
+    if [ -z "$EMAIL" ]; then
+        error "Email is required when domain is specified"
+    fi
+fi
+
+# Ask about Matrix Terminal
+if [ "$INSTALL_MATRIX" = false ]; then
+    echo ""
+    echo -e "${BLUE}[?]${NC} Install Matrix Terminal landing page?"
+    echo "    (Cool hacker-style login screen with commands like 'tetris', 'talk morpheus')"
+    read -p "    Install Matrix Terminal? (y/N): " -n 1 -r MATRIX_REPLY
+    echo
+    if [[ $MATRIX_REPLY =~ ^[Yy]$ ]]; then
+        INSTALL_MATRIX=true
+    fi
+fi
+
+# Summary
+echo ""
+echo "╔════════════════════════════════════════════════╗"
+echo "║     Installation Configuration                 ║"
+echo "╠════════════════════════════════════════════════╣"
+if [ -n "$DOMAIN" ]; then
+    echo "║  Domain:         $DOMAIN"
+    echo "║  Email:          $EMAIL"
+else
+    echo "║  Mode:           Local Development"
+fi
+echo "║  Matrix Theme:   $([ "$INSTALL_MATRIX" = true ] && echo "Yes" || echo "No")"
+echo "║  Skip SSL:       $([ "$SKIP_SSL" = true ] && echo "Yes" || echo "No")"
+echo "╚════════════════════════════════════════════════╝"
+echo ""
+read -p "Continue with installation? (Y/n): " -n 1 -r CONFIRM
+echo
+if [[ $CONFIRM =~ ^[Nn]$ ]]; then
+    echo "Installation cancelled."
+    exit 0
+fi
+echo ""
+
+# ============================================================================
 # SYSTEM REQUIREMENTS CHECK
 # ============================================================================
 
