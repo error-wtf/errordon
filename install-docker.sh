@@ -216,21 +216,21 @@ sleep 10
 log "Ensuring PostgreSQL role/database exist..."
 # Create role/database expected by Mastodon (.env.production uses DB_USER=mastodon)
 sudo docker compose exec -T db sh -lc "psql -U postgres -v ON_ERROR_STOP=1 <<'SQL'
-DO $$
+DO \$\$
 BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'mastodon') THEN
     CREATE ROLE mastodon LOGIN PASSWORD '${DB_PASS}';
   END IF;
 END
-$$;
+\$\$;
 
-DO $$
+DO \$\$
 BEGIN
   IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'mastodon_production') THEN
     CREATE DATABASE mastodon_production OWNER mastodon;
   END IF;
 END
-$$;
+\$\$;
 SQL"
 
 log "Setting up database..."
