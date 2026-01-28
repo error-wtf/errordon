@@ -40,8 +40,25 @@ class MediaAttachment < ApplicationRecord
 
   MAX_DESCRIPTION_LENGTH = 1_500
 
-  IMAGE_LIMIT = 16.megabytes
-  VIDEO_LIMIT = 250.megabytes  # Errordon: Raised from 99MB for large video/audio uploads
+  # ==========================================================================
+  # FEDIVERSE-COMPATIBLE UPLOAD LIMITS
+  # ==========================================================================
+  # These limits are intentionally conservative to ensure federation works
+  # smoothly with other Mastodon/Fediverse instances:
+  #
+  # - Many instances reject media > 40-50MB during federation
+  # - Large files cause timeouts during ActivityPub delivery
+  # - Storage costs are unfairly pushed to remote instances
+  # - Conservative limits ensure posts federate reliably
+  #
+  # Configurable via ENV:
+  #   ERRORDON_IMAGE_LIMIT_MB (default: 16)
+  #   ERRORDON_VIDEO_LIMIT_MB (default: 40)
+  #
+  # See docs/STORAGE_FAIR_SHARE.md for full policy documentation.
+  # ==========================================================================
+  IMAGE_LIMIT = ENV.fetch('ERRORDON_IMAGE_LIMIT_MB', 16).to_i.megabytes
+  VIDEO_LIMIT = ENV.fetch('ERRORDON_VIDEO_LIMIT_MB', 40).to_i.megabytes
 
   MAX_VIDEO_MATRIX_LIMIT = 8_294_400 # 3840x2160px
   MAX_VIDEO_FRAME_RATE   = 120
