@@ -1,203 +1,184 @@
-# Architecture Map: Media & Profile in Mastodon
+# Architecture Map: Media & Profile in Errordon
 
-This document maps the relevant code locations for implementing profile media columns and upload changes.
+**Last Updated:** 2026-01-28
+**Status:** IMPLEMENTED
+
+This document maps the code locations for profile media columns and upload configuration.
+
+---
+
+## Implementation Status
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| `media_type` API param | ✅ Done | `video`, `audio`, `image` filtering |
+| Backend tests | ✅ Done | Full coverage in `account_statuses_filter_spec.rb` |
+| Frontend tabs | ✅ Done | Videos, Audio, Images tabs |
+| Frontend routes | ✅ Done | `/@:acct/videos`, `/@:acct/audio`, `/@:acct/images` |
+| Filter bar | ✅ Done | Exclude reblogs, Alt text only, Public only |
+| Upload limit 250MB | ✅ Done | `VIDEO_LIMIT = 250.megabytes` |
+| Nginx config | ✅ Done | `client_max_body_size 300m` |
+
+---
 
 ## Database / Models
 
 ### MediaAttachment (`app/models/media_attachment.rb`)
 
-Core model for all uploaded media.
-
 ```ruby
-# Key attributes:
-# - type: image, gifv, video, audio, unknown
-# - file: paperclip attachment
-# - status_id: belongs_to status
-# - account_id: belongs_to account
-# - file_file_size: size in bytes
+# Type enum (line 38):
+enum :type, { image: 0, gifv: 1, video: 2, unknown: 3, audio: 4 }
 
-# Key scopes to add:
-scope :videos, -> { where(type: :video) }
-scope :audio, -> { where(type: :audio) }
-scope :images, -> { where(type: :image) }
+# Upload limits (lines 43-44):
+IMAGE_LIMIT = 16.megabytes
+VIDEO_LIMIT = 250.megabytes  # Raised from 99MB for large uploads
 ```
 
 ### Status (`app/models/status.rb`)
 
-Posts that contain media attachments.
-
 ```ruby
-# Relevant associations:
 has_many :media_attachments, dependent: :destroy
 
-# Existing scope for media:
+# Media scope:
 scope :with_media, -> { where(id: MediaAttachment.select(:status_id)) }
 ```
 
-### Account (`app/models/account.rb`)
-
-User profiles.
-
-```ruby
-# Relevant associations:
-has_many :statuses, inverse_of: :account, dependent: :destroy
-has_many :media_attachments, dependent: :destroy
-```
+---
 
 ## API Endpoints
 
 ### Account Statuses (`app/controllers/api/v1/accounts/statuses_controller.rb`)
 
-**Current endpoint:** `GET /api/v1/accounts/:id/statuses`
+**Endpoint:** `GET /api/v1/accounts/:id/statuses`
 
-**Existing params:**
-- `only_media` - filter to posts with media
-- `exclude_replies` - exclude replies
-- `exclude_reblogs` - exclude boosts
-- `pinned` - only pinned posts
+**Parameters:**
+| Param | Type | Description |
+|-------|------|-------------|
+| `only_media` | boolean | Filter to posts with media |
+| `media_type` | string | Filter by type: `video`, `audio`, `image` |
+| `exclude_replies` | boolean | Exclude replies |
+| `exclude_reblogs` | boolean | Exclude boosts |
+| `pinned` | boolean | Only pinned posts |
+| `tagged` | string | Filter by hashtag |
 
-**New param to add:**
-- `media_type` - filter by type: `video`, `audio`, `image`
+**Example:**
+```bash
+# Get only videos from user
+curl "https://example.com/api/v1/accounts/123/statuses?only_media=true&media_type=video"
+```
+
+### Filter Logic (`app/lib/account_statuses_filter.rb`)
 
 ```ruby
-# Location: app/controllers/api/v1/accounts/statuses_controller.rb
-# Method: index
-# Add filtering logic:
+KEYS = %i(
+  pinned
+  tagged
+  only_media
+  media_type      # ✅ IMPLEMENTED
+  exclude_replies
+  exclude_reblogs
+).freeze
 
-def account_statuses
-  statuses = @account.statuses.without_reblogs
-  statuses = statuses.joins(:media_attachments)
-                     .where(media_attachments: { type: params[:media_type] }) if params[:media_type]
-  statuses
+def media_type_scope
+  type = params[:media_type].to_s.downcase
+  valid_types = %w(video audio image)
+  return Status.none unless valid_types.include?(type)
+
+  Status.joins(:media_attachments)
+        .where(media_attachments: { type: type })
+        .group(Status.arel_table[:id])
 end
 ```
 
-### Media Upload (`app/controllers/api/v1/media_controller.rb`)
-
-**Endpoint:** `POST /api/v1/media`
-
-Handles file uploads, triggers processing jobs.
+---
 
 ## Frontend Components
 
-### Profile Page (`app/javascript/mastodon/features/account/`)
+### Profile Tabs (`app/javascript/mastodon/features/account_timeline/components/tabs.tsx`)
 
-```
-account/
-├── components/
-│   ├── header.jsx           # Profile header
-│   └── action_bar.jsx       # Follow/block buttons
-├── containers/
-│   └── account_container.js
-└── index.jsx                # Main profile component
+```tsx
+<NavLink exact to={`/@${acct}/media`}>Media</NavLink>
+<NavLink exact to={`/@${acct}/videos`}>Videos</NavLink>
+<NavLink exact to={`/@${acct}/audio`}>Audio</NavLink>
+<NavLink exact to={`/@${acct}/images`}>Images</NavLink>
 ```
 
-### Account Timeline (`app/javascript/mastodon/features/account_timeline/`)
+### Routes (`app/javascript/mastodon/features/ui/index.jsx`)
 
-```
-account_timeline/
-├── components/
-│   └── header.jsx           # Tab navigation (Posts/Replies/Media)
-├── containers/
-│   └── account_timeline_container.js
-└── index.jsx                # Timeline component
+```jsx
+<WrappedRoute path='/@:acct/media' component={AccountGallery} />
+<WrappedRoute path='/@:acct/videos' component={AccountGallery} componentParams={{ mediaType: 'video' }} />
+<WrappedRoute path='/@:acct/audio' component={AccountGallery} componentParams={{ mediaType: 'audio' }} />
+<WrappedRoute path='/@:acct/images' component={AccountGallery} componentParams={{ mediaType: 'image' }} />
 ```
 
-**Key file for tabs:** `app/javascript/mastodon/features/ui/components/tabs_bar.jsx`
+### Gallery Component (`app/javascript/mastodon/features/account_gallery/index.tsx`)
 
-### Media Components
+```tsx
+export const AccountGallery: React.FC<{
+  multiColumn: boolean;
+  mediaType?: 'video' | 'audio' | 'image';
+}> = ({ multiColumn, mediaType }) => {
+  // Filter attachments by media type if specified
+  let attachments = mediaType
+    ? allAttachments.filter((attachment) => attachment.get('type') === mediaType)
+    : allAttachments;
+  // ...
+};
+```
 
-```
-app/javascript/mastodon/components/
-├── media_gallery.jsx        # Image grid display
-├── video.jsx                # Video player
-├── audio.jsx                # Audio player
-└── attachment_list.jsx      # Generic attachment list
-```
+### Filter Bar (`app/javascript/mastodon/features/account_gallery/components/media_filter_bar.tsx`)
+
+Provides UI for:
+- Exclude reblogs
+- Only with alt text
+- Only public posts
+
+---
 
 ## Upload Limits
 
-### Configuration Files
+| Layer | File | Setting |
+|-------|------|---------|
+| Rails | `app/models/media_attachment.rb` | `VIDEO_LIMIT = 250.megabytes` |
+| Rails | `app/models/media_attachment.rb` | `IMAGE_LIMIT = 16.megabytes` |
+| Nginx | `deploy/nginx.conf` | `client_max_body_size 300m` |
+| Nginx | `deploy/nginx.conf` | `proxy_read_timeout 300s` |
+
+---
+
+## Tests
+
+### Backend (`spec/lib/account_statuses_filter_spec.rb`)
 
 ```ruby
-# config/initializers/paperclip.rb
-# - MIME type allowlists
-# - File size limits
-
-# app/models/media_attachment.rb
-# - MAX_VIDEO_SIZE
-# - MAX_IMAGE_SIZE
-# - Validation callbacks
-
-# config/settings.yml
-# - Default limits (can be overridden)
+describe 'media_type filter' do
+  it 'filters by video media type'
+  it 'filters by audio media type'
+  it 'filters by image media type'
+  it 'returns nothing for invalid media type'
+end
 ```
 
-### Nginx Config
+---
 
-```nginx
-# /etc/nginx/sites-available/mastodon
-client_max_body_size 40m;  # Change to 250m
-```
+## Localization
 
-## Processing Pipeline (Sidekiq Jobs)
+| Key | English | File |
+|-----|---------|------|
+| `account.videos` | Videos | `app/javascript/mastodon/locales/en.json` |
+| `account.audio` | Audio | `app/javascript/mastodon/locales/en.json` |
+| `account.images` | Images | `app/javascript/mastodon/locales/en.json` |
 
-### Media Processing
+---
 
-```ruby
-# app/workers/
-├── post_process_media_worker.rb  # Main processing job
-├── process_media_service.rb      # Service for processing
-└── video_transcoding_worker.rb   # Video-specific (if exists)
+## Related Files
 
-# app/services/
-└── post_status_service.rb        # Creates status + triggers media processing
-```
-
-### Transcoding (ffmpeg integration)
-
-```ruby
-# app/lib/paperclip/
-├── video_transcoder.rb           # Video transcoding
-├── audio_transcoder.rb           # Audio transcoding
-└── transcoder.rb                 # Base transcoder
-```
-
-## Key Constants & Config
-
-| Constant | Location | Current Value | Target |
-|----------|----------|---------------|--------|
-| `MAX_VIDEO_SIZE` | `media_attachment.rb` | 40 MB | 250 MB |
-| `MAX_AUDIO_SIZE` | `media_attachment.rb` | 40 MB | 250 MB |
-| `MAX_IMAGE_SIZE` | `media_attachment.rb` | 10 MB | 10 MB |
-| `client_max_body_size` | nginx.conf | 40m | 250m |
-
-## Changes Required by Feature
-
-### Profile Media Columns
-
-| Layer | File | Change |
-|-------|------|--------|
-| API | `accounts/statuses_controller.rb` | Add `media_type` param |
-| Model | `status.rb` | Add scopes for media types |
-| Frontend | `account_timeline/` | Add tabs for Video/Audio/Images |
-| Frontend | `components/tabs_bar.jsx` | New tab entries |
-| Routes | `routes.rb` | New frontend routes |
-
-### Upload 250MB
-
-| Layer | File | Change |
-|-------|------|--------|
-| Model | `media_attachment.rb` | Update size constants |
-| Config | nginx.conf | `client_max_body_size 250m` |
-| Config | `paperclip.rb` | Update limits |
-| Jobs | `post_process_media_worker.rb` | Handle larger files |
-
-### Transcoding Pipeline
-
-| Layer | File | Change |
-|-------|------|--------|
-| Jobs | New: `transcode_video_worker.rb` | ffmpeg processing |
-| Service | New: `video_transcode_service.rb` | Variant generation |
-| Model | `media_attachment.rb` | Add variant columns |
-| Storage | S3/local config | Multiple file versions |
+| Component | Path |
+|-----------|------|
+| Filter class | `app/lib/account_statuses_filter.rb` |
+| Filter spec | `spec/lib/account_statuses_filter_spec.rb` |
+| Gallery component | `app/javascript/mastodon/features/account_gallery/index.tsx` |
+| Tabs component | `app/javascript/mastodon/features/account_timeline/components/tabs.tsx` |
+| Routes | `app/javascript/mastodon/features/ui/index.jsx` |
+| Nginx config | `deploy/nginx.conf` |

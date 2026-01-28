@@ -158,6 +158,41 @@ docker compose logs -f sidekiq
 
 ## Troubleshooting
 
+### Avoiding Automation Pitfalls (Loop Prevention)
+
+From previous deployment experiences, avoid these patterns:
+
+**❌ Don't:**
+- Retry the same fix more than twice without new evidence
+- Use `rm -rf` to "clean up" and retry
+- Make multiple quick commits without verifying each works
+- Assume browser cache when issue is server-side
+
+**✅ Do:**
+- Verify changes are actually on the server (`git log`, `docker compose ps`)
+- Check logs before and after changes
+- Test with cache bypass (incognito, curl, different device)
+- Stop and diagnose after 2 failed attempts
+
+**Two-Strike Rule:**
+```
+Attempt 1: Fix X → Fail
+Attempt 2: Fix X variant → Fail
+→ STOP RETRYING THIS APPROACH
+→ Diagnose root cause
+→ Try different approach
+```
+
+**Safe Cleanup:**
+```bash
+# GOOD: Stop containers, then clean with sudo
+docker compose down -v
+sudo rm -rf ~/errordon/postgres14  # If needed
+
+# BAD: Force remove while running
+rm -rf ~/errordon  # May fail on root-owned files
+```
+
 ### Check Service Health
 
 ```bash

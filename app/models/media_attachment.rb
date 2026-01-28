@@ -41,7 +41,7 @@ class MediaAttachment < ApplicationRecord
   MAX_DESCRIPTION_LENGTH = 1_500
 
   IMAGE_LIMIT = 16.megabytes
-  VIDEO_LIMIT = 99.megabytes
+  VIDEO_LIMIT = 250.megabytes  # Errordon: Raised from 99MB for large video/audio uploads
 
   MAX_VIDEO_MATRIX_LIMIT = 8_294_400 # 3840x2160px
   MAX_VIDEO_FRAME_RATE   = 120
