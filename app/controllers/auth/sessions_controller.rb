@@ -156,6 +156,11 @@ class Auth::SessionsController < Devise::SessionsController
 
     user.update_sign_in!(new_sign_in: true)
     sign_in(user)
+    
+    # Restore matrix_passed flag after session regeneration
+    # This prevents redirect loop back to matrix landing page
+    session[:matrix_passed] = true
+    
     flash.delete(:notice)
 
     user.login_activities.create(

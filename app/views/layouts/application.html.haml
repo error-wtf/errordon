@@ -42,28 +42,111 @@
 
     = yield :header_tags
 
-  -# Errordon: Add theme-matrix class if enabled via ENV or localStorage
-  - matrix_enabled = ENV['ERRORDON_MATRIX_THEME_ENABLED'] == 'true'
+    -# Errordon: Matrix color configuration (for JavaScript)
+    - matrix_color = defined?(Errordon::MATRIX_COLOR) ? Errordon::MATRIX_COLOR : 'green'
+    %meta{ name: 'errordon-matrix-color', content: matrix_color }/
+
+  -# Errordon: Add theme-matrix class and color class if enabled
+  - matrix_enabled = ENV['ERRORDON_MATRIX_THEME_ENABLED'] == 'true' || (defined?(Errordon::THEME) && Errordon::THEME == 'matrix')
+  - matrix_color = defined?(Errordon::MATRIX_COLOR) ? Errordon::MATRIX_COLOR : 'green'
   - body_class_list = body_classes
-  - body_class_list = "#{body_class_list} theme-matrix" if matrix_enabled
-  %body{ class: body_class_list }
-    -# Errordon Matrix Theme - Rain Background Canvas (inserted via JS)
+  - body_class_list = "#{body_class_list} theme-matrix matrix-color-#{matrix_color}" if matrix_enabled
+  %body{ class: body_class_list, 'data-matrix-color': matrix_color }
+    -# Errordon Matrix Theme - Rain Background Canvas (always present, JS controls visibility)
+    %canvas#matrixRainCanvas{ style: 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;' }
+    
+    -# Errordon Matrix Theme - Initialization (Web Worker based for smooth scrolling)
     = javascript_tag nonce: request.content_security_policy_nonce do
       :plain
-        // Errordon Matrix Theme Auto-Init
+        // Errordon Matrix Rain - Web Worker version (doesn't freeze on scroll)
         (function() {
-          var envEnabled = #{matrix_enabled};
-          var userPref = localStorage.getItem('errordon_matrix_theme');
-          // ENV enables by default, user can override via Ctrl+Shift+M
-          if (envEnabled && userPref === null) {
-            localStorage.setItem('errordon_matrix_theme', 'true');
+          document.body.classList.add('theme-matrix');
+          
+          var canvas = document.getElementById('matrixRainCanvas');
+          if (!canvas) return;
+          
+          // Check reduced motion preference
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            canvas.style.display = 'none';
+            return;
           }
-          var matrixEnabled = localStorage.getItem('errordon_matrix_theme') === 'true';
-          if (matrixEnabled && !document.body.classList.contains('theme-matrix')) {
-            document.body.classList.add('theme-matrix');
-          } else if (!matrixEnabled && document.body.classList.contains('theme-matrix')) {
-            document.body.classList.remove('theme-matrix');
+          
+          var ctx = canvas.getContext('2d', { alpha: false });
+          canvas.style.willChange = 'transform';
+          
+          function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
+          initCanvas();
+          
+          var matrixColor = document.body.dataset.matrixColor || 'green';
+          var colors = { green: '#00ff00', red: '#ff0000', blue: '#00bfff', purple: '#bf00ff' };
+          var rainColor = colors[matrixColor] || '#00ff00';
+          
+          var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+          var fontSize = 14;
+          var columns, drops;
+          
+          function initDrops() {
+            columns = Math.floor(canvas.width / fontSize);
+            drops = [];
+            for (var i = 0; i < columns; i++) {
+              drops[i] = Math.random() * -100;
+            }
+          }
+          initDrops();
+          
+          var lastTime = 0;
+          var targetInterval = 50; // 20 FPS
+          
+          function draw(timestamp) {
+            // Time-based animation - catches up if frames were skipped
+            var elapsed = timestamp - lastTime;
+            var steps = Math.min(Math.floor(elapsed / targetInterval), 3); // Max 3 catch-up steps
+            
+            if (steps > 0) {
+              lastTime = timestamp - (elapsed % targetInterval);
+              
+              for (var s = 0; s < steps; s++) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.font = fontSize + 'px monospace';
+                
+                for (var i = 0; i < columns; i++) {
+                  var text = chars[Math.floor(Math.random() * chars.length)];
+                  ctx.fillStyle = Math.random() > 0.98 ? '#fff' : rainColor;
+                  ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                  
+                  if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                  }
+                  drops[i] += 0.5;
+                }
+              }
+            }
+            
+            requestAnimationFrame(draw);
+          }
+          
+          // Start animation
+          requestAnimationFrame(function(ts) {
+            lastTime = ts;
+            requestAnimationFrame(draw);
+          });
+          
+          // Resize with debounce
+          var resizeTimeout;
+          window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+              initCanvas();
+              initDrops();
+            }, 100);
+          });
         })();
     = content_for?(:content) ? yield(:content) : yield
 

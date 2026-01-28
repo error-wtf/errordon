@@ -1,37 +1,249 @@
 // Errordon Matrix Theme Integration
 // Matrix rain background + Enter Matrix splash screen
+// With accessibility support (prefers-reduced-motion) and performance optimizations
 
-// Matrix Rain Effect
+// =============================================================================
+// CONFIGURATION
+// =============================================================================
+const MATRIX_CONFIG = {
+  // Intensity presets: low (battery saver), medium (default), high (full effect)
+  intensity: {
+    low:    { fps: 15, fadeOpacity: 0.03, speed: 0.2 },
+    medium: { fps: 20, fadeOpacity: 0.05, speed: 0.35 },
+    high:   { fps: 30, fadeOpacity: 0.07, speed: 0.5 }
+  },
+  // Color variants (admin-configurable during install)
+  colors: {
+    green:  { primary: '#00ff00', dark: '#00cc00', rgb: '0, 255, 0' },
+    red:    { primary: '#ff0000', dark: '#cc0000', rgb: '255, 0, 0' },
+    blue:   { primary: '#00bfff', dark: '#0099cc', rgb: '0, 191, 255' },
+    purple: { primary: '#bf00ff', dark: '#9900cc', rgb: '191, 0, 255' }
+  },
+  // Character set (Japanese katakana + alphanumeric)
+  chars: 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  // Default font size (pixels)
+  fontSize: 14,
+  // Mobile font size (larger = fewer columns = better performance)
+  mobileFontSize: 18,
+  // Mobile breakpoint
+  mobileBreakpoint: 768
+};
+
+// =============================================================================
+// COLOR MANAGEMENT
+// =============================================================================
+
+/**
+ * Get the server-configured default color (from meta tag or ENV)
+ */
+function getServerDefaultColor() {
+  const meta = document.querySelector('meta[name="errordon-matrix-color"]');
+  return meta?.content || 'green';
+}
+
+/**
+ * Get stored color preference or server default
+ */
+function getColorPreference() {
+  const stored = localStorage.getItem('errordon_matrix_color');
+  if (stored && MATRIX_CONFIG.colors[stored]) {
+    return stored;
+  }
+  return getServerDefaultColor();
+}
+
+/**
+ * Apply color variant to document
+ */
+function applyMatrixColor(color) {
+  if (!MATRIX_CONFIG.colors[color]) {
+    color = 'green';
+  }
+  
+  // Remove all color classes
+  document.body.classList.remove(
+    'matrix-color-green',
+    'matrix-color-red',
+    'matrix-color-blue',
+    'matrix-color-purple'
+  );
+  
+  // Add the selected color class
+  document.body.classList.add(`matrix-color-${color}`);
+  
+  // Store preference
+  localStorage.setItem('errordon_matrix_color', color);
+  
+  // Dispatch event for other components
+  window.dispatchEvent(new CustomEvent('errordon:color-change', { 
+    detail: { color } 
+  }));
+  
+  console.log(`[Errordon] Matrix color set to: ${color}`);
+}
+
+/**
+ * Get current color config object
+ */
+function getCurrentColorConfig() {
+  const color = getColorPreference();
+  return MATRIX_CONFIG.colors[color] || MATRIX_CONFIG.colors.green;
+}
+
+/**
+ * Cycle through color variants
+ */
+function cycleColor() {
+  const colors = Object.keys(MATRIX_CONFIG.colors);
+  const current = getColorPreference();
+  const currentIndex = colors.indexOf(current);
+  const nextIndex = (currentIndex + 1) % colors.length;
+  const nextColor = colors[nextIndex];
+  
+  applyMatrixColor(nextColor);
+  
+  // Update rain color if active
+  if (window.matrixRain) {
+    window.matrixRain.setColor(nextColor);
+  }
+  
+  return nextColor;
+}
+
+// =============================================================================
+// ACCESSIBILITY HELPERS
+// =============================================================================
+
+/**
+ * Check if user prefers reduced motion
+ */
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * Check if device is low-end (for performance scaling)
+ */
+function isLowEndDevice() {
+  const cores = navigator.hardwareConcurrency || 4;
+  const memory = navigator.deviceMemory || 4;
+  return cores <= 2 || memory <= 2;
+}
+
+/**
+ * Get stored intensity preference or auto-detect
+ */
+function getIntensityPreference() {
+  const stored = localStorage.getItem('errordon_matrix_intensity');
+  if (stored && MATRIX_CONFIG.intensity[stored]) {
+    return stored;
+  }
+  // Auto-detect based on device capability
+  if (isLowEndDevice()) {
+    return 'low';
+  }
+  return 'medium';
+}
+
+// =============================================================================
+// MATRIX RAIN EFFECT
+// =============================================================================
+
 class MatrixRain {
-  constructor() {
+  constructor(options = {}) {
     this.canvas = null;
     this.ctx = null;
     this.columns = 0;
     this.drops = [];
-    this.active = true;
-    this.intervalId = null;
-    this.chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    this.fontSize = 14;
+    this.active = false;
+    this.animationId = null;
+    this.lastFrameTime = 0;
+    this.paused = false;
+    
+    // Configuration
+    this.intensity = options.intensity || getIntensityPreference();
+    this.config = MATRIX_CONFIG.intensity[this.intensity];
+    this.frameInterval = 1000 / this.config.fps;
+    this.chars = MATRIX_CONFIG.chars;
+    this.fontSize = window.innerWidth < MATRIX_CONFIG.mobileBreakpoint 
+      ? MATRIX_CONFIG.mobileFontSize 
+      : MATRIX_CONFIG.fontSize;
+    
+    // Color configuration
+    this.colorName = options.color || getColorPreference();
+    this.colorConfig = MATRIX_CONFIG.colors[this.colorName] || MATRIX_CONFIG.colors.green;
+    
+    // Scroll pause for performance
+    this.scrollTimeout = null;
+    this.handleScroll = this.handleScroll.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+    this.draw = this.draw.bind(this);
   }
 
   init() {
-    // Only init if theme-matrix is active
-    if (!document.body.classList.contains('theme-matrix')) {
-      return;
+    // ACCESSIBILITY: Skip animation if user prefers reduced motion
+    if (prefersReducedMotion()) {
+      console.log('[Errordon] Matrix rain disabled (prefers-reduced-motion)');
+      document.body.classList.add('matrix-static-background');
+      return false;
     }
 
+    // Only init if theme-matrix is active
+    if (!document.body.classList.contains('theme-matrix')) {
+      return false;
+    }
+
+    // Create canvas
     this.canvas = document.createElement('canvas');
     this.canvas.id = 'matrix-rain-canvas';
     this.canvas.className = 'matrix-rain-canvas';
+    this.canvas.setAttribute('aria-hidden', 'true'); // Screen reader skip
     document.body.prepend(this.canvas);
 
     this.ctx = this.canvas.getContext('2d');
     this.resize();
     
-    window.addEventListener('resize', () => this.resize());
-    this.start();
+    // Event listeners
+    window.addEventListener('resize', this.handleResize, { passive: true });
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
     
-    console.log('[Errordon] Matrix rain initialized');
+    // Listen for reduced motion changes
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+      if (e.matches) {
+        this.stop();
+        this.canvas?.remove();
+        document.body.classList.add('matrix-static-background');
+      }
+    });
+    
+    this.start();
+    console.log(`[Errordon] Matrix rain initialized (intensity: ${this.intensity})`);
+    return true;
+  }
+
+  handleResize() {
+    if (!this.canvas) return;
+    
+    // Recalculate font size for mobile
+    this.fontSize = window.innerWidth < MATRIX_CONFIG.mobileBreakpoint 
+      ? MATRIX_CONFIG.mobileFontSize 
+      : MATRIX_CONFIG.fontSize;
+    
+    this.resize();
+  }
+
+  handleScroll() {
+    // Pause during scroll for performance
+    if (!this.paused && this.active) {
+      this.pause();
+    }
+    
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      if (this.paused && this.active) {
+        this.resume();
+      }
+    }, 150);
   }
 
   resize() {
@@ -44,13 +256,27 @@ class MatrixRain {
     );
   }
 
-  draw() {
-    if (!this.active || !this.ctx) return;
+  draw(timestamp) {
+    if (!this.active || this.paused || !this.ctx) {
+      if (this.active && !this.paused) {
+        this.animationId = requestAnimationFrame(this.draw);
+      }
+      return;
+    }
 
-    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    // Frame rate limiting
+    const elapsed = timestamp - this.lastFrameTime;
+    if (elapsed < this.frameInterval) {
+      this.animationId = requestAnimationFrame(this.draw);
+      return;
+    }
+    this.lastFrameTime = timestamp - (elapsed % this.frameInterval);
+
+    // Draw fade effect (creates trail)
+    this.ctx.fillStyle = `rgba(0, 0, 0, ${this.config.fadeOpacity})`;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.fillStyle = '#00ff00';
+    // Draw characters
     this.ctx.font = `${this.fontSize}px monospace`;
 
     for (let i = 0; i < this.columns; i++) {
@@ -58,28 +284,64 @@ class MatrixRain {
       const x = i * this.fontSize;
       const y = this.drops[i] * this.fontSize;
 
-      // Occasional bright character
-      this.ctx.fillStyle = Math.random() > 0.98 ? '#ffffff' : '#00ff00';
+      // Occasional bright character (lead character effect)
+      // Use configured color instead of hardcoded green
+      this.ctx.fillStyle = Math.random() > 0.98 ? '#ffffff' : this.colorConfig.primary;
       this.ctx.fillText(char, x, y);
 
+      // Reset drop when it reaches bottom
       if (y > this.canvas.height && Math.random() > 0.975) {
         this.drops[i] = 0;
       }
-      this.drops[i] += 0.3 + Math.random() * 0.4;
+      this.drops[i] += this.config.speed + Math.random() * 0.2;
     }
+
+    this.animationId = requestAnimationFrame(this.draw);
+  }
+
+  /**
+   * Change the rain color dynamically
+   */
+  setColor(colorName) {
+    if (!MATRIX_CONFIG.colors[colorName]) return;
+    this.colorName = colorName;
+    this.colorConfig = MATRIX_CONFIG.colors[colorName];
+    localStorage.setItem('errordon_matrix_color', colorName);
+    console.log(`[Errordon] Matrix rain color set to: ${colorName}`);
   }
 
   start() {
-    if (this.intervalId) return;
+    if (this.active) return;
     this.active = true;
-    this.intervalId = setInterval(() => this.draw(), 50);
+    this.paused = false;
+    this.lastFrameTime = performance.now();
+    this.animationId = requestAnimationFrame(this.draw);
   }
 
   stop() {
     this.active = false;
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
+    this.paused = false;
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+    // Clear canvas
+    if (this.ctx && this.canvas) {
+      this.ctx.fillStyle = '#000';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+  }
+
+  pause() {
+    this.paused = true;
+  }
+
+  resume() {
+    if (!this.active) return;
+    this.paused = false;
+    this.lastFrameTime = performance.now();
+    if (!this.animationId) {
+      this.animationId = requestAnimationFrame(this.draw);
     }
   }
 
@@ -91,13 +353,38 @@ class MatrixRain {
     }
     return this.active;
   }
+
+  setIntensity(level) {
+    if (!MATRIX_CONFIG.intensity[level]) return;
+    this.intensity = level;
+    this.config = MATRIX_CONFIG.intensity[level];
+    this.frameInterval = 1000 / this.config.fps;
+    localStorage.setItem('errordon_matrix_intensity', level);
+    console.log(`[Errordon] Matrix intensity set to: ${level}`);
+  }
+
+  destroy() {
+    this.stop();
+    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('scroll', this.handleScroll);
+    clearTimeout(this.scrollTimeout);
+    if (this.canvas) {
+      this.canvas.remove();
+      this.canvas = null;
+    }
+    this.ctx = null;
+  }
 }
 
-// Matrix Splash Screen
+// =============================================================================
+// MATRIX SPLASH SCREEN
+// =============================================================================
+
 class MatrixSplash {
   constructor() {
     this.overlay = null;
-    this.splashInterval = null;
+    this.splashAnimationId = null;
+    this.reducedMotion = prefersReducedMotion();
   }
 
   shouldShow() {
@@ -112,7 +399,12 @@ class MatrixSplash {
     }
 
     this.createOverlay();
-    this.startRain();
+    
+    // Only animate if user allows motion
+    if (!this.reducedMotion) {
+      this.startRain();
+    }
+    
     this.bindEvents();
   }
 
@@ -120,17 +412,29 @@ class MatrixSplash {
     this.overlay = document.createElement('div');
     this.overlay.id = 'matrix-splash-overlay';
     this.overlay.className = 'matrix-splash-overlay';
+    this.overlay.setAttribute('role', 'dialog');
+    this.overlay.setAttribute('aria-label', 'Welcome to Errordon');
+    
+    // Simplified version for reduced motion
+    const canvasHtml = this.reducedMotion 
+      ? '' 
+      : '<canvas id="splash-matrix-canvas" class="splash-matrix-canvas" aria-hidden="true"></canvas>';
+    
     this.overlay.innerHTML = `
-      <canvas id="splash-matrix-canvas" class="splash-matrix-canvas"></canvas>
+      ${canvasHtml}
       <div class="matrix-splash-content">
         <h1 class="matrix-splash-title">ERRORDON</h1>
         <p class="matrix-splash-subtitle">The Matrix has you...</p>
         <div class="matrix-splash-terminal">
-          <span class="matrix-prompt">root@matrix:~$</span>
+          <label for="matrix-splash-input" class="visually-hidden">Enter command</label>
+          <span class="matrix-prompt" aria-hidden="true">root@matrix:~$</span>
           <input type="text" id="matrix-splash-input" class="matrix-splash-input" 
                  placeholder="type 'enter matrix' to continue..." autocomplete="off" autofocus>
         </div>
         <p class="matrix-splash-hint">Wake up, Neo...</p>
+        <button type="button" class="matrix-splash-skip" aria-label="Skip intro">
+          Press Enter or click to continue
+        </button>
       </div>
     `;
     document.body.appendChild(this.overlay);
@@ -148,125 +452,234 @@ class MatrixSplash {
     const fontSize = 16;
     let columns = Math.floor(canvas.width / fontSize);
     let drops = Array.from({ length: columns }, () => Math.random() * canvas.height / fontSize);
+    let lastTime = 0;
+    const frameInterval = 1000 / 20; // 20 FPS for splash
 
-    this.splashInterval = setInterval(() => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#0f0';
-      ctx.font = `${fontSize}px monospace`;
+    const draw = (timestamp) => {
+      if (!this.overlay) return; // Stop if overlay removed
+      
+      const elapsed = timestamp - lastTime;
+      if (elapsed >= frameInterval) {
+        lastTime = timestamp - (elapsed % frameInterval);
+        
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0f0';
+        ctx.font = `${fontSize}px monospace`;
 
-      for (let i = 0; i < columns; i++) {
-        const char = chars.charAt(Math.floor(Math.random() * chars.length));
-        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
+        for (let i = 0; i < columns; i++) {
+          const char = chars.charAt(Math.floor(Math.random() * chars.length));
+          ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i] += 0.5;
         }
-        drops[i] += 0.5;
       }
-    }, 50);
+      
+      this.splashAnimationId = requestAnimationFrame(draw);
+    };
+
+    this.splashAnimationId = requestAnimationFrame(draw);
   }
 
   bindEvents() {
     const input = document.getElementById('matrix-splash-input');
-    if (!input) return;
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const cmd = input.value.trim().toLowerCase();
-        if (cmd === 'enter matrix' || cmd === 'entermatrix' || cmd === 'enter') {
-          this.enterMatrix();
-        } else {
-          input.value = '';
-          input.placeholder = 'Try: enter matrix';
+    const skipButton = this.overlay?.querySelector('.matrix-splash-skip');
+    
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const cmd = input.value.trim().toLowerCase();
+          if (cmd === 'enter matrix' || cmd === 'entermatrix' || cmd === 'enter' || cmd === '') {
+            this.enterMatrix();
+          } else {
+            input.value = '';
+            input.placeholder = 'Try: enter matrix (or just press Enter)';
+          }
         }
+      });
+
+      setTimeout(() => input.focus(), 100);
+    }
+    
+    // Skip button for accessibility
+    if (skipButton) {
+      skipButton.addEventListener('click', () => this.enterMatrix());
+    }
+    
+    // Allow clicking anywhere to skip (accessibility)
+    this.overlay?.addEventListener('click', (e) => {
+      if (e.target === this.overlay) {
+        this.enterMatrix();
       }
     });
-
-    setTimeout(() => input.focus(), 100);
   }
 
   enterMatrix() {
     sessionStorage.setItem('matrix_entered', 'true');
 
-    if (this.splashInterval) {
-      clearInterval(this.splashInterval);
+    if (this.splashAnimationId) {
+      cancelAnimationFrame(this.splashAnimationId);
+      this.splashAnimationId = null;
+    }
+
+    // Skip animation if reduced motion
+    if (this.reducedMotion) {
+      this.overlay?.remove();
+      document.dispatchEvent(new CustomEvent('matrix:entered'));
+      return;
     }
 
     // Glitch effect
-    this.overlay.classList.add('matrix-glitch');
+    this.overlay?.classList.add('matrix-glitch');
     
-    const content = this.overlay.querySelector('.matrix-splash-content');
-    content.innerHTML = `
-      <h1 class="matrix-splash-title matrix-glitch-text">WELCOME TO THE REAL WORLD</h1>
-      <p class="matrix-splash-subtitle">Follow the white rabbit...</p>
-    `;
+    const content = this.overlay?.querySelector('.matrix-splash-content');
+    if (content) {
+      content.innerHTML = `
+        <h1 class="matrix-splash-title matrix-glitch-text">WELCOME TO THE REAL WORLD</h1>
+        <p class="matrix-splash-subtitle">Follow the white rabbit...</p>
+      `;
+    }
 
     // Fade out
     setTimeout(() => {
-      this.overlay.classList.add('matrix-fade-out');
+      this.overlay?.classList.add('matrix-fade-out');
       setTimeout(() => {
-        this.overlay.remove();
+        this.overlay?.remove();
         document.dispatchEvent(new CustomEvent('matrix:entered'));
       }, 1000);
     }, 1500);
   }
 }
 
-// Theme toggle keyboard shortcut
+// =============================================================================
+// KEYBOARD SHORTCUTS
+// =============================================================================
+
 function initMatrixKeyboardShortcut() {
   document.addEventListener('keydown', (e) => {
     // Ctrl+Shift+M to toggle Matrix theme
     if (e.ctrlKey && e.shiftKey && e.key === 'M') {
       e.preventDefault();
-      document.body.classList.toggle('theme-matrix');
-      
-      const isMatrix = document.body.classList.contains('theme-matrix');
-      localStorage.setItem('errordon_matrix_theme', isMatrix ? 'true' : 'false');
-      
-      if (isMatrix && !window.matrixRain) {
-        window.matrixRain = new MatrixRain();
-        window.matrixRain.init();
-      } else if (!isMatrix && window.matrixRain) {
-        window.matrixRain.stop();
-        const canvas = document.getElementById('matrix-rain-canvas');
-        if (canvas) canvas.remove();
-        window.matrixRain = null;
-      }
-      
-      console.log(`[Errordon] Matrix theme ${isMatrix ? 'enabled' : 'disabled'}`);
+      toggleMatrixTheme();
+    }
+    
+    // Ctrl+Shift+I to cycle intensity (low → medium → high → low)
+    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+      e.preventDefault();
+      cycleIntensity();
+    }
+    
+    // Ctrl+Shift+C to cycle colors (green → red → blue → purple → green)
+    if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+      e.preventDefault();
+      cycleColor();
     }
   });
 }
 
-// Initialize on load
+function toggleMatrixTheme() {
+  document.body.classList.toggle('theme-matrix');
+  
+  const isMatrix = document.body.classList.contains('theme-matrix');
+  localStorage.setItem('errordon_matrix_theme', isMatrix ? 'matrix' : 'default');
+  
+  if (isMatrix && !window.matrixRain) {
+    window.matrixRain = new MatrixRain();
+    window.matrixRain.init();
+  } else if (!isMatrix && window.matrixRain) {
+    window.matrixRain.destroy();
+    window.matrixRain = null;
+    document.body.classList.remove('matrix-static-background');
+  }
+  
+  console.log(`[Errordon] Matrix theme ${isMatrix ? 'enabled' : 'disabled'}`);
+  
+  // Dispatch event for other components
+  window.dispatchEvent(new CustomEvent('errordon:theme-change', { 
+    detail: { theme: isMatrix ? 'matrix' : 'default' } 
+  }));
+}
+
+function cycleIntensity() {
+  if (!window.matrixRain) return;
+  
+  const levels = ['low', 'medium', 'high'];
+  const currentIndex = levels.indexOf(window.matrixRain.intensity);
+  const nextIndex = (currentIndex + 1) % levels.length;
+  window.matrixRain.setIntensity(levels[nextIndex]);
+}
+
+// =============================================================================
+// INITIALIZATION
+// =============================================================================
+
 function initErrordonMatrix() {
-  // Check stored preference
-  const matrixEnabled = localStorage.getItem('errordon_matrix_theme') === 'true';
+  // Matrix theme is ENABLED BY DEFAULT for Errordon
+  // User can disable with Ctrl+Shift+M (saves preference to localStorage)
+  const stored = localStorage.getItem('errordon_matrix_theme');
+  
+  // Only disable if user EXPLICITLY chose 'default' or 'false'
+  // null/undefined/anything else = Matrix enabled (default behavior)
+  const userDisabled = stored === 'default' || stored === 'false';
+  const matrixEnabled = !userDisabled;
   
   if (matrixEnabled) {
     document.body.classList.add('theme-matrix');
+    
+    // Apply color variant
+    const colorPref = getColorPreference();
+    applyMatrixColor(colorPref);
   }
 
   // Initialize rain if theme active
   if (document.body.classList.contains('theme-matrix')) {
     window.matrixRain = new MatrixRain();
-    window.matrixRain.init();
+    const rainInitialized = window.matrixRain.init();
     
-    // Show splash for new sessions
-    const splash = new MatrixSplash();
-    splash.init();
+    // Show splash for new sessions (only if rain initialized, i.e., motion allowed)
+    if (rainInitialized || !prefersReducedMotion()) {
+      const splash = new MatrixSplash();
+      splash.init();
+    }
   }
 
-  // Enable keyboard shortcut
+  // Enable keyboard shortcuts
   initMatrixKeyboardShortcut();
+  
+  console.log('[Errordon] Matrix module loaded');
 }
 
-// Export
+// =============================================================================
+// PUBLIC API
+// =============================================================================
+
+// Expose for external use
 window.MatrixRain = MatrixRain;
 window.MatrixSplash = MatrixSplash;
 window.initErrordonMatrix = initErrordonMatrix;
+window.toggleMatrixTheme = toggleMatrixTheme;
+window.cycleIntensity = cycleIntensity;
+window.cycleColor = cycleColor;
+window.applyMatrixColor = applyMatrixColor;
 
-// Auto-init when DOM ready
+// Configuration access
+window.MATRIX_CONFIG = MATRIX_CONFIG;
+
+// Utility exports
+window.matrixUtils = {
+  prefersReducedMotion,
+  isLowEndDevice,
+  getIntensityPreference,
+  getColorPreference,
+  getCurrentColorConfig
+};
+
+// =============================================================================
+// AUTO-INITIALIZATION
+// =============================================================================
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initErrordonMatrix);
 } else {

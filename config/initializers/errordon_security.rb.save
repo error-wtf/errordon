@@ -75,19 +75,10 @@ Rails.application.config.middleware.insert_before 0, Rack::Builder do
     def call(env)
       status, headers, response = @app.call(env)
 
-      if env['PATH_INFO'] == '/matrix/tetris.html'
-        headers['X-Frame-Options'] = 'SAMEORIGIN'
-        headers['x-frame-options'] = 'SAMEORIGIN'
-        headers.delete('Content-Security-Policy')
-        headers['content-security-policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'"
-      end
-
-
       # Add security headers for Errordon endpoints
       if env['PATH_INFO']&.include?('/errordon') || env['PATH_INFO']&.start_with?('/api/')
         headers['X-Content-Type-Options'] = 'nosniff'
         headers['X-Frame-Options'] = 'DENY'
-        headers['X-XSS-Protection'] = '1; mode=block'
         headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
         headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
       end

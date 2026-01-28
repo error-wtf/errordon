@@ -17,6 +17,6 @@ class HomeController < ApplicationController
     return if session[:matrix_passed]
 
     # Redirect to static Matrix Terminal (CSP-safe)
-    redirect_to '/matrix/index.html', allow_other_host: true
+    redirect_to '/matrix/index.html'
   end
 end
