@@ -444,3 +444,132 @@
     }
   }
 }
+
+// =============================================================================
+// STORAGE QUOTA COMPONENT (Errordon Fair Share)
+// =============================================================================
+
+.storage-quota {
+  padding: 15px;
+  margin: 10px 0;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+
+  &--loading {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    padding: 20px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+  }
+
+  &__badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+
+    &--exempt {
+      background: var(--color-accent);
+      color: var(--color-text-on-accent);
+    }
+  }
+
+  &__progress {
+    height: 8px;
+    background: var(--color-bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  &__bar {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+
+    &--warning {
+      background: #f5a623;
+    }
+
+    &--full {
+      background: #e74c3c;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+  }
+
+  &__label {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  &__warning {
+    padding: 10px;
+    margin: 10px 0;
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 6px;
+    color: #e74c3c;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  &__fair-share {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border-primary);
+  }
+
+  &__notice {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin: 0 0 5px 0;
+    line-height: 1.4;
+  }
+
+  &__info {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin: 0;
+    font-style: italic;
+  }
+}

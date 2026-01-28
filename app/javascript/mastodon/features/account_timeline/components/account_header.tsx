@@ -26,6 +26,7 @@ import { MemorialNote } from './memorial_note';
 import { MovedNote } from './moved_note';
 import { AccountNumberFields } from './number_fields';
 import redesignClasses from './redesign.module.scss';
+import { StorageQuota } from './storage_quota';
 import { AccountTabs } from './tabs';
 
 const titleFromAccount = (account: Account) => {
@@ -179,6 +180,9 @@ export const AccountHeader: React.FC<{
               </div>
 
               <AccountNumberFields accountId={accountId} />
+
+              {/* Errordon: Storage quota display for own account */}
+              <StorageQuota accountId={accountId} />
             </div>
           )}
         </div>
