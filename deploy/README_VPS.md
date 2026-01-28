@@ -109,13 +109,57 @@ docker compose exec web tootctl accounts create admin \
 
 ## Errordon-Specific Settings
 
-### Upload Limits (250MB)
+### Upload Limits (Fediverse-Compatible)
 
-Already configured in `.env.production`:
-- `MAX_VIDEO_SIZE=262144000`
-- `MAX_AUDIO_SIZE=262144000`
+Errordon uses conservative upload limits to ensure posts federate reliably:
 
-nginx already set to `client_max_body_size 250m;`
+| Type | Default | Reason |
+|------|---------|--------|
+| Image | 16 MB | Standard fediverse limit |
+| Video/Audio | 40 MB | Federation-safe maximum |
+
+**Why 40MB instead of larger?**
+- Many instances reject media > 50MB during federation
+- Large files cause ActivityPub delivery timeouts  
+- Storage costs unfairly pushed to remote instances
+
+Configure in `.env.production`:
+```bash
+ERRORDON_IMAGE_LIMIT_MB=16   # Image upload limit
+ERRORDON_VIDEO_LIMIT_MB=40   # Video/audio upload limit
+```
+
+nginx should match: `client_max_body_size 50m;` (with overhead)
+
+### Storage Fair Share Policy
+
+Errordon implements fair-share storage quotas:
+
+```
+upload_pool = disk_total × 50%
+per_user_quota = upload_pool / active_users
+```
+
+**Key Settings:**
+```bash
+# Maximum % of disk for uploads (default: 50)
+ERRORDON_STORAGE_MAX_PERCENT=50
+
+# Per-user quota bounds
+ERRORDON_STORAGE_MIN_QUOTA_MB=50    # Floor
+ERRORDON_STORAGE_MAX_QUOTA_GB=10    # Ceiling
+
+# Rate limits
+ERRORDON_DAILY_UPLOAD_LIMIT_GB=1    # Per day
+ERRORDON_HOURLY_UPLOAD_LIMIT=20     # Per hour
+```
+
+**When quota is exceeded:**
+- Media uploads: ❌ Blocked
+- Text + links posting: ✅ Allowed
+- User must delete uploads to free space
+
+See `docs/STORAGE_FAIR_SHARE.md` for full documentation.
 
 ### Privacy Defaults
 
