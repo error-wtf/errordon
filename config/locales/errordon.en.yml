@@ -42,6 +42,12 @@ en:
         quota_updated: "Quota updated successfully"
         exempt_user: "User is exempt from quotas"
     
+    quota:
+      storage_exceeded: "Storage quota exceeded. Used: %{used}, Quota: %{quota}. Delete some uploads to free space."
+      daily_exceeded: "Daily upload limit exceeded. Uploaded: %{uploaded}, Limit: %{limit}. Please wait until tomorrow."
+      rate_exceeded: "Upload rate limit exceeded. %{count} uploads this hour, limit is %{limit}. Please slow down."
+      text_only_hint: "You can still post text and links while at your storage limit."
+    
     upload:
       quota_exceeded: "Storage quota exceeded"
       rate_limit_exceeded: "Upload rate limit exceeded"
@@ -50,6 +56,7 @@ en:
       transcoding_started: "Video is being processed..."
       transcoding_complete: "Processing complete"
       transcoding_failed: "Processing failed"
+      text_only_allowed: "Media uploads blocked - delete files to free space"
     
     privacy:
       preset_strict: "Strict privacy mode enabled"
