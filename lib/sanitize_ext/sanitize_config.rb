@@ -137,7 +137,8 @@ class Sanitize
 
       attributes: {
         'audio' => %w(controls),
-        'iframe' => %w(allowfullscreen frameborder height scrolling src width),
+        # Errordon: Added 'allow', 'loading', 'title', 'style' for better embed compatibility (Spotify, etc.)
+        'iframe' => %w(allowfullscreen frameborder height scrolling src width allow loading title style),
         'source' => %w(src type),
         'video' => %w(controls height loop width),
       },
@@ -148,7 +149,8 @@ class Sanitize
       },
 
       add_attributes: {
-        'iframe' => { 'sandbox' => 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms' },
+        # Errordon: Extended sandbox permissions for embeds that need storage/media access (Spotify login, etc.)
+        'iframe' => { 'sandbox' => 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-storage-access-by-user-activation' },
       }
     )
   end
