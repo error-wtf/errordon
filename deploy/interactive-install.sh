@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Errordon Interactive Installer v1.1.0
+# Errordon Interactive Installer v1.2.0
 # Guided installation wizard for Errordon
 #
 # Usage: curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/interactive-install.sh -o install.sh && chmod +x install.sh && ./install.sh
@@ -26,11 +26,12 @@ dc() {
 clear
 echo -e "${GREEN}"
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║          ERRORDON - Interactive Installer v1.1.0        ║"
+echo "║          ERRORDON - Interactive Installer v1.2.0        ║"
 echo "║      A Safe Fediverse: No Porn, No Hate, No Fascism     ║"
 echo "╠══════════════════════════════════════════════════════════╣"
 echo "║  Features:                                               ║"
-echo "║  • Matrix Terminal landing page                         ║"
+echo "║  • Matrix Terminal landing page (4 color themes)       ║"
+echo "║  • Full-text search (OpenSearch)                        ║"
 echo "║  • AI content moderation (Ollama)                       ║"
 echo "║  • 250MB upload support                                 ║"
 echo "║  • Privacy-first defaults                               ║"
@@ -69,21 +70,42 @@ else
 fi
 
 # STEP 4: Features
-echo -e "\n${BLUE}━━━ STEP 4/5: Features ━━━${NC}"
+echo -e "\n${BLUE}━━━ STEP 4/6: Features ━━━${NC}"
 echo -e "${GREEN}Matrix Terminal:${NC} Cyberpunk-style landing page with terminal interface"
 read -p "Enable Matrix Terminal? (Y/n): " yn
 [[ "$yn" =~ ^[Nn]$ ]] && INSTALL_MATRIX=false || INSTALL_MATRIX=true
+
+# Matrix Color Selection (only if Matrix enabled)
+if [ "$INSTALL_MATRIX" = true ]; then
+    echo ""
+    echo -e "${GREEN}Matrix Color Theme:${NC} Choose the color scheme for your Matrix UI"
+    echo "  1) Green  - Classic Matrix (default)"
+    echo "  2) Red    - Aggressive/Error theme"
+    echo "  3) Blue   - Cyber/Tech theme"
+    echo "  4) Purple - Cyberpunk theme"
+    read -p "Select color [1-4, default=1]: " color_choice
+    case "$color_choice" in
+        2) MATRIX_COLOR="red" ;;
+        3) MATRIX_COLOR="blue" ;;
+        4) MATRIX_COLOR="purple" ;;
+        *) MATRIX_COLOR="green" ;;
+    esac
+    log "Matrix color: $MATRIX_COLOR"
+else
+    MATRIX_COLOR="green"
+fi
 
 echo -e "${GREEN}Ollama AI:${NC} NSFW-Protect AI moderation (requires 8GB+ RAM)"
 read -p "Install Ollama for AI content moderation? (y/N): " yn
 [[ "$yn" =~ ^[Yy]$ ]] && INSTALL_OLLAMA=true || INSTALL_OLLAMA=false
 
 # STEP 5: Confirm
-echo -e "\n${BLUE}━━━ STEP 5/5: Confirm ━━━${NC}"
+echo -e "\n${BLUE}━━━ STEP 6/6: Confirm ━━━${NC}"
 echo "Domain:       $DOMAIN"
 echo "Admin:        $ADMIN_USER <$ADMIN_EMAIL>"
 echo "SMTP:         ${SMTP_SERVER:-not configured}"
 echo "Matrix:       $INSTALL_MATRIX"
+[ "$INSTALL_MATRIX" = true ] && echo "Matrix Color: $MATRIX_COLOR"
 echo "Ollama/AI:    $INSTALL_OLLAMA"
 echo ""
 read -p "Start installation? (Y/n): " yn
@@ -92,10 +114,10 @@ read -p "Start installation? (Y/n): " yn
 # Run quick-install with collected params
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ARGS="--domain $DOMAIN --email $ADMIN_EMAIL"
-[ "$INSTALL_MATRIX" = true ] && ARGS="$ARGS --with-matrix"
+[ "$INSTALL_MATRIX" = true ] && ARGS="$ARGS --with-matrix --matrix-color $MATRIX_COLOR"
 [ "$INSTALL_OLLAMA" = true ] && ARGS="$ARGS --with-ollama"
 
-export ADMIN_USER ADMIN_EMAIL SMTP_SERVER SMTP_PORT SMTP_LOGIN SMTP_PASSWORD SMTP_FROM
+export ADMIN_USER ADMIN_EMAIL SMTP_SERVER SMTP_PORT SMTP_LOGIN SMTP_PASSWORD SMTP_FROM MATRIX_COLOR
 
 # Always download fresh quick-install.sh to avoid cache issues
 echo ""

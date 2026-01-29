@@ -2062,7 +2062,7 @@ body.theme-matrix {
     }
   }
   
-  // Skeleton loading
+  // Skeleton loading - comprehensive
   .skeleton {
     background: linear-gradient(
       90deg,
@@ -2070,6 +2070,110 @@ body.theme-matrix {
       rgba(var(--matrix-primary-rgb), 0.2) 50%,
       rgba(var(--matrix-primary-rgb), 0.1) 100%
     ) !important;
+    border-radius: inherit !important;
+  }
+
+  // =============================================================================
+  // ACCOUNT MEDIA TABS & GALLERY PLACEHOLDERS
+  // =============================================================================
+  
+  // Hashtag bar pills - dark background
+  .hashtag-bar {
+    a {
+      background: rgba(var(--matrix-primary-rgb), 0.15) !important;
+      color: var(--matrix-primary) !important;
+      border: 1px solid rgba(var(--matrix-primary-rgb), 0.3) !important;
+      
+      &:hover,
+      &:focus,
+      &:active {
+        background: rgba(var(--matrix-primary-rgb), 0.25) !important;
+      }
+    }
+  }
+  
+  // Featured tags pills
+  .featured-tags,
+  .account__featured-tags {
+    background: transparent !important;
+    
+    a, button, .featured-tag {
+      background: rgba(0, 0, 0, 0.8) !important;
+      color: var(--matrix-primary) !important;
+      border: 1px solid rgba(var(--matrix-primary-rgb), 0.3) !important;
+    }
+  }
+  
+  // Account gallery container and items
+  .account-gallery__container {
+    background: transparent !important;
+    
+    .account-gallery__item {
+      background: rgba(0, 0, 0, 0.6) !important;
+      border: 1px solid rgba(var(--matrix-primary-rgb), 0.2) !important;
+      
+      &:hover {
+        border-color: var(--matrix-primary) !important;
+      }
+    }
+  }
+  
+  // Story thumbnails (can appear in media views)
+  .story__thumbnail {
+    background: rgba(0, 0, 0, 0.8) !important;
+    
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        rgba(var(--matrix-primary-rgb), 0.1) 0%,
+        rgba(var(--matrix-primary-rgb), 0.2) 50%,
+        rgba(var(--matrix-primary-rgb), 0.1) 100%
+      ) !important;
+    }
+  }
+  
+  // Inline follow suggestions (can have light backgrounds)
+  .inline-follow-suggestions,
+  .follow-recommendations {
+    background: rgba(0, 0, 0, 0.85) !important;
+    border-color: var(--matrix-primary-dark) !important;
+  }
+  
+  // Generic pills and tags
+  .domain-pill,
+  .relationship-tag,
+  .account__relationship,
+  [class*="pill"],
+  [class*="tag"]:not(a):not(button) {
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: var(--matrix-primary) !important;
+    border-color: rgba(var(--matrix-primary-rgb), 0.3) !important;
+  }
+  
+  // Empty column indicators
+  .empty-column-indicator {
+    color: var(--matrix-primary) !important;
+    background: transparent !important;
+  }
+  
+  // Picture placeholders
+  .picture-in-picture-placeholder {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border-color: var(--matrix-primary-dark) !important;
+  }
+  
+  // Modal placeholders
+  .modal-placeholder {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  // Force all CSS variable backgrounds to dark
+  [style*="--color-bg-primary"],
+  [style*="--color-bg-secondary"],
+  [style*="--color-bg-tertiary"],
+  [style*="--color-bg-brand-softer"],
+  [style*="--color-bg-brand-soft"] {
+    background: rgba(0, 0, 0, 0.85) !important;
   }
 
   // =============================================================================
@@ -2108,6 +2212,261 @@ body.theme-matrix {
     
     span {
       color: $matrix-text !important;
+    }
+  }
+
+  // =============================================================================
+  // AUDIO & VIDEO PLAYER CONTROLS - MATRIX STYLE
+  // =============================================================================
+  
+  // Audio Player
+  .audio-player {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border: 1px solid var(--matrix-primary-dark) !important;
+    
+    // Play/Pause button
+    .audio-player__play-button,
+    .player-button,
+    button[aria-label="Play"],
+    button[aria-label="Pause"],
+    button[aria-label="Abspielen"],
+    button[aria-label="Pause"] {
+      color: $matrix-text !important;
+      background: transparent !important;
+      
+      .icon,
+      svg {
+        fill: $matrix-text !important;
+        color: $matrix-text !important;
+      }
+      
+      &:hover {
+        color: var(--matrix-primary) !important;
+        
+        .icon,
+        svg {
+          fill: var(--matrix-primary) !important;
+          color: var(--matrix-primary) !important;
+        }
+      }
+    }
+    
+    // Progress bar
+    .audio-player__progress,
+    .audio-player__progress-placeholder {
+      background: rgba(255, 255, 255, 0.2) !important;
+      
+      &::before,
+      .audio-player__buffer,
+      .audio-player__progress__loaded {
+        background: rgba(var(--matrix-primary-rgb), 0.3) !important;
+      }
+      
+      .audio-player__progress__played,
+      &::after {
+        background: var(--matrix-primary) !important;
+      }
+    }
+    
+    // Seek handle
+    .audio-player__seek__handle,
+    .audio-player__progress__handle {
+      background: var(--matrix-primary) !important;
+      border-color: var(--matrix-primary) !important;
+    }
+    
+    // Time display
+    .audio-player__time,
+    .audio-player__time-current,
+    .audio-player__time-total,
+    .audio-player__time-separator {
+      color: $matrix-text !important;
+    }
+    
+    // Volume control
+    .audio-player__volume {
+      &::before {
+        background: var(--matrix-primary) !important;
+      }
+      
+      button {
+        color: $matrix-text !important;
+        
+        svg, .icon {
+          fill: $matrix-text !important;
+        }
+        
+        &:hover {
+          color: var(--matrix-primary) !important;
+          
+          svg, .icon {
+            fill: var(--matrix-primary) !important;
+          }
+        }
+      }
+    }
+    
+    // Mute button
+    .audio-player__mute,
+    button[aria-label="Mute"],
+    button[aria-label="Unmute"],
+    button[aria-label="Stummschalten"] {
+      color: $matrix-text !important;
+      
+      svg, .icon {
+        fill: $matrix-text !important;
+        color: $matrix-text !important;
+      }
+    }
+    
+    // Waveform
+    .audio-player__waveform {
+      background: transparent !important;
+      
+      canvas {
+        filter: hue-rotate(80deg) saturate(2);
+      }
+    }
+  }
+  
+  // Video Player
+  .video-player {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border: 1px solid var(--matrix-primary-dark) !important;
+    
+    // Controls bar
+    .video-player__controls {
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.9)) !important;
+    }
+    
+    // All buttons in video player
+    .video-player__buttons {
+      button,
+      a {
+        color: $matrix-text !important;
+        
+        svg, .icon {
+          fill: $matrix-text !important;
+          color: $matrix-text !important;
+        }
+        
+        &:hover {
+          color: var(--matrix-primary) !important;
+          
+          svg, .icon {
+            fill: var(--matrix-primary) !important;
+            color: var(--matrix-primary) !important;
+          }
+        }
+      }
+    }
+    
+    // Play button overlay
+    .video-player__play,
+    .video-player__play-icon {
+      color: $matrix-text !important;
+      background: rgba(0, 0, 0, 0.7) !important;
+      border-color: $matrix-text !important;
+      
+      svg, .icon {
+        fill: $matrix-text !important;
+      }
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.9) !important;
+        border-color: var(--matrix-primary) !important;
+        
+        svg, .icon {
+          fill: var(--matrix-primary) !important;
+        }
+      }
+    }
+    
+    // Seek bar
+    .video-player__seek {
+      background: rgba(255, 255, 255, 0.2) !important;
+      
+      &::before,
+      .video-player__seek__buffer {
+        background: rgba(var(--matrix-primary-rgb), 0.3) !important;
+      }
+      
+      &::after,
+      .video-player__seek__progress {
+        background: var(--matrix-primary) !important;
+      }
+    }
+    
+    // Seek handle
+    .video-player__seek__handle {
+      background: var(--matrix-primary) !important;
+      border-color: var(--matrix-primary) !important;
+    }
+    
+    // Volume bar
+    .video-player__volume {
+      &::before {
+        background: var(--matrix-primary) !important;
+      }
+    }
+    
+    // Time display
+    .video-player__time,
+    .video-player__time-current,
+    .video-player__time-total,
+    .video-player__time-sep {
+      color: $matrix-text !important;
+    }
+    
+    // Fullscreen button
+    .video-player__fullscreen,
+    button[aria-label="Full screen"],
+    button[aria-label="Vollbild"] {
+      color: $matrix-text !important;
+      
+      svg, .icon {
+        fill: $matrix-text !important;
+      }
+      
+      &:hover {
+        color: var(--matrix-primary) !important;
+        
+        svg, .icon {
+          fill: var(--matrix-primary) !important;
+        }
+      }
+    }
+  }
+  
+  // Generic player button styles (catches all player buttons)
+  .player-button,
+  [class*="player"] button,
+  [class*="player"] .icon-button {
+    color: $matrix-text !important;
+    
+    svg, .icon {
+      fill: $matrix-text !important;
+      color: $matrix-text !important;
+    }
+    
+    &:hover {
+      color: var(--matrix-primary) !important;
+      
+      svg, .icon {
+        fill: var(--matrix-primary) !important;
+        color: var(--matrix-primary) !important;
+      }
+    }
+  }
+  
+  // SVG icons inside players - nuclear option
+  .audio-player svg,
+  .video-player svg {
+    fill: $matrix-text !important;
+    color: $matrix-text !important;
+    
+    path {
+      fill: inherit !important;
     }
   }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Errordon Quick Install Script v1.1.0
+# Errordon Quick Install Script v1.2.0
 # One-line VPS installer for Ubuntu 22.04+, Debian 12+, Kali Linux
 #
 # Usage: curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/quick-install.sh | bash -s -- --domain your.domain.com
@@ -55,6 +55,7 @@ DOMAIN=""
 EMAIL=""
 INSTALL_OLLAMA=false
 INSTALL_MATRIX=false
+MATRIX_COLOR="${MATRIX_COLOR:-green}"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -62,22 +63,30 @@ while [[ $# -gt 0 ]]; do
         --email) EMAIL="$2"; shift 2 ;;
         --with-ollama) INSTALL_OLLAMA=true; shift ;;
         --with-matrix) INSTALL_MATRIX=true; shift ;;
+        --matrix-color) MATRIX_COLOR="$2"; shift 2 ;;
         --help) 
             echo "Errordon Quick Installer"
             echo ""
             echo "Usage: $0 --domain your.domain.com [options]"
             echo ""
             echo "Options:"
-            echo "  --domain DOMAIN    Your domain (required)"
-            echo "  --email EMAIL      Admin email for SSL and alerts"
-            echo "  --with-ollama      Install Ollama for NSFW-Protect AI"
-            echo "  --with-matrix      Enable Matrix Terminal landing page"
+            echo "  --domain DOMAIN        Your domain (required)"
+            echo "  --email EMAIL          Admin email for SSL and alerts"
+            echo "  --with-ollama          Install Ollama for NSFW-Protect AI"
+            echo "  --with-matrix          Enable Matrix Terminal landing page"
+            echo "  --matrix-color COLOR   Matrix color: green, red, blue, purple (default: green)"
             echo ""
             exit 0
             ;;
         *) shift ;;
     esac
 done
+
+# Validate MATRIX_COLOR
+case "$MATRIX_COLOR" in
+    green|red|blue|purple) ;;
+    *) warn "Invalid matrix color '$MATRIX_COLOR', defaulting to green"; MATRIX_COLOR="green" ;;
+esac
 
 if [ -z "$DOMAIN" ]; then
     echo ""
@@ -295,12 +304,34 @@ ARKEYS
     # Enable Matrix theme if requested
     if [ "$INSTALL_MATRIX" = true ]; then
         sed -i "s/ERRORDON_MATRIX_THEME_ENABLED=false/ERRORDON_MATRIX_THEME_ENABLED=true/" .env.production
+        # Add or update MATRIX_COLOR
+        if grep -q "^MATRIX_COLOR=" .env.production; then
+            sed -i "s/MATRIX_COLOR=.*/MATRIX_COLOR=$MATRIX_COLOR/" .env.production
+        else
+            echo "MATRIX_COLOR=$MATRIX_COLOR" >> .env.production
+        fi
+    fi
+    
+    # Add Elasticsearch/OpenSearch config
+    if ! grep -q "^ES_ENABLED=" .env.production; then
+        cat >> .env.production << ESEOF
+
+# Elasticsearch/OpenSearch for full-text search
+ES_ENABLED=true
+ES_HOST=es
+ES_PORT=9200
+ESEOF
     fi
     
     log ".env.production created"
 else
     log ".env.production already exists"
 fi
+
+# Create required directories for bind mounts
+log "Creating data directories..."
+mkdir -p postgres14 redis elasticsearch public/system
+chmod 777 elasticsearch  # OpenSearch needs write access
 
 # ============================================================================
 # PHASE 4: NGINX & SSL
@@ -405,19 +436,29 @@ if ! dc build 2>&1 | tee /tmp/errordon-build.log; then
 fi
 log "Docker build completed successfully!"
 
-# Start db and redis first
-log "Starting database and Redis..."
-dc up -d db redis
-log "Waiting for database to be ready..."
-sleep 15
+# Start db, redis, and elasticsearch first
+log "Starting database, Redis, and OpenSearch..."
+dc up -d db redis es
+log "Waiting for services to be ready..."
+sleep 20
 
 # Check if database is ready
 for i in {1..30}; do
-    if dc exec -T db pg_isready -U mastodon -d mastodon_production &>/dev/null; then
+    if dc exec -T db pg_isready -U postgres &>/dev/null; then
         log "Database is ready"
         break
     fi
     echo "  Waiting for database... ($i/30)"
+    sleep 2
+done
+
+# Check if OpenSearch is ready
+for i in {1..30}; do
+    if curl -s localhost:9200/_cluster/health 2>/dev/null | grep -q '"status"'; then
+        log "OpenSearch is ready"
+        break
+    fi
+    echo "  Waiting for OpenSearch... ($i/30)"
     sleep 2
 done
 
@@ -511,21 +552,31 @@ if [ "$INSTALL_MATRIX" = true ]; then
     
     # Add Matrix config to .env.production
     if ! grep -q "ERRORDON_MATRIX_LANDING_ENABLED" .env.production 2>/dev/null; then
-        cat >> .env.production << 'MATRIXEOF'
+        cat >> .env.production << MATRIXEOF
 
 # ============================================================================
 # MATRIX TERMINAL LANDING PAGE
 # ============================================================================
 ERRORDON_MATRIX_LANDING_ENABLED=true
+
+# Matrix Color Theme
+# Options: green (classic), red (aggressive), blue (cyber), purple (cyberpunk)
+MATRIX_COLOR=$MATRIX_COLOR
 MATRIXEOF
     else
         sed -i 's/ERRORDON_MATRIX_LANDING_ENABLED=false/ERRORDON_MATRIX_LANDING_ENABLED=true/' .env.production
+        # Update or add MATRIX_COLOR
+        if grep -q "^MATRIX_COLOR=" .env.production; then
+            sed -i "s/MATRIX_COLOR=.*/MATRIX_COLOR=$MATRIX_COLOR/" .env.production
+        else
+            echo "MATRIX_COLOR=$MATRIX_COLOR" >> .env.production
+        fi
     fi
     
     # Set landing page via Rails console
     dc run --rm web bundle exec rails runner "Setting.landing_page = 'matrix'" 2>/dev/null || true
     
-    log "Matrix Terminal enabled as landing page"
+    log "Matrix Terminal enabled as landing page with color: $MATRIX_COLOR"
 fi
 
 # ============================================================================
@@ -542,6 +593,10 @@ dc exec -T web mkdir -p tmp/errordon_cleanup 2>/dev/null || true
 # Run any pending migrations (for Errordon tables)
 log "Running database migrations..."
 dc run --rm web bundle exec rake db:migrate 2>/dev/null || true
+
+# Deploy search index for full-text search
+log "Deploying search index..."
+dc exec -T web bin/tootctl search deploy 2>/dev/null || warn "Search index deploy failed - can retry later"
 
 # Initialize NSFW-Protect
 dc exec -T web bundle exec rake errordon:nsfw_protect:setup 2>/dev/null || true
