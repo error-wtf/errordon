@@ -173,11 +173,12 @@ class MatrixRain {
     this.colorName = options.color || getColorPreference();
     this.colorConfig = MATRIX_CONFIG.colors[this.colorName] || MATRIX_CONFIG.colors.green;
     
-    // Scroll pause for performance
-    this.scrollTimeout = null;
-    this.handleScroll = this.handleScroll.bind(this);
+    // Resize handler
     this.handleResize = this.handleResize.bind(this);
     this.draw = this.draw.bind(this);
+    
+    // Visibility change handler (pause when tab not visible)
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
   }
 
   init() {
@@ -205,7 +206,8 @@ class MatrixRain {
     
     // Event listeners
     window.addEventListener('resize', this.handleResize, { passive: true });
-    window.addEventListener('scroll', this.handleScroll, { passive: true });
+    // Pause only when tab is not visible (saves battery/CPU)
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
     
     // Listen for reduced motion changes
     window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
@@ -232,18 +234,13 @@ class MatrixRain {
     this.resize();
   }
 
-  handleScroll() {
-    // Pause during scroll for performance
-    if (!this.paused && this.active) {
+  handleVisibilityChange() {
+    // Pause when tab is hidden (saves battery/CPU)
+    if (document.hidden) {
       this.pause();
+    } else {
+      this.resume();
     }
-    
-    clearTimeout(this.scrollTimeout);
-    this.scrollTimeout = setTimeout(() => {
-      if (this.paused && this.active) {
-        this.resume();
-      }
-    }, 150);
   }
 
   resize() {
@@ -366,8 +363,7 @@ class MatrixRain {
   destroy() {
     this.stop();
     window.removeEventListener('resize', this.handleResize);
-    window.removeEventListener('scroll', this.handleScroll);
-    clearTimeout(this.scrollTimeout);
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     if (this.canvas) {
       this.canvas.remove();
       this.canvas = null;
