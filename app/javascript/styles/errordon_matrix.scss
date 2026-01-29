@@ -3179,6 +3179,55 @@ body.theme-matrix {
     }
   }
   
+  // =============================================================================
+  // STATUS CARD VIDEO - Embedded players (Spotify, hearthis.at, etc.)
+  // =============================================================================
+  .status-card-video {
+    position: relative !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 20, 0, 0.95) 100%) !important;
+    border: 1px solid rgba(var(--matrix-primary-rgb), 0.3) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    
+    // Matrix-style loading indicator while iframe loads
+    &::before {
+      content: '▶ Loading player...';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--matrix-primary, #00ff00);
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      opacity: 0.5;
+      z-index: 0;
+      pointer-events: none;
+      text-shadow: 0 0 10px var(--matrix-primary, #00ff00);
+    }
+
+    iframe {
+      position: relative;
+      z-index: 1;
+      background: transparent !important;
+      border-radius: 8px !important;
+    }
+  }
+  
+  // Expanded status card (video type)
+  .status-card.expanded {
+    .status-card__image {
+      background: rgba(0, 0, 0, 0.9) !important;
+      min-height: 200px;
+      
+      // Show thumbnail image properly
+      img {
+        object-fit: cover !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+    }
+  }
+  
   // Ultimate fallback - target by computed light colors
   // These use !important to override any inline styles
   .status-card,
