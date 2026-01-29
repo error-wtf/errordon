@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Errordon Production Deployment Script
-# For Ubuntu 22.04 LTS
+# Errordon Production Deployment Script v1.2.0
+# For Ubuntu 22.04 LTS, Debian 12+
 #
 # Usage: ./deploy.sh [domain]
 # Example: ./deploy.sh social.example.com
@@ -49,10 +49,10 @@ if [ "$EUID" -eq 0 ]; then
     error "Don't run as root. Script will use sudo when needed."
 fi
 
-# Create mastodon user if needed
-if ! id "mastodon" &>/dev/null; then
-    log "Creating mastodon user..."
-    sudo adduser --disabled-login --gecos "" mastodon
+# Create errordon user if needed
+if ! id "errordon" &>/dev/null; then
+    log "Creating errordon user..."
+    sudo adduser --disabled-login --gecos "" errordon
 fi
 
 # Install Docker if not present
@@ -60,7 +60,7 @@ if ! command -v docker &> /dev/null; then
     log "Installing Docker..."
     curl -fsSL https://get.docker.com | sh
     sudo usermod -aG docker $USER
-    sudo usermod -aG docker mastodon
+    sudo usermod -aG docker errordon
     warn "Docker installed. You may need to logout/login for group changes."
 else
     log "Docker already installed"
@@ -95,14 +95,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Clone or update repo
-INSTALL_DIR="/home/mastodon/errordon"
+INSTALL_DIR="/home/errordon/errordon"
 if [ ! -d "$INSTALL_DIR" ]; then
     log "Cloning Errordon..."
-    sudo -u mastodon git clone https://github.com/error-wtf/errordon.git $INSTALL_DIR
+    sudo -u errordon git clone https://github.com/error-wtf/errordon.git $INSTALL_DIR
 else
     log "Updating Errordon..."
     cd $INSTALL_DIR
-    sudo -u mastodon git pull
+    sudo -u errordon git pull
 fi
 
 cd $INSTALL_DIR

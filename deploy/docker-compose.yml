@@ -1,4 +1,4 @@
-# Errordon Docker Compose v0.5.0
+# Errordon Docker Compose v1.2.0
 # Quick Install: curl -sSL https://raw.githubusercontent.com/error-wtf/errordon/master/deploy/interactive-install.sh | bash
 
 services:

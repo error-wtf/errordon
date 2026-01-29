@@ -2,7 +2,7 @@
 
 [![Fediverse Compatible](https://img.shields.io/badge/Fediverse-Compatible-blueviolet)](https://joinmastodon.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Version](https://img.shields.io/badge/version-0.3.0-green.svg)](https://github.com/error-wtf/errordon)
+[![Version](https://img.shields.io/badge/version-1.2.0-green.svg)](https://github.com/error-wtf/errordon)
 [![EU Law Compliant](https://img.shields.io/badge/EU%20Law-Compliant-blue.svg)](https://eur-lex.europa.eu/)
 [![German Law](https://img.shields.io/badge/German%20Law-StGB%20%C2%A7130%2C%20%C2%A7184b%2C%20%C2%A786a-red.svg)](https://www.gesetze-im-internet.de/stgb/)
 [![NSFW-Protect AI](https://img.shields.io/badge/NSFW--Protect-AI%20Powered-ff4444.svg)](docs/NSFW_PROTECT_ARCHITECTURE.md)

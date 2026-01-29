@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Errordon Update Script v0.3.0
+# Errordon Update Script v1.2.0
 # Updates to latest version with zero-downtime rolling restart
 #
 # Usage: ./update.sh [--skip-backup] [--branch BRANCH]
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 # Configuration
-ERRORDON_DIR="${ERRORDON_DIR:-/home/mastodon/errordon}"
+ERRORDON_DIR="${ERRORDON_DIR:-/home/errordon/errordon}"
 BRANCH="main"
 SKIP_BACKUP=false
 
@@ -40,7 +40,7 @@ error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 
 echo ""
 echo "╔════════════════════════════════════════╗"
-echo "║     Errordon Update v0.3.0             ║"
+echo "║     Errordon Update v1.2.0             ║"
 echo "║     Branch: $BRANCH"
 echo "╚════════════════════════════════════════╝"
 echo ""

@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# Errordon Backup Script v0.3.0
+# Errordon Backup Script v1.2.0
 # Creates database, redis, and media backups
 #
 # Usage: ./backup.sh [--full]
-# Cron:  0 3 * * * /home/mastodon/errordon/deploy/backup.sh >> /var/log/errordon-backup.log 2>&1
+# Cron:  0 3 * * * /home/errordon/errordon/deploy/backup.sh >> /var/log/errordon-backup.log 2>&1
 #
 # Options:
 #   --full    Include media files (can be large!)
@@ -13,8 +13,8 @@
 set -euo pipefail
 
 # Configuration
-BACKUP_DIR="${ERRORDON_BACKUP_DIR:-/home/mastodon/backups}"
-ERRORDON_DIR="${ERRORDON_DIR:-/home/mastodon/errordon}"
+BACKUP_DIR="${ERRORDON_BACKUP_DIR:-/home/errordon/backups}"
+ERRORDON_DIR="${ERRORDON_DIR:-/home/errordon/errordon}"
 DATE=$(date +%Y%m%d_%H%M%S)
 RETENTION_DAYS=${ERRORDON_BACKUP_RETENTION:-7}
 FULL_BACKUP=false
