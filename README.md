@@ -19,6 +19,23 @@
 
 ---
 
+## 📸 Screenshots
+
+<table>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/profile-view.png" alt="Errordon Profile View - Matrix Theme" />
+<p align="center"><em>Profile View with Media Tabs</em></p>
+</td>
+<td width="50%">
+<img src="docs/screenshots/live-feeds.png" alt="Errordon Live Feeds - Matrix Theme" />
+<p align="center"><em>Live Feeds with Matrix Rain</em></p>
+</td>
+</tr>
+</table>
+
+---
+
 ## 🚫 ZERO TOLERANCE POLICY
 
 <table>
