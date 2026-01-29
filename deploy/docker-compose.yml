@@ -75,6 +75,9 @@ services:
       - es
     volumes:
       - ./public/system:/opt/mastodon/public/system
+    # Errordon: Enable host.docker.internal on Linux for Ollama AI
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   streaming:
     build:
@@ -112,6 +115,9 @@ services:
       - ./public/system:/opt/mastodon/public/system
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep '[s]idekiq' || false"]
+    # Errordon: Enable host.docker.internal on Linux for Ollama AI
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # ============================================================================
   # NSFW-PROTECT AI (Optional)
