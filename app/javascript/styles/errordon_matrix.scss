@@ -2955,10 +2955,11 @@ body.theme-matrix {
   }
 
   // =============================================================================
-  // STATUS CARD PLAY BUTTON - Preview cards (hearthis.at, YouTube, etc.)
+  // STATUS CARD PLAY BUTTON - Preview cards (hearthis.at, YouTube, Bandcamp, etc.)
   // =============================================================================
   .status-card__image {
-    .icon {
+    // Direct icon children
+    > .icon {
       color: $matrix-text !important;
       fill: $matrix-text !important;
       background: rgba(0, 0, 0, 0.7) !important;
@@ -2972,17 +2973,52 @@ body.theme-matrix {
         fill: $matrix-text !important;
         color: $matrix-text !important;
       }
+    }
+  }
+  
+  // Status card actions overlay (play button + external link)
+  .status-card__actions {
+    button, a {
+      background: rgba(0, 0, 0, 0.7) !important;
+      color: $matrix-text !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 12px 16px !important;
       
-      &:hover {
-        color: var(--matrix-primary) !important;
-        fill: var(--matrix-primary) !important;
-        box-shadow: 0 0 20px rgba(var(--matrix-primary-rgb), 0.8) !important;
+      .icon {
+        color: $matrix-text !important;
+        fill: $matrix-text !important;
+        width: 24px !important;
+        height: 24px !important;
         
         svg, path {
-          fill: var(--matrix-primary) !important;
-          color: var(--matrix-primary) !important;
+          fill: $matrix-text !important;
+          color: $matrix-text !important;
         }
       }
+      
+      &:hover {
+        background: rgba(var(--matrix-primary-rgb), 0.3) !important;
+        
+        .icon {
+          color: var(--matrix-primary) !important;
+          fill: var(--matrix-primary) !important;
+          
+          svg, path {
+            fill: var(--matrix-primary) !important;
+            color: var(--matrix-primary) !important;
+          }
+        }
+      }
+    }
+    
+    // The container div
+    > div {
+      background: rgba(0, 0, 0, 0.6) !important;
+      border-radius: 8px !important;
+      padding: 4px !important;
+      gap: 8px !important;
+      display: flex !important;
     }
   }
   
