@@ -16,7 +16,9 @@ import BookmarksActiveIcon from '@/material-icons/400-24px/bookmarks-fill.svg?re
 import BookmarksIcon from '@/material-icons/400-24px/bookmarks.svg?react';
 import HomeActiveIcon from '@/material-icons/400-24px/home-fill.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home.svg?react';
+import GavelIcon from '@/material-icons/400-24px/gavel.svg?react';
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
+import LockIcon from '@/material-icons/400-24px/lock.svg?react';
 import NotificationsActiveIcon from '@/material-icons/400-24px/notifications-fill.svg?react';
 import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
 import PersonAddActiveIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
@@ -79,6 +81,8 @@ const messages = defineMessages({
     defaultMessage: 'Follows and followers',
   },
   about: { id: 'navigation_bar.about', defaultMessage: 'About' },
+  termsOfService: { id: 'navigation_bar.terms_of_service', defaultMessage: 'Terms of Service' },
+  privacyPolicy: { id: 'navigation_bar.privacy_policy', defaultMessage: 'Privacy Policy' },
   search: { id: 'navigation_bar.search', defaultMessage: 'Search' },
   searchTrends: {
     id: 'navigation_bar.search_trends',
@@ -346,9 +350,23 @@ export const NavigationPanel: React.FC<{ multiColumn?: boolean }> = ({
           <ColumnLink
             transparent
             to='/about'
-            icon='ellipsis-h'
+            icon='info'
             iconComponent={InfoIcon}
             text={intl.formatMessage(messages.about)}
+          />
+          <ColumnLink
+            transparent
+            to='/privacy-policy'
+            icon='lock'
+            iconComponent={LockIcon}
+            text={intl.formatMessage(messages.privacyPolicy)}
+          />
+          <ColumnLink
+            transparent
+            to='/terms-of-service'
+            icon='gavel'
+            iconComponent={GavelIcon}
+            text={intl.formatMessage(messages.termsOfService)}
           />
         </div>
 
