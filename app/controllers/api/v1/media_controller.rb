@@ -12,6 +12,10 @@ class Api::V1::MediaController < Api::BaseController
 
   def create
     @media_attachment = current_account.media_attachments.create!(media_attachment_params)
+    
+    # Errordon: Queue NSFW check if enabled
+    enqueue_nsfw_check(@media_attachment)
+    
     render json: @media_attachment, serializer: REST::MediaAttachmentSerializer
   rescue Paperclip::Errors::NotIdentifiedByImageMagickError
     render json: file_type_error, status: 422
@@ -66,5 +70,21 @@ class Api::V1::MediaController < Api::BaseController
 
   def in_usage_error
     { error: 'Media attachment is currently used by a status' }
+  end
+
+  # Errordon: NSFW-Protect AI check
+  def enqueue_nsfw_check(media_attachment)
+    return unless defined?(NsfwProtectConfig) && NsfwProtectConfig.enabled?
+    return unless media_attachment.image? || media_attachment.video?
+    
+    # Get client IP for audit logging
+    ip_address = request.remote_ip
+    
+    # Queue the NSFW check as a background job
+    Errordon::NsfwCheckWorker.perform_async(media_attachment.id, ip_address)
+    Rails.logger.info "[NSFW-Protect] Queued check for media #{media_attachment.id}"
+  rescue StandardError => e
+    # Don't block upload if NSFW check fails to queue
+    Rails.logger.error "[NSFW-Protect] Failed to queue check: #{e.message}"
   end
 end
