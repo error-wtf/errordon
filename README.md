@@ -71,7 +71,8 @@ Errordon includes a revolutionary **AI-powered content moderation system** that 
 It is optionional - you can install with or with out. The deploy scripts let you choose. But I thought Porn-Filter would be a need.
 
 Here some Thoughts about the wide Range of AI-Usecases - from helping handicaped people to masssurveilance and masskilling weapons.
-A demand to look closer and not stay shortminded: https://hearthis.at/lino.casu/ai-lino/
+
+A call to look closer and not stay shortminded: https://hearthis.at/lino.casu/ai-lino/
 
 ### How It Works
 
