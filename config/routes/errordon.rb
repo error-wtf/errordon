@@ -45,12 +45,15 @@ namespace :api do
         post 'send_weekly_summary', to: 'nsfw_protect#send_weekly_summary'
       end
 
-      # GDPR/DSGVO Compliance
+      # GDPR/DSGVO Self-Service Compliance
       namespace :gdpr do
-        get 'export', to: 'gdpr#export'           # Art. 15 DSGVO
-        delete 'delete', to: 'gdpr#delete'        # Art. 17 DSGVO
-        get 'info', to: 'gdpr#info'               # Datenschutzinfos
-        get 'retention', to: 'gdpr#retention'     # Aufbewahrungsfristen
+        get 'status', to: 'gdpr#status'           # Current GDPR status
+        get 'data', to: 'gdpr#data'               # Art. 15 - Right of Access
+        post 'delete', to: 'gdpr#delete'          # Art. 17 - Right to Erasure
+        post 'cancel', to: 'gdpr#cancel'          # Cancel deletion request
+        get 'export', to: 'gdpr#export'           # Art. 20 - Data Portability
+        get 'info', to: 'gdpr#info'               # Privacy information
+        get 'retention', to: 'gdpr#retention'     # Data retention periods
       end
 
       # Invite codes

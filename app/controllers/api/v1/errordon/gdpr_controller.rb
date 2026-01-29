@@ -1,167 +1,169 @@
 # frozen_string_literal: true
 
-class Api::V1::Errordon::GdprController < Api::BaseController
-  before_action :require_user!
+module Api
+  module V1
+    module Errordon
+      # =============================================================================
+      # GDPR SELF-SERVICE API
+      # =============================================================================
+      #
+      # Provides GDPR Article 15-22 self-service endpoints:
+      # - GET  /api/v1/errordon/gdpr/status    - Check deletion status
+      # - GET  /api/v1/errordon/gdpr/data      - Request data summary
+      # - POST /api/v1/errordon/gdpr/delete    - Request deletion
+      # - POST /api/v1/errordon/gdpr/cancel    - Cancel deletion request
+      #
+      # All endpoints require authentication and rate limiting for security.
+      # =============================================================================
 
-  # GET /api/v1/errordon/gdpr/export
-  # Art. 15 DSGVO: Auskunftsrecht
-  # Exportiert alle personenbezogenen Daten des Nutzers
-  def export
-    export_data = Errordon::GdprComplianceService.export_user_data(current_account.id)
-    
-    render json: {
-      success: true,
-      legal_notice: {
-        right: 'Art. 15 DSGVO - Auskunftsrecht',
-        description: 'Sie haben das Recht, Auskunft über Ihre gespeicherten personenbezogenen Daten zu erhalten.',
-        contact: 'datenschutz@' + Rails.configuration.x.local_domain
-      },
-      data: export_data
-    }
-  end
+      class GdprController < Api::BaseController
+        before_action :require_user!
+        before_action :set_account
 
-  # DELETE /api/v1/errordon/gdpr/delete
-  # Art. 17 DSGVO: Recht auf Löschung ("Recht auf Vergessenwerden")
-  def delete
-    # Prüfe ob Account gelöscht werden kann
-    if current_account.nsfw_protect_strikes.where(strike_type: :csam).exists?
-      return render json: {
-        success: false,
-        error: 'account_under_investigation',
-        message: 'Ihr Account enthält Daten, die aufgrund gesetzlicher Pflichten (§184b StGB) ' \
-                 'aufbewahrt werden müssen. Kontaktieren Sie den Datenschutzbeauftragten.',
-        legal_basis: 'Art. 17 Abs. 3 lit. b DSGVO - Rechtliche Verpflichtung',
-        contact: 'datenschutz@' + Rails.configuration.x.local_domain
-      }, status: :forbidden
+        # Rate limiting for security (prevent abuse)
+        RATE_LIMIT_REQUESTS = 5
+        RATE_LIMIT_PERIOD = 1.hour
+
+        # GET /api/v1/errordon/gdpr/status
+        # Returns current GDPR status (deletion pending, data stats, etc.)
+        def status
+          render json: {
+            account_id: @account.id,
+            username: @account.username,
+            gdpr_rights: gdpr_rights_info,
+            deletion_status: ::Errordon::GdprDeletionService.deletion_status(@account),
+            data_summary: data_summary
+          }
+        end
+
+        # GET /api/v1/errordon/gdpr/data
+        # Returns summary of stored personal data (GDPR Art. 15)
+        def data
+          render json: {
+            article: 'GDPR Article 15 - Right of Access',
+            account: account_data,
+            statistics: data_statistics,
+            export_available: true,
+            export_url: '/settings/exports'
+          }
+        end
+
+        # POST /api/v1/errordon/gdpr/delete
+        # Request account deletion (GDPR Art. 17)
+        def delete
+          # Verify password for security
+          unless valid_password?
+            render json: { error: 'Invalid password' }, status: :unauthorized
+            return
+          end
+
+          result = ::Errordon::GdprDeletionService.request_deletion(
+            @account,
+            request_ip: request.remote_ip,
+            reason: params[:reason]
+          )
+
+          if result[:success]
+            sign_out current_user
+            render json: {
+              success: true,
+              message: 'Account deletion scheduled',
+              audit_id: result[:audit_id],
+              due_date: result[:due_date],
+              article: 'GDPR Article 17 - Right to Erasure'
+            }
+          else
+            render json: { error: result[:error] }, status: :unprocessable_entity
+          end
+        end
+
+        # POST /api/v1/errordon/gdpr/cancel
+        # Cancel pending deletion (within grace period)
+        def cancel
+          result = ::Errordon::GdprDeletionService.cancel_deletion(@account)
+
+          if result[:success]
+            render json: {
+              success: true,
+              message: 'Deletion cancelled',
+              account_status: 'active'
+            }
+          else
+            render json: { error: result[:error] }, status: :unprocessable_entity
+          end
+        end
+
+        private
+
+        def set_account
+          @account = current_user.account
+        end
+
+        def valid_password?
+          return true if current_user.encrypted_password.blank?
+
+          current_user.valid_password?(params[:password])
+        end
+
+        def gdpr_rights_info
+          {
+            right_of_access: {
+              article: 15,
+              description: 'You can request a copy of all your personal data',
+              endpoint: '/settings/exports'
+            },
+            right_to_rectification: {
+              article: 16,
+              description: 'You can correct your personal data',
+              endpoint: '/settings/profile'
+            },
+            right_to_erasure: {
+              article: 17,
+              description: 'You can request deletion of your account',
+              endpoint: '/settings/delete',
+              processing_time: '30 days'
+            },
+            right_to_data_portability: {
+              article: 20,
+              description: 'You can export your data in machine-readable format',
+              endpoint: '/settings/exports'
+            }
+          }
+        end
+
+        def data_summary
+          {
+            statuses: @account.statuses.count,
+            media_attachments: @account.media_attachments.count,
+            followers: @account.followers.count,
+            following: @account.following.count,
+            account_age_days: (Date.current - @account.created_at.to_date).to_i
+          }
+        end
+
+        def account_data
+          {
+            username: @account.username,
+            display_name: @account.display_name,
+            email: current_user.email,
+            created_at: @account.created_at,
+            last_sign_in: current_user.last_sign_in_at,
+            locale: current_user.locale
+          }
+        end
+
+        def data_statistics
+          {
+            statuses_count: @account.statuses.count,
+            media_attachments_count: @account.media_attachments.count,
+            media_storage_bytes: @account.media_attachments.sum(:file_file_size),
+            followers_count: @account.followers.count,
+            following_count: @account.following.count,
+            favourites_count: Favourite.where(account: @account).count,
+            bookmarks_count: Bookmark.where(account: @account).count
+          }
+        end
+      end
     end
-
-    result = Errordon::GdprComplianceService.delete_user_data(
-      current_account.id,
-      preserve_for_investigation: false
-    )
-
-    render json: {
-      success: true,
-      legal_notice: {
-        right: 'Art. 17 DSGVO - Recht auf Löschung',
-        description: 'Ihre personenbezogenen Daten wurden gemäß Ihrem Antrag gelöscht oder anonymisiert.'
-      },
-      deleted_items: result[:items_deleted],
-      timestamp: result[:timestamp]
-    }
-  end
-
-  # GET /api/v1/errordon/gdpr/info
-  # Informationen über Datenverarbeitung
-  def info
-    render json: {
-      data_controller: {
-        name: Setting.site_title,
-        domain: Rails.configuration.x.local_domain,
-        contact: 'datenschutz@' + Rails.configuration.x.local_domain
-      },
-      
-      data_processing: {
-        content_moderation: {
-          purpose: 'Automatische Erkennung illegaler Inhalte (Pornografie, Hassrede, CSAM)',
-          legal_basis: 'Art. 6 Abs. 1 lit. f DSGVO (Berechtigtes Interesse)',
-          retention: '1 Jahr für reguläre Verstöße',
-          categories: ['IP-Adresse', 'Hochgeladene Medien', 'KI-Analyse-Ergebnisse']
-        },
-        
-        csam_reporting: {
-          purpose: 'Meldung von Kindesmissbrauchsdarstellungen an Strafverfolgungsbehörden',
-          legal_basis: 'Art. 6 Abs. 1 lit. c DSGVO (Rechtliche Verpflichtung nach §184b StGB)',
-          retention: '5 Jahre (gesetzliche Aufbewahrungspflicht)',
-          categories: ['IP-Adresse', 'Account-Daten', 'Beweismaterial']
-        },
-        
-        security_logging: {
-          purpose: 'Schutz der Plattform vor Missbrauch und Angriffen',
-          legal_basis: 'Art. 6 Abs. 1 lit. f DSGVO (Berechtigtes Interesse)',
-          retention: '7 Tage für IP-Adressen',
-          categories: ['IP-Adresse', 'User-Agent', 'Zeitstempel']
-        }
-      },
-
-      your_rights: {
-        access: {
-          article: 'Art. 15 DSGVO',
-          description: 'Auskunft über gespeicherte Daten',
-          endpoint: '/api/v1/errordon/gdpr/export'
-        },
-        erasure: {
-          article: 'Art. 17 DSGVO',
-          description: 'Löschung Ihrer personenbezogenen Daten',
-          endpoint: '/api/v1/errordon/gdpr/delete',
-          limitations: 'Ausgenommen bei rechtlicher Aufbewahrungspflicht'
-        },
-        rectification: {
-          article: 'Art. 16 DSGVO',
-          description: 'Berichtigung unrichtiger Daten',
-          contact: 'datenschutz@' + Rails.configuration.x.local_domain
-        },
-        restriction: {
-          article: 'Art. 18 DSGVO',
-          description: 'Einschränkung der Verarbeitung',
-          contact: 'datenschutz@' + Rails.configuration.x.local_domain
-        },
-        portability: {
-          article: 'Art. 20 DSGVO',
-          description: 'Datenübertragbarkeit',
-          endpoint: '/api/v1/errordon/gdpr/export'
-        },
-        complaint: {
-          article: 'Art. 77 DSGVO',
-          description: 'Beschwerderecht bei der Aufsichtsbehörde',
-          authority: 'Landesbeauftragte/r für Datenschutz Ihres Bundeslandes'
-        }
-      },
-
-      retention_periods: Errordon::GdprComplianceService::RETENTION_PERIODS.transform_values do |v|
-        v.nil? ? 'unbegrenzt (anonymisiert)' : "#{v.to_i / 1.day} Tage"
-      end,
-
-      automated_decisions: {
-        ai_moderation: {
-          exists: true,
-          description: 'Automatische Analyse hochgeladener Inhalte mittels KI',
-          impact: 'Kann zur Sperrung des Accounts führen',
-          human_review: 'Bei allen automatischen Entscheidungen ist eine manuelle Überprüfung möglich',
-          contest: 'Widerspruch per E-Mail an datenschutz@' + Rails.configuration.x.local_domain
-        }
-      }
-    }
-  end
-
-  # GET /api/v1/errordon/gdpr/retention
-  # Zeigt Aufbewahrungsfristen für den aktuellen Account
-  def retention
-    account = current_account
-    
-    strikes_info = account.nsfw_protect_strikes.map do |strike|
-      retention_end = strike.strike_type&.to_sym == :csam ?
-        strike.created_at + Errordon::GdprComplianceService::RETENTION_PERIODS[:csam_data] :
-        strike.created_at + Errordon::GdprComplianceService::RETENTION_PERIODS[:regular_strikes]
-      
-      {
-        id: strike.id,
-        type: strike.strike_type,
-        created_at: strike.created_at.iso8601,
-        data_deletion_date: retention_end.iso8601,
-        ip_anonymization_date: (strike.created_at + Errordon::GdprComplianceService::RETENTION_PERIODS[:ip_addresses]).iso8601,
-        ip_already_anonymized: strike.ip_address.nil?
-      }
-    end
-
-    render json: {
-      account_id: account.id,
-      strikes: strikes_info,
-      ip_retention_policy: {
-        duration_days: Errordon::GdprComplianceService::RETENTION_PERIODS[:ip_addresses].to_i / 1.day,
-        description: 'IP-Adressen werden nach 7 Tagen automatisch anonymisiert'
-      },
-      next_cleanup: '04:00 UTC täglich'
-    }
   end
 end
