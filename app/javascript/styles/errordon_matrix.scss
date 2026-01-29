@@ -2158,11 +2158,99 @@ body.theme-matrix {
     }
   }
   
-  // Inline follow suggestions (can have light backgrounds)
+  // =============================================================================
+  // INLINE FOLLOW SUGGESTIONS ("Wem folgen?" cards)
+  // =============================================================================
   .inline-follow-suggestions,
   .follow-recommendations {
     background: rgba(0, 0, 0, 0.85) !important;
     border-color: var(--matrix-primary-dark) !important;
+    
+    // Header text
+    &__header {
+      h3 {
+        color: var(--matrix-primary) !important;
+      }
+      
+      .link-button {
+        color: var(--matrix-primary) !important;
+        
+        &:hover {
+          color: $matrix-text !important;
+        }
+      }
+    }
+    
+    // Individual suggestion cards
+    &__body__scrollable__card {
+      background: rgba(0, 0, 0, 0.9) !important;
+      border: 1px solid rgba(var(--matrix-primary-rgb), 0.4) !important;
+      
+      &:hover {
+        border-color: var(--matrix-primary) !important;
+        box-shadow: 0 0 10px rgba(var(--matrix-primary-rgb), 0.3) !important;
+      }
+      
+      // Close/dismiss button
+      > .icon-button {
+        color: var(--matrix-primary) !important;
+        
+        &:hover {
+          color: $matrix-text !important;
+        }
+      }
+      
+      // Avatar border
+      .account__avatar {
+        border-color: rgba(var(--matrix-primary-rgb), 0.3) !important;
+        background-color: rgba(0, 0, 0, 0.8) !important;
+      }
+      
+      // Display name
+      &__text-stack {
+        .display-name__html {
+          color: $matrix-text !important;
+        }
+        
+        .display-name__account {
+          color: var(--matrix-primary) !important;
+        }
+        
+        &__source {
+          color: rgba(var(--matrix-primary-rgb), 0.6) !important;
+        }
+      }
+      
+      // Follow button
+      button, .button {
+        background: var(--matrix-primary) !important;
+        color: #000 !important;
+        border: none !important;
+        
+        &:hover {
+          background: var(--matrix-primary-light) !important;
+          box-shadow: 0 0 10px rgba(var(--matrix-primary-rgb), 0.5) !important;
+        }
+      }
+    }
+    
+    // Scroll buttons
+    &__body__scroll-button {
+      &__icon {
+        background: var(--matrix-primary) !important;
+        color: #000 !important;
+      }
+    }
+  }
+  
+  // Explore suggestions card (alternative layout)
+  .explore-suggestions-card {
+    background: rgba(0, 0, 0, 0.85) !important;
+    border-color: var(--matrix-primary-dark) !important;
+    
+    &__source {
+      color: rgba(var(--matrix-primary-rgb), 0.6) !important;
+    }
   }
   
   // Generic pills and tags
