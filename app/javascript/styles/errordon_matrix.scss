@@ -2118,6 +2118,32 @@ body.theme-matrix {
     }
   }
   
+  // =============================================================================
+  // MEDIA FILTER BAR - Matrix style for Originals/Public/Alt text filters
+  // =============================================================================
+  .media-filter-bar {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 1px solid rgba(var(--matrix-primary-rgb), 0.3) !important;
+    
+    .filter-chip {
+      background: rgba(0, 0, 0, 0.8) !important;
+      color: var(--matrix-primary) !important;
+      border: 1px solid rgba(var(--matrix-primary-rgb), 0.4) !important;
+      
+      &:hover {
+        background: rgba(var(--matrix-primary-rgb), 0.15) !important;
+        border-color: var(--matrix-primary) !important;
+      }
+      
+      &.active {
+        background: var(--matrix-primary) !important;
+        color: #000 !important;
+        border-color: var(--matrix-primary) !important;
+        box-shadow: 0 0 10px rgba(var(--matrix-primary-rgb), 0.5);
+      }
+    }
+  }
+  
   // Story thumbnails (can appear in media views)
   .story__thumbnail {
     background: rgba(0, 0, 0, 0.8) !important;
