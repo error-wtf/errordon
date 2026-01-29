@@ -142,8 +142,21 @@ class FetchLinkCardService < BaseService
       @card.html             = Sanitize.fragment(embed[:html], Sanitize::Config::MASTODON_OEMBED)
       @card.image_remote_url = (url + embed[:thumbnail_url]).to_s if embed[:thumbnail_url].present?
     when 'rich'
-      # Most providers rely on <script> tags, which is a no-no
-      return false
+      # Errordon: Allow rich embeds that only contain iframes (no scripts)
+      # This enables providers like hearthis.at, Bandcamp, etc.
+      sanitized_html = Sanitize.fragment(embed[:html], Sanitize::Config::MASTODON_OEMBED)
+      
+      # Only accept if sanitized HTML contains an iframe (script tags are stripped by sanitizer)
+      if sanitized_html.present? && sanitized_html.include?('<iframe')
+        @card.type             = 'video' # Treat as video for frontend compatibility
+        @card.width            = embed[:width].presence  || 0
+        @card.height           = embed[:height].presence || 0
+        @card.html             = sanitized_html
+        @card.image_remote_url = (url + embed[:thumbnail_url]).to_s if embed[:thumbnail_url].present?
+      else
+        # Reject rich embeds that rely on scripts
+        return false
+      end
     end
 
     @card.save_with_optional_image!
