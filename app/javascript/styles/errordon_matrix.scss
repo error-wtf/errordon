@@ -2954,6 +2954,38 @@ body.theme-matrix {
     }
   }
 
+  // =============================================================================
+  // STATUS CARD PLAY BUTTON - Preview cards (hearthis.at, YouTube, etc.)
+  // =============================================================================
+  .status-card__image {
+    .icon {
+      color: $matrix-text !important;
+      fill: $matrix-text !important;
+      background: rgba(0, 0, 0, 0.7) !important;
+      border-radius: 50% !important;
+      padding: 8px !important;
+      width: 36px !important;
+      height: 36px !important;
+      box-shadow: 0 0 15px rgba(var(--matrix-primary-rgb), 0.5) !important;
+      
+      svg, path {
+        fill: $matrix-text !important;
+        color: $matrix-text !important;
+      }
+      
+      &:hover {
+        color: var(--matrix-primary) !important;
+        fill: var(--matrix-primary) !important;
+        box-shadow: 0 0 20px rgba(var(--matrix-primary-rgb), 0.8) !important;
+        
+        svg, path {
+          fill: var(--matrix-primary) !important;
+          color: var(--matrix-primary) !important;
+        }
+      }
+    }
+  }
+  
   // Ultimate fallback - target by computed light colors
   // These use !important to override any inline styles
   .status-card,
