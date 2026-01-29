@@ -344,16 +344,40 @@ errordon/
 
 ## 📖 Documentation
 
+### Getting Started
+
 | Document | Description |
 |----------|-------------|
-| [NSFW_PROTECT_ARCHITECTURE.md](docs/NSFW_PROTECT_ARCHITECTURE.md) | Technical details of AI moderation |
+| [🚀 Deployment Guide](docs/DEPLOYMENT.md) | Complete production deployment |
+| [📚 Tutorials](docs/TUTORIALS.md) | Step-by-step guides |
+| [⚙️ Configuration](docs/CONFIGURATION.md) | All environment variables |
+| [🔧 Troubleshooting](docs/TROUBLESHOOTING.md) | Common issues & solutions |
+
+### Technical Documentation
+
+| Document | Description |
+|----------|-------------|
+| [NSFW_PROTECT_ARCHITECTURE.md](docs/NSFW_PROTECT_ARCHITECTURE.md) | AI moderation system details |
 | [STORAGE_QUOTA.md](docs/STORAGE_QUOTA.md) | Dynamic disk-based quotas |
 | [GDPR_COMPLIANCE.md](docs/GDPR_COMPLIANCE.md) | Data retention & privacy |
 | [VIDEO_CLEANUP.md](docs/VIDEO_CLEANUP.md) | Auto video shrinking |
 | [TRANSCODING_PIPELINE.md](docs/TRANSCODING_PIPELINE.md) | Media transcoding |
+| [SECURITY.md](docs/SECURITY.md) | Security best practices |
+
+### Legal Documents
+
+| Document | Description |
+|----------|-------------|
 | [Terms of Service](public/terms_of_service.md) | Legal terms (DE/EN) |
 | [Privacy Policy](public/privacy_policy.md) | DSGVO/GDPR compliant |
 | [Community Guidelines](public/community_guidelines.md) | Rules with legal references |
+
+### Contributing
+
+| Document | Description |
+|----------|-------------|
+| [Contributing Guide](docs/CONTRIBUTING.md) | How to contribute |
+| [Changelog](docs/CHANGELOG.md) | Version history & changes |
 
 ---
 
