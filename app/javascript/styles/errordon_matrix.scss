@@ -1412,6 +1412,75 @@ body.theme-matrix {
     border-color: var(--matrix-primary-dark) !important;
   }
 
+  // =============================================================================
+  // HOVER CARD (Profile Popup)
+  // =============================================================================
+  .hover-card {
+    background: rgba(0, 0, 0, 0.95) !important;
+    border: 1px solid var(--matrix-primary) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 20px rgba(var(--matrix-primary-rgb), 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+
+    &__name {
+      color: $matrix-text !important;
+      
+      .display-name {
+        color: $matrix-text !important;
+        
+        &__account {
+          color: var(--matrix-primary) !important;
+        }
+      }
+    }
+
+    &__numbers {
+      color: $matrix-text !important;
+      
+      strong {
+        color: var(--matrix-primary) !important;
+      }
+      
+      span {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
+    }
+
+    &__bio {
+      color: rgba(255, 255, 255, 0.85) !important;
+      
+      a {
+        color: var(--matrix-primary) !important;
+      }
+    }
+
+    &__familiar-followers {
+      color: rgba(255, 255, 255, 0.7) !important;
+      
+      a {
+        color: var(--matrix-primary) !important;
+      }
+    }
+
+    // Follow button in hover card
+    .button {
+      background: transparent !important;
+      border: 1px solid var(--matrix-primary) !important;
+      color: var(--matrix-primary) !important;
+      
+      &:hover {
+        background: var(--matrix-primary) !important;
+        color: $matrix-black !important;
+      }
+    }
+  }
+
+  // Hover card controller
+  .hover-card-controller {
+    z-index: 9999 !important;
+  }
+
   // --- ALERTS & NOTIFICATIONS ---
   .flash-message,
   .alert,
