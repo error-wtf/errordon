@@ -19,6 +19,12 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
     reset_session
     session.update old_session_values.except('session_id')
 
+    # Errordon: Auto-sign in user after confirmation
+    if @confirmation_user && !@confirmation_user.confirmed?
+      # User will be confirmed by Devise's super call
+      # We'll sign them in via after_confirmation_path_for
+    end
+
     super
   end
 
@@ -85,11 +91,32 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
   end
 
   def after_confirmation_path_for(_resource_name, user)
+    # Errordon: Auto-sign in user after email confirmation
+    # This ensures users are logged in immediately after confirming their email
+    if user.approved? && !user_signed_in?
+      sign_in(user)
+      flash[:notice] = I18n.t('devise.confirmations.confirmed_and_signed_in', default: 'Your email has been confirmed. You are now signed in!')
+      return web_url('start')
+    end
+
+    # Original behavior for app redirects (only if explicitly requested AND user came from app)
     if user.created_by_application && redirect_to_app?
-      user.created_by_application.confirmation_redirect_uri
-    elsif user_signed_in?
+      # Try app redirect, but provide fallback
+      app_uri = user.created_by_application.confirmation_redirect_uri
+      if app_uri.present?
+        return app_uri
+      end
+    end
+
+    # Fallback: redirect to web interface
+    if user_signed_in?
+      web_url('start')
+    elsif user.approved?
+      # Sign in and redirect
+      sign_in(user)
       web_url('start')
     else
+      # User needs approval
       new_user_session_path
     end
   end
