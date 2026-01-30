@@ -7,9 +7,15 @@
 // ============================================================================
 
 // =============================================================================
-// CRITICAL FIX: Ensure ALL images are ALWAYS visible
+// CRITICAL FIX: Disable lazy loading - show ALL images IMMEDIATELY
 // This MUST be at the top for highest priority
 // =============================================================================
+
+// Override Mastodon's lazy loading (images hidden until .loaded class added)
+.image img,
+.image:not(.loaded) img {
+  opacity: 1 !important;
+}
 
 // Fix for images in posts/feed
 .media-gallery img,
@@ -22,10 +28,12 @@
   opacity: 1 !important;
 }
 
-// Fix for images in modals
+// Fix for images in modals - show immediately on first click
 .media-modal,
 .image-modal,
 .video-modal {
+  .image img,
+  .image:not(.loaded) img,
   .zoomable-image,
   .zoomable-image img,
   .media-modal__content,
@@ -41,7 +49,8 @@
 [class*="modal"] img,
 [role="dialog"] img,
 [class*="gallery"] img,
-[class*="thumbnail"] img {
+[class*="thumbnail"] img,
+.image img {
   visibility: visible !important;
   opacity: 1 !important;
 }
