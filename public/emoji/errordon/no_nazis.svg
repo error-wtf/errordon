@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- White background circle -->
-  <circle cx="256" cy="256" r="240" fill="#ffffff"/>
+  <!-- White background -->
+  <circle cx="256" cy="256" r="250" fill="#ffffff"/>
   
-  <!-- Red circle border -->
-  <circle cx="256" cy="256" r="240" fill="none" stroke="#cc0000" stroke-width="32"/>
+  <!-- Red outer ring -->
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#dd0000" stroke-width="32"/>
   
-  <!-- Swastika (to be crossed out) -->
-  <g fill="#000000">
-    <rect x="232" y="136" width="48" height="240"/>
-    <rect x="136" y="232" width="240" height="48"/>
-    <rect x="232" y="136" width="96" height="48"/>
-    <rect x="184" y="328" width="96" height="48"/>
-    <rect x="136" y="184" width="48" height="96"/>
-    <rect x="328" y="232" width="48" height="96"/>
+  <!-- Swastika (small, gray) -->
+  <g fill="#444444" transform="translate(256,256)">
+    <rect x="-16" y="-80" width="32" height="160"/>
+    <rect x="-80" y="-16" width="160" height="32"/>
+    <rect x="16" y="-80" width="48" height="32"/>
+    <rect x="-64" y="48" width="48" height="32"/>
+    <rect x="-80" y="-64" width="32" height="48"/>
+    <rect x="48" y="16" width="32" height="48"/>
   </g>
   
-  <!-- Red diagonal strike-through -->
-  <line x1="64" y1="448" x2="448" y2="64" stroke="#cc0000" stroke-width="48" stroke-linecap="round"/>
+  <!-- Red strike-through line -->
+  <line x1="72" y1="440" x2="440" y2="72" stroke="#dd0000" stroke-width="48" stroke-linecap="round"/>
 </svg>
