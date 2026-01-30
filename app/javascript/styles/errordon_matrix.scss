@@ -29,16 +29,22 @@
 }
 
 // =============================================================================
-// MEDIA MODAL - 100% VISIBLE, NO DARKENING
+// MEDIA MODAL - 100% VISIBLE, NO DARKENING!
 // Images/videos only hidden when user clicks "Ausblenden"
 // =============================================================================
 .media-modal,
 .image-modal,
 .video-modal,
 .audio-modal {
-  background: #000 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   
-  // ALL images fully visible
+  // ALL content fully visible
+  &, * {
+    filter: none !important;
+  }
+  
   .image,
   .image img,
   .image:not(.loaded) img,
@@ -46,11 +52,13 @@
   .zoomable-image img,
   .media-modal__content,
   .media-modal__content img,
+  canvas,
   img {
     visibility: visible !important;
     opacity: 1 !important;
     display: block !important;
     filter: none !important;
+    background: transparent !important;
   }
   
   // Video player - fully visible
@@ -70,29 +78,36 @@
     background: #000 !important;
   }
   
-  // Remove ANY overlay
+  // Remove ANY overlay/preview that might darken
   &::before,
   &::after,
   .media-modal__overlay,
   .image__preview {
     display: none !important;
     opacity: 0 !important;
+    visibility: hidden !important;
   }
 }
 
-// Modal background - solid black
+// Modal overlay - solid black background ONLY
 .modal-root__overlay {
   background: #000 !important;
 }
 
-// Ensure modal content is never darkened
-.modal-root__container .media-modal,
-.modal-root__container .image-modal,
-.modal-root__container .video-modal {
-  img, video, .video-player {
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: none !important;
+// Media modal container - no extra styling
+.modal-root__container {
+  .media-modal,
+  .image-modal,
+  .video-modal,
+  .audio-modal {
+    background: transparent !important;
+    border: none !important;
+    
+    img, video, canvas, .video-player, .zoomable-image {
+      opacity: 1 !important;
+      visibility: visible !important;
+      filter: none !important;
+    }
   }
 }
 
@@ -480,16 +495,22 @@ body.theme-matrix {
 // ============================================================================
 
 body.theme-matrix {
-  .modal-root__overlay { background: rgba(0, 0, 0, 0.95); }
+  .modal-root__overlay { background: #000 !important; }
   
-  // Media modal - 100% visible, NEVER darkened
+  // Media modal - 100% visible, NEVER darkened!
   .media-modal,
   .image-modal,
   .video-modal,
   .audio-modal {
-    background: #000 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     
-    img, video, audio,
+    &, * {
+      filter: none !important;
+    }
+    
+    img, video, audio, canvas,
     .image,
     .zoomable-image,
     .video-player,
@@ -501,9 +522,8 @@ body.theme-matrix {
       background: transparent !important;
     }
     
-    // Hide any preview/blur overlays
-    .image__preview,
-    canvas {
+    // Hide preview overlays but NOT canvas (needed for image display)
+    .image__preview {
       display: none !important;
     }
   }
@@ -1424,8 +1444,8 @@ body.theme-matrix {
   }
 
   // --- MODALS & POPUPS (Comprehensive) ---
-  .modal-root__modal,
-  .modal-root__container,
+  // NOTE: media-modal, video-modal, audio-modal, image-modal EXCLUDED - need transparent bg for images!
+  .modal-root__modal:not(.media-modal):not(.image-modal):not(.video-modal):not(.audio-modal),
   .compose-modal,
   .confirmation-modal,
   .confirmation-modal__container,
@@ -1437,7 +1457,6 @@ body.theme-matrix {
   .embed-modal,
   .list-editor,
   .focal-point-modal,
-  .media-modal,
   .boost-modal,
   .favourite-modal,
   .doodle-modal,
@@ -1452,16 +1471,9 @@ body.theme-matrix {
   .onboarding-modal,
   .error-modal,
   .loading-modal,
-  .video-modal,
-  .audio-modal,
-  .image-modal,
   .alttext-modal,
   .alt-text-modal,
-  .media-modal__close,
-  .dialog-modal,
-  [role="dialog"],
-  [role="alertdialog"],
-  .ReactModal__Content {
+  .dialog-modal {
     background: rgba(10, 10, 10, 0.98) !important;
     color: $matrix-text !important;
     border: 1px solid var(--matrix-primary-dark) !important;
@@ -1496,13 +1508,21 @@ body.theme-matrix {
   }
 
   .modal-root__overlay {
-    background: rgba(0, 0, 0, 0.85) !important;
+    background: #000 !important;
   }
 
-  // Media modal - ensure images are visible
-  .media-modal {
+  // Media modal - 100% visible!
+  .media-modal,
+  .image-modal,
+  .video-modal,
+  .audio-modal {
     background: transparent !important;
     border: none !important;
+    box-shadow: none !important;
+    
+    &, * {
+      filter: none !important;
+    }
     
     .zoomable-image {
       display: flex !important;
@@ -1510,6 +1530,7 @@ body.theme-matrix {
       justify-content: center !important;
       width: 100% !important;
       height: 100% !important;
+      background: transparent !important;
       
       img {
         max-width: 100% !important;
@@ -1517,29 +1538,14 @@ body.theme-matrix {
         object-fit: contain !important;
         visibility: visible !important;
         opacity: 1 !important;
+        filter: none !important;
       }
     }
     
-    canvas {
+    canvas, img, video, audio {
       visibility: visible !important;
       opacity: 1 !important;
-    }
-    
-    img {
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-  }
-  
-  .image-modal,
-  .video-modal,
-  .audio-modal {
-    background: transparent !important;
-    border: none !important;
-    
-    img, video, audio {
-      visibility: visible !important;
-      opacity: 1 !important;
+      filter: none !important;
     }
   }
   
