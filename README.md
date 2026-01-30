@@ -408,15 +408,20 @@ This software is for you if:
 
 ## 📜 License
 
-**AGPLv3** - Compatible with Mastodon's license.
+**Code:** [Anti-Capitalist Software License 1.4](https://anticapitalist.software/) - Compatible with Mastodon's AGPL license.
 
-All Errordon additions are also AGPLv3.
+**Emojis:**
+- **OpenMoji** (tech emojis): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) - https://openmoji.org
+- **Political emojis** (acab, antifa, fcknzs, etc.): Custom designs, free to use
+
+> OpenMoji emojis by the OpenMoji project (https://openmoji.org). License: CC BY-SA 4.0
 
 ---
 
 ## 🔗 Links
 
 - [Mastodon](https://github.com/mastodon/mastodon) - Upstream project
+- [OpenMoji](https://openmoji.org) - Open source emoji library (CC BY-SA 4.0)
 - [Ollama](https://ollama.com/) - AI backend for NSFW-Protect
 - [German Criminal Code (StGB)](https://www.gesetze-im-internet.de/stgb/) - Legal framework
 
