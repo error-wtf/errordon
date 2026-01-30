@@ -28,10 +28,14 @@
   opacity: 1 !important;
 }
 
-// Fix for images in modals - show immediately on first click
+// Fix for media in modals - show immediately on first click
+// NO overlay, NO opacity reduction - just pure black background + content
 .media-modal,
 .image-modal,
-.video-modal {
+.video-modal,
+.audio-modal {
+  background: #000 !important;
+  
   .image img,
   .image:not(.loaded) img,
   .zoomable-image,
@@ -43,6 +47,33 @@
     opacity: 1 !important;
     display: block !important;
   }
+  
+  // Video player - fully visible
+  .video-player,
+  video {
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #000 !important;
+  }
+  
+  // Audio player - fully visible  
+  .audio-player,
+  audio {
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #000 !important;
+  }
+  
+  // Remove any overlay that might darken the content
+  &::before,
+  &::after {
+    display: none !important;
+  }
+}
+
+// Modal overlay - solid black, no transparency on the content area
+.modal-root__overlay {
+  background: rgba(0, 0, 0, 0.95) !important;
 }
 
 // Global fix for any hidden images
@@ -423,7 +454,23 @@ body.theme-matrix {
 // ============================================================================
 
 body.theme-matrix {
-  .modal-root__overlay { background: rgba(0, 0, 0, 0.92); }
+  .modal-root__overlay { background: rgba(0, 0, 0, 0.95); }
+  
+  // Media modal - content must be 100% visible, no darkening
+  .media-modal,
+  .image-modal,
+  .video-modal,
+  .audio-modal {
+    background: #000 !important;
+    
+    img, video, audio,
+    .video-player,
+    .audio-player {
+      opacity: 1 !important;
+      visibility: visible !important;
+      filter: none !important;
+    }
+  }
 
   .modal-root__container {
     .compose-modal,
@@ -635,36 +682,35 @@ body.theme-matrix {
   }
   
   // ==========================================================================
-  // PANEL OPACITY (Increased for better readability)
-  // Previous: 0.85-0.88, Now: 0.92-0.95
+  // PANEL OPACITY - 50% dark GREEN overlay = rain stays green, not gray!
+  // Using rgba(0, 8, 0, 0.5) instead of rgba(0, 0, 0, 0.5)
   // ==========================================================================
   
-  // Columns - primary content containers
+  // Columns - primary content containers  
   .column,
   .drawer {
-    background: rgba(0, 0, 0, 0.93) !important;
-    backdrop-filter: blur(2px);
+    background: rgba(0, 8, 0, 0.5) !important;
   }
   
   .drawer__inner {
-    background: rgba(0, 0, 0, 0.93) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
   }
   
-  // Posts - high opacity for maximum readability
+  // Posts - slightly more opaque for readability
   .status,
   .detailed-status {
-    background: rgba(0, 0, 0, 0.92) !important;
+    background: rgba(0, 8, 0, 0.55) !important;
   }
   
-  // Navigation panel - most opaque for clarity
+  // Navigation panel
   .navigation-panel {
-    background: rgba(0, 0, 0, 0.95) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
   }
   
   // Compose form area
   .compose-form__autosuggest-wrapper,
   .compose-form {
-    background: rgba(0, 0, 0, 0.95) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
   }
   
   // Modals - fully opaque (no rain distraction)
@@ -1325,7 +1371,7 @@ body.theme-matrix {
   .filter-bar,
   .search-header,
   .explore__search-header {
-    background: rgba(0, 0, 0, 0.9) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
     border-color: var(--matrix-primary-dark) !important;
   }
 
@@ -1665,7 +1711,7 @@ body.theme-matrix {
   .getting-started,
   .getting-started__wrapper,
   .getting-started__footer {
-    background: rgba(0, 0, 0, 0.85) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
   }
 
   .navigation-panel__menu a,
@@ -1687,7 +1733,7 @@ body.theme-matrix {
   .compose-form__warning,
   .reply-indicator,
   .reply-indicator__content {
-    background: rgba(0, 0, 0, 0.8) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
     color: $matrix-text !important;
   }
 
@@ -1702,10 +1748,10 @@ body.theme-matrix {
   .public-account-header__bar,
   .public-account-header__tabs,
   .account-timeline__header {
-    background: rgba(0, 0, 0, 0.85) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
   }
 
-  // --- PROFILE VERIFICATION PAGE (shown in screenshot) ---
+  // --- PROFILE VERIFICATION PAGE ---
   .public-layout,
   .public-layout .container,
   .public-layout .content,
@@ -1715,7 +1761,7 @@ body.theme-matrix {
   .verification-card__item,
   .website-preview,
   .preview-card {
-    background: rgba(0, 0, 0, 0.9) !important;
+    background: rgba(0, 8, 0, 0.5) !important;
     color: $matrix-text !important;
   }
 
