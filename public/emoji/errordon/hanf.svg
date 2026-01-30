@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <rect width="36" height="36" fill="#2ecc71" rx="4"/>
+  <g fill="#1a5e2a" transform="translate(18,18)">
+    <!-- Cannabis leaf -->
+    <ellipse cx="0" cy="-8" rx="2" ry="7"/>
+    <ellipse cx="-6" cy="-4" rx="2" ry="6" transform="rotate(-30)"/>
+    <ellipse cx="6" cy="-4" rx="2" ry="6" transform="rotate(30)"/>
+    <ellipse cx="-8" cy="2" rx="1.5" ry="5" transform="rotate(-60)"/>
+    <ellipse cx="8" cy="2" rx="1.5" ry="5" transform="rotate(60)"/>
+    <rect x="-1" y="4" width="2" height="8" rx="1"/>
+  </g>
+</svg>

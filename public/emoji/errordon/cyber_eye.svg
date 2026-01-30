@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><ellipse cx="18" cy="18" fill="#292f33" rx="16" ry="10"/><ellipse cx="18" cy="18" fill="#fff" rx="12" ry="8"/><circle cx="18" cy="18" r="6" fill="#0f0"/><circle cx="18" cy="18" r="3"/><circle cx="16" cy="16" r="1.5" fill="#fff"/><path fill="none" stroke="#0f0" stroke-width=".5" d="M18 12v-2m0 14v2m-6-8h-2m14 0h2"/><circle cx="18" cy="18" r="8" fill="none" stroke="#0f0" stroke-dasharray="2,2" stroke-width=".3"/></svg>
+<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <g id="color">
+    <ellipse cx="35.75" cy="36.4282" rx="34.8096" ry="20.4282" fill="#FFFFFF" stroke="none"/>
+    <ellipse cx="35.75" cy="36.4282" rx="34.8096" ry="20.4282" fill="#FFFFFF" stroke="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+    <circle cx="36" cy="35.9583" r="15.484" fill="#a57939" stroke="none"/>
+  </g>
+  <g id="hair"/>
+  <g id="skin"/>
+  <g id="skin-shadow"/>
+  <g id="line">
+    <ellipse cx="35.75" cy="36.4282" rx="34.8096" ry="20.4282" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+    <circle cx="36" cy="35.9583" r="8.4416" fill="#000000" stroke="none"/>
+    <circle cx="36" cy="35.9583" r="8.4416" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+    <circle cx="36" cy="35.9583" r="15.484" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+  </g>
+</svg>

@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect fill="#000" width="32" height="32" x="2" y="2" rx="4"/><circle cx="18" cy="12" r="4" fill="#0f0"/><path fill="#0f0" d="M14 20c0 2.2 1.8 4 4 4s4-1.8 4-4v-2h-8z"/><ellipse cx="18" cy="28" fill="#0f0" rx="4" ry="2" transform="rotate(-20 18 28)"/></svg>
+<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <g id="color"/>
+  <g id="hair"/>
+  <g id="skin"/>
+  <g id="skin-shadow"/>
+  <g id="line">
+    <line x1="36.5" x2="36.5" y1="17" y2="49.7614" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+    <polyline fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="27.8047,41.6451 36.5,50.3104 45.1953,41.6451"/>
+    <line x1="27.5" x2="45.5" y1="55" y2="55" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+  </g>
+</svg>
