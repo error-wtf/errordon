@@ -7,9 +7,22 @@
 // ============================================================================
 
 // =============================================================================
-// CRITICAL FIX: Ensure images in media modals are ALWAYS visible
+// CRITICAL FIX: Ensure ALL images are ALWAYS visible
 // This MUST be at the top for highest priority
 // =============================================================================
+
+// Fix for images in posts/feed
+.media-gallery img,
+.media-gallery__item img,
+.media-gallery__item-thumbnail img,
+.media-gallery__preview,
+.status img,
+.detailed-status img {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+// Fix for images in modals
 .media-modal,
 .image-modal,
 .video-modal {
@@ -24,9 +37,11 @@
   }
 }
 
-// Global fix for any hidden images in modals
+// Global fix for any hidden images
 [class*="modal"] img,
-[role="dialog"] img {
+[role="dialog"] img,
+[class*="gallery"] img,
+[class*="thumbnail"] img {
   visibility: visible !important;
   opacity: 1 !important;
 }
