@@ -1,19 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- White background -->
-  <circle cx="32" cy="32" r="30" fill="#ffffff"/>
-  <circle cx="32" cy="32" r="28" fill="none" stroke="#000000" stroke-width="2"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Three Arrows / Iron Front symbol -->
+  <circle cx="256" cy="256" r="250" fill="#ffffff"/>
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#000000" stroke-width="8"/>
   
-  <!-- Three arrows (Iron Front) pointing down-left -->
-  <g stroke="#000000" stroke-width="5" stroke-linecap="round" fill="none">
-    <line x1="20" y1="16" x2="44" y2="48"/>
-    <line x1="32" y1="12" x2="32" y2="52"/>
-    <line x1="44" y1="16" x2="20" y2="48"/>
-  </g>
-  
-  <!-- Arrow heads -->
+  <!-- Three diagonal arrows pointing down-left -->
   <g fill="#000000">
-    <polygon points="44,48 38,42 44,40"/>
-    <polygon points="32,52 26,46 38,46"/>
-    <polygon points="20,48 20,40 26,42"/>
+    <!-- Arrow 1 (left) -->
+    <polygon points="120,80 160,80 360,400 400,400 400,440 360,440 120,80"/>
+    <polygon points="80,160 120,80 160,140"/>
+    
+    <!-- Arrow 2 (center) -->
+    <polygon points="200,60 240,60 440,380 440,440 400,440 160,80 200,60"/>
+    <polygon points="160,140 200,60 240,120"/>
+    
+    <!-- Arrow 3 (right) -->
+    <polygon points="280,40 320,40 480,340 480,400 440,400 240,60 280,40"/>
+    <polygon points="240,120 280,40 320,100"/>
   </g>
 </svg>

@@ -1,6 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="4" fill="#000000"/>
-  <rect x="2" y="2" width="60" height="60" rx="3" fill="none" stroke="#ffffff" stroke-width="2"/>
-  <text x="32" y="26" font-family="Impact, Arial Black, sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="middle">FCK</text>
-  <text x="32" y="48" font-family="Impact, Arial Black, sans-serif" font-size="18" font-weight="900" fill="#cc0000" text-anchor="middle">NZS</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- FCK NZS stencil style -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- White border -->
+  <rect x="16" y="16" width="480" height="480" fill="none" stroke="#ffffff" stroke-width="8"/>
+  
+  <!-- FCK text -->
+  <text x="256" y="200" font-family="Impact, Arial Black, sans-serif" font-size="140" font-weight="900" fill="#ffffff" text-anchor="middle">FCK</text>
+  
+  <!-- NZS text in red -->
+  <text x="256" y="380" font-family="Impact, Arial Black, sans-serif" font-size="140" font-weight="900" fill="#ff0000" text-anchor="middle">NZS</text>
 </svg>

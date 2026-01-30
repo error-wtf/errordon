@@ -1,15 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Black background -->
-  <circle cx="32" cy="32" r="30" fill="#000000"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Classic Circle-A anarchist symbol -->
+  <circle cx="256" cy="256" r="240" fill="#000000"/>
   
   <!-- Red circle -->
-  <circle cx="32" cy="32" r="24" fill="none" stroke="#cc0000" stroke-width="4"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#ff0000" stroke-width="24"/>
   
-  <!-- Red A with extended lines through circle -->
-  <g stroke="#cc0000" stroke-width="4" fill="none">
-    <!-- A shape -->
-    <line x1="32" y1="12" x2="18" y2="52"/>
-    <line x1="32" y1="12" x2="46" y2="52"/>
-    <line x1="22" y1="38" x2="42" y2="38"/>
+  <!-- Letter A extending through the circle -->
+  <g fill="none" stroke="#ff0000" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left leg of A -->
+    <line x1="256" y1="56" x2="96" y2="440"/>
+    <!-- Right leg of A -->
+    <line x1="256" y1="56" x2="416" y2="440"/>
+    <!-- Crossbar of A (extends beyond the A) -->
+    <line x1="56" y1="320" x2="456" y2="320"/>
   </g>
 </svg>
