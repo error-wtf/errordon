@@ -441,20 +441,25 @@ body.theme-matrix {
   }
 
   .account__header {
-    background: linear-gradient($matrix-dark, $matrix-black);
+    background: transparent !important;
     
     &__image {
-      // Banner image - NO filter, NO overlay, fully visible!
+      // Banner image - 100% visible, NO overlay, NO filter!
       filter: none !important;
-      background: transparent !important;
+      background: none !important;
+      
+      &::before, &::after {
+        display: none !important;
+      }
       
       img {
         opacity: 1 !important;
         filter: none !important;
+        visibility: visible !important;
       }
     }
     
-    &__bar { background: $matrix-dark; }
+    &__bar { background: rgba(0, 8, 0, 0.7) !important; }
     
     &__tabs__name h1 {
       font-family: $font-hacker;
@@ -1780,21 +1785,31 @@ body.theme-matrix {
   }
 
   // --- ACCOUNT HEADERS ---
-  // NOTE: .account__header__image excluded - banner should be 100% visible!
+  // Banner/Header image: 100% visible, NO darkening!
+  .account__header,
+  .account__header__image,
+  .public-account-header,
+  .public-account-header__image {
+    background: transparent !important;
+    filter: none !important;
+    
+    &::before, &::after {
+      display: none !important;
+    }
+    
+    img {
+      opacity: 1 !important;
+      filter: none !important;
+    }
+  }
+  
+  // Only the bar/tabs get dark background (not the banner!)
   .account__header__bar,
-  .account__header__tabs,
   .account__header__tabs__buttons,
-  .account__header__bio .account__header__content,
   .public-account-header__bar,
   .public-account-header__tabs,
   .account-timeline__header {
-    background: rgba(0, 8, 0, 0.5) !important;
-  }
-  
-  // Banner image - NO overlay, fully visible
-  .account__header__image,
-  .public-account-header__image {
-    background: transparent !important;
+    background: rgba(0, 8, 0, 0.7) !important;
   }
 
   // --- PROFILE VERIFICATION PAGE ---
