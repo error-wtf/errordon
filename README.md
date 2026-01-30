@@ -228,8 +228,8 @@ Beyond legal compliance, Errordon includes:
 | 🎬 **Profile Media Tabs** | Separate Videos/Audio/Images tabs |
 | 🎨 **Matrix Theme** | Cyberpunk green UI (Ctrl+Shift+M) |
 | 🖥️ **Matrix Terminal** | Interactive landing page with games |
-| 😎 **127 Custom Emojis** | Matrix/Hacker/Nerd/CCC/DevOps/Security themed |
-| 📤 **250MB Uploads** | With server-side transcoding |
+| 😎 **165 Custom Emojis** | Matrix/Hacker/Nerd/CCC/DevOps/Security themed |
+| 📤 **Standard Uploads** | 10MB images, 99MB videos |
 | 🔒 **Privacy-First** | Strict defaults via ENV |
 | 💾 **Dynamic Storage Quota** | 60% disk shared equally, profile display |
 | 🔍 **Media Filters** | Originals only, Alt text, Public |
@@ -262,7 +262,7 @@ ERRORDON_THEME=matrix  # Options: matrix, default, light
 
 ## 😎 Custom Emojis
 
-127 Matrix/Hacker/Nerd/CCC/DevOps/Security themed emojis in 14 categories:
+165 Matrix/Hacker/Nerd/CCC/DevOps/Security themed emojis in 14 categories:
 
 | Category | Emojis |
 |----------|--------|
@@ -303,7 +303,7 @@ bundle exec rails errordon:import_emojis
 
 - **Profile Media Columns**: Separate tabs for Videos, Audio, Images in user profiles
 - **Filter UI**: Filter by "originals only", "with alt text", visibility
-- **Large Uploads**: Up to 250MB for video/audio with automatic transcoding
+- **Standard Uploads**: Mastodon defaults (10MB images, 99MB videos)
 - **Privacy Defaults**: Strict preset inspired by chaos.social principles
 
 ## 📁 Repository Structure
@@ -333,7 +333,7 @@ errordon/
 │   ├── initializers/errordon_*.rb       # Feature configs
 │   ├── routes/errordon.rb               # API routes
 │   └── locales/errordon.*.yml           # Translations
-├── public/emoji/errordon/               # 127 custom SVG emojis
+├── public/emoji/errordon/               # 165 custom emojis (PNG + SVG)
 ├── lib/tasks/errordon_emojis.rake       # Emoji import task
 ├── deploy/                              # Production configs
 ├── docs/                                # Documentation
