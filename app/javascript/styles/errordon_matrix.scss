@@ -7,6 +7,31 @@
 // ============================================================================
 
 // =============================================================================
+// CRITICAL FIX: Ensure images in media modals are ALWAYS visible
+// This MUST be at the top for highest priority
+// =============================================================================
+.media-modal,
+.image-modal,
+.video-modal {
+  .zoomable-image,
+  .zoomable-image img,
+  .media-modal__content,
+  .media-modal__content img,
+  img {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+  }
+}
+
+// Global fix for any hidden images in modals
+[class*="modal"] img,
+[role="dialog"] img {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+// =============================================================================
 // COLOR PALETTE DEFINITIONS
 // =============================================================================
 
