@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- RESIST stencil style -->
-  <rect width="512" height="512" fill="#000000"/>
-  
-  <!-- Red bars top and bottom -->
-  <rect x="0" y="0" width="512" height="80" fill="#cc0000"/>
-  <rect x="0" y="432" width="512" height="80" fill="#cc0000"/>
-  
-  <!-- RESIST text -->
-  <text x="256" y="300" font-family="Impact, Arial Black, sans-serif" font-size="100" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="8">RESIST</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#000"/>
+  <rect y="0" width="100" height="20" fill="#e50000"/>
+  <rect y="80" width="100" height="20" fill="#e50000"/>
+  <text x="50" y="62" font-family="Arial Black,sans-serif" font-size="22" font-weight="900" fill="#fff" text-anchor="middle">RESIST</text>
 </svg>

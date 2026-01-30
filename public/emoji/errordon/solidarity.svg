@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Classic raised fist symbol -->
-  <rect width="512" height="512" fill="#cc0000"/>
-  
-  <g fill="#000000">
-    <!-- Fist main body -->
-    <path d="M176 280 L176 400 L336 400 L336 280 Q336 260 316 260 L196 260 Q176 260 176 280 Z"/>
-    
-    <!-- Index finger -->
-    <rect x="176" y="120" width="40" height="160" rx="20"/>
-    
-    <!-- Middle finger -->
-    <rect x="224" y="96" width="40" height="180" rx="20"/>
-    
-    <!-- Ring finger -->
-    <rect x="272" y="112" width="40" height="168" rx="20"/>
-    
-    <!-- Pinky finger -->
-    <rect x="320" y="144" width="36" height="136" rx="18"/>
-    
-    <!-- Thumb -->
-    <ellipse cx="152" cy="300" rx="28" ry="56"/>
-    
-    <!-- Wrist/Arm -->
-    <rect x="192" y="400" width="128" height="80"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#e50000"/>
+  <g fill="#000">
+    <rect x="35" y="45" width="30" height="35" rx="3"/>
+    <rect x="35" y="20" width="8" height="30" rx="3"/>
+    <rect x="45" y="15" width="8" height="35" rx="3"/>
+    <rect x="55" y="20" width="8" height="30" rx="3"/>
+    <rect x="65" y="28" width="7" height="22" rx="3"/>
+    <rect x="28" y="50" width="12" height="15" rx="3"/>
+    <rect x="40" y="80" width="20" height="15"/>
   </g>
 </svg>
