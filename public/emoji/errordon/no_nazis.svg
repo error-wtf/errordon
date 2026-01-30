@@ -1,7 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="28" fill="#ffffff" stroke="#cc0000" stroke-width="4"/>
-  <!-- Crossed out -->
-  <line x1="12" y1="12" x2="52" y2="52" stroke="#cc0000" stroke-width="6" stroke-linecap="round"/>
-  <!-- Nazi symbol hint (broken/crossed) -->
-  <text x="32" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#333" text-anchor="middle">NS</text>
+  <!-- White background -->
+  <circle cx="32" cy="32" r="30" fill="#ffffff"/>
+  
+  <!-- Red circle border -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#cc0000" stroke-width="4"/>
+  
+  <!-- Crossed out swastika (stylized/broken) -->
+  <g transform="translate(32,32)" stroke="#333333" stroke-width="3" fill="none">
+    <line x1="-8" y1="0" x2="8" y2="0"/>
+    <line x1="0" y1="-8" x2="0" y2="8"/>
+    <line x1="8" y1="0" x2="8" y2="-6"/>
+    <line x1="-8" y1="0" x2="-8" y2="6"/>
+    <line x1="0" y1="-8" x2="6" y2="-8"/>
+    <line x1="0" y1="8" x2="-6" y2="8"/>
+  </g>
+  
+  <!-- Red diagonal cross-out line -->
+  <line x1="10" y1="54" x2="54" y2="10" stroke="#cc0000" stroke-width="6" stroke-linecap="round"/>
 </svg>
