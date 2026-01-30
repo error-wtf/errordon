@@ -35,12 +35,9 @@ export const getStoredTheme = (): ThemeName => {
   if (stored && stored in themes) {
     return stored as ThemeName;
   }
-  // If no localStorage preference, check if server enabled Matrix theme
-  // Server adds 'theme-matrix' class when ERRORDON_MATRIX_THEME_ENABLED=true
-  if (document.body.classList.contains('theme-matrix')) {
-    return 'matrix';
-  }
-  return 'default';
+  // Default to Matrix theme for Errordon
+  // Users can switch to default/light via Ctrl+Shift+M
+  return 'matrix';
 };
 
 export const setTheme = (themeName: ThemeName): void => {

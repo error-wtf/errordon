@@ -28,14 +28,18 @@
   opacity: 1 !important;
 }
 
-// Fix for media in modals - show immediately on first click
-// NO overlay, NO opacity reduction - just pure black background + content
+// =============================================================================
+// MEDIA MODAL - 100% VISIBLE, NO DARKENING
+// Images/videos only hidden when user clicks "Ausblenden"
+// =============================================================================
 .media-modal,
 .image-modal,
 .video-modal,
 .audio-modal {
   background: #000 !important;
   
+  // ALL images fully visible
+  .image,
   .image img,
   .image:not(.loaded) img,
   .zoomable-image,
@@ -46,6 +50,7 @@
     visibility: visible !important;
     opacity: 1 !important;
     display: block !important;
+    filter: none !important;
   }
   
   // Video player - fully visible
@@ -54,6 +59,7 @@
     visibility: visible !important;
     opacity: 1 !important;
     background: #000 !important;
+    filter: none !important;
   }
   
   // Audio player - fully visible  
@@ -64,16 +70,30 @@
     background: #000 !important;
   }
   
-  // Remove any overlay that might darken the content
+  // Remove ANY overlay
   &::before,
-  &::after {
+  &::after,
+  .media-modal__overlay,
+  .image__preview {
     display: none !important;
+    opacity: 0 !important;
   }
 }
 
-// Modal overlay - solid black, no transparency on the content area
+// Modal background - solid black
 .modal-root__overlay {
-  background: rgba(0, 0, 0, 0.95) !important;
+  background: #000 !important;
+}
+
+// Ensure modal content is never darkened
+.modal-root__container .media-modal,
+.modal-root__container .image-modal,
+.modal-root__container .video-modal {
+  img, video, .video-player {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+  }
 }
 
 // Global fix for any hidden images
@@ -409,8 +429,14 @@ body.theme-matrix {
     background: linear-gradient($matrix-dark, $matrix-black);
     
     &__image {
-      // Subtle effect, keeps images visible
-      filter: grayscale(20%) contrast(1.05);
+      // Banner image - NO filter, NO overlay, fully visible!
+      filter: none !important;
+      background: transparent !important;
+      
+      img {
+        opacity: 1 !important;
+        filter: none !important;
+      }
     }
     
     &__bar { background: $matrix-dark; }
@@ -456,7 +482,7 @@ body.theme-matrix {
 body.theme-matrix {
   .modal-root__overlay { background: rgba(0, 0, 0, 0.95); }
   
-  // Media modal - content must be 100% visible, no darkening
+  // Media modal - 100% visible, NEVER darkened
   .media-modal,
   .image-modal,
   .video-modal,
@@ -464,11 +490,21 @@ body.theme-matrix {
     background: #000 !important;
     
     img, video, audio,
+    .image,
+    .zoomable-image,
     .video-player,
-    .audio-player {
+    .audio-player,
+    .media-modal__content {
       opacity: 1 !important;
       visibility: visible !important;
       filter: none !important;
+      background: transparent !important;
+    }
+    
+    // Hide any preview/blur overlays
+    .image__preview,
+    canvas {
+      display: none !important;
     }
   }
 
@@ -1738,17 +1774,21 @@ body.theme-matrix {
   }
 
   // --- ACCOUNT HEADERS ---
-  .account__header,
-  .account__header__image,
+  // NOTE: .account__header__image excluded - banner should be 100% visible!
   .account__header__bar,
   .account__header__tabs,
   .account__header__tabs__buttons,
   .account__header__bio .account__header__content,
-  .public-account-header,
   .public-account-header__bar,
   .public-account-header__tabs,
   .account-timeline__header {
     background: rgba(0, 8, 0, 0.5) !important;
+  }
+  
+  // Banner image - NO overlay, fully visible
+  .account__header__image,
+  .public-account-header__image {
+    background: transparent !important;
   }
 
   // --- PROFILE VERIFICATION PAGE ---
