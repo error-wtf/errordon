@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="30" fill="#1a1a1a" stroke="#cc0000" stroke-width="2"/>
+  <!-- Three arrows (Iron Front symbol) -->
+  <path d="M20 20 L32 44 L26 44 L20 32 Z" fill="#cc0000"/>
+  <path d="M32 16 L38 44 L32 44 L26 16 Z" fill="#cc0000"/>
+  <path d="M44 20 L32 44 L38 44 L44 32 Z" fill="#cc0000"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="30" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+  <!-- Red flag -->
+  <path d="M18 20 L18 48 L44 38 L44 20 Z" fill="#cc0000"/>
+  <!-- Black flag (overlapping) -->
+  <path d="M22 16 L22 44 L48 34 L48 16 Z" fill="#000000"/>
+  <!-- Circle border -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#cc0000" stroke-width="3"/>
+</svg>
