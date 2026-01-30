@@ -1367,6 +1367,50 @@ body.theme-matrix {
   .modal-root__overlay {
     background: rgba(0, 0, 0, 0.85) !important;
   }
+
+  // Media modal - ensure images are visible
+  .media-modal {
+    background: transparent !important;
+    border: none !important;
+    
+    .zoomable-image {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+      
+      img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    }
+    
+    canvas {
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    img {
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  }
+  
+  .image-modal,
+  .video-modal,
+  .audio-modal {
+    background: transparent !important;
+    border: none !important;
+    
+    img, video, audio {
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  }
   
   // Confirmation modal specific
   .confirmation-modal,
