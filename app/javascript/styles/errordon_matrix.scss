@@ -7,6 +7,26 @@
 // ============================================================================
 
 // =============================================================================
+// CRITICAL: Override CSS variables for Matrix theme
+// This MUST be at the ROOT level to override the default theme variables
+// =============================================================================
+:root,
+html,
+body.theme-matrix {
+  // Override overlay to be TRANSPARENT for Matrix rain visibility
+  --color-bg-overlay: transparent !important;
+}
+
+// Force modal overlay to be COMPLETELY transparent
+body.theme-matrix .modal-root__overlay,
+.theme-matrix .modal-root__overlay {
+  --color-bg-overlay: transparent !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+}
+
+// =============================================================================
 // CRITICAL FIX: Disable lazy loading - show ALL images IMMEDIATELY
 // This MUST be at the top for highest priority
 // =============================================================================
