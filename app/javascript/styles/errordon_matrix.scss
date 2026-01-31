@@ -129,11 +129,21 @@ body.theme-matrix .modal-root__overlay,
   // Remove ANY overlay/preview that might darken
   &::before,
   &::after,
-  .media-modal__overlay,
   .image__preview {
     display: none !important;
     opacity: 0 !important;
     visibility: hidden !important;
+  }
+  
+  // Make all inner elements transparent
+  .media-modal__overlay,
+  .media-modal__navigation,
+  .media-modal__navigation--hidden,
+  .media-modal__buttons,
+  .media-modal__content,
+  .picture-in-picture__footer {
+    background: transparent !important;
+    background-color: transparent !important;
   }
 }
 
@@ -1700,22 +1710,34 @@ body.theme-matrix {
     }
   }
   
-  // Any popup with white background
+  // Any popup with white background - EXCEPT media modals which need transparent!
   .dialog,
   .dialog__content,
   .alert-dialog,
   .popup,
   .popover,
   .popover-menu,
-  [class*="modal"],
-  [class*="Modal"],
-  [class*="dialog"],
-  [class*="Dialog"],
+  [class*="modal"]:not(.media-modal):not(.image-modal):not(.video-modal):not(.audio-modal):not(.modal-root):not(.modal-root__overlay):not(.modal-root__container),
+  [class*="Modal"]:not(.media-modal):not(.image-modal):not(.video-modal):not(.audio-modal),
+  [class*="dialog"]:not(.media-modal):not(.image-modal):not(.video-modal):not(.audio-modal),
+  [class*="Dialog"]:not(.media-modal):not(.image-modal):not(.video-modal):not(.audio-modal),
   [class*="popup"],
   [class*="Popup"] {
     background: rgba(10, 10, 10, 0.98) !important;
     color: $matrix-text !important;
     border-color: var(--matrix-primary-dark) !important;
+  }
+  
+  // Media modals - MUST be transparent for Matrix rain!
+  .media-modal,
+  .image-modal,
+  .video-modal,
+  .audio-modal,
+  .modal-root,
+  .modal-root__overlay,
+  .modal-root__container:has(.media-modal) {
+    background: transparent !important;
+    background-color: transparent !important;
   }
 
   // =============================================================================
