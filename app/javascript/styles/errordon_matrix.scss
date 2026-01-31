@@ -11,13 +11,41 @@
 // This MUST be at the ROOT level to override the default theme variables
 // =============================================================================
 :root,
-html,
-body.theme-matrix {
-  // Override overlay to be TRANSPARENT for Matrix rain visibility
+html {
   --color-bg-overlay: transparent !important;
 }
 
+// HTML and Body MUST be transparent for Matrix rain canvas to show!
+html.custom-scrollbars,
+html {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+body.theme-matrix,
+body.app-body.theme-matrix {
+  background: transparent !important;
+  background-color: transparent !important;
+  --color-bg-overlay: transparent !important;
+  --color-bg-primary: transparent !important;
+  --color-black: transparent !important;
+}
+
+// ALL main containers MUST be transparent
+body.theme-matrix .app-holder,
+body.theme-matrix #mastodon,
+body.theme-matrix .ui,
+body.theme-matrix .ui__header,
+body.theme-matrix .columns-area,
+body.theme-matrix .columns-area__panels,
+body.theme-matrix .columns-area__panels__pane,
+body.theme-matrix .columns-area__panels__main {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 // Force modal overlay to be COMPLETELY transparent
+body.theme-matrix .modal-root,
 body.theme-matrix .modal-root__overlay,
 .theme-matrix .modal-root__overlay {
   --color-bg-overlay: transparent !important;
