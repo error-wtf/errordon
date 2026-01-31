@@ -261,7 +261,7 @@ $font-fallback: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 // ============================================================================
 
 body.theme-matrix {
-  background: $matrix-black;
+  background: transparent !important;
   color: $matrix-text;
   
   // Subtle scanline effect (purely decorative, doesn't block interaction)
@@ -287,7 +287,7 @@ body.theme-matrix {
 // Fediverse-compatible: Specific selectors, minimal !important
 body.theme-matrix {
   .ui, .columns-area, .columns-area__panels {
-    background: $matrix-black;
+    background: transparent !important;
   }
 
   .column, .drawer {
