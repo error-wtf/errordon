@@ -90,18 +90,21 @@
 }
 
 // Modal overlay - fully transparent to show Matrix rain!
-.modal-root__overlay {
+// AGGRESSIVE: Override inline styles with [style] selectors
+.modal-root__overlay,
+.modal-root__overlay[style],
+.modal-root__overlay[style*="background"],
+div.modal-root__overlay,
+div.modal-root__overlay[style],
+[class*="modal-root__overlay"],
+[class*="modal-root__overlay"][style],
+.modal-root > .modal-root__overlay,
+.modal-root > [style*="background"],
+[role="presentation"].modal-root__overlay,
+[role="presentation"][style*="background"] {
   background: transparent !important;
   background-color: transparent !important;
   opacity: 1 !important;
-}
-
-// Override any inline styles on modal overlay
-[class*="modal-root__overlay"],
-div.modal-root__overlay,
-.modal-root > .modal-root__overlay {
-  background: transparent !important;
-  background-color: transparent !important;
 }
 
 // Media modal container - no extra styling
@@ -529,7 +532,12 @@ body.theme-matrix {
 
 body.theme-matrix {
   .modal-root__overlay,
-  [class*="modal-root__overlay"] { 
+  .modal-root__overlay[style],
+  .modal-root__overlay[style*="background"],
+  [class*="modal-root__overlay"],
+  [class*="modal-root__overlay"][style],
+  [role="presentation"].modal-root__overlay,
+  div[style*="background-color"].modal-root__overlay { 
     background: transparent !important;
     background-color: transparent !important;
   }
@@ -1559,7 +1567,11 @@ body.theme-matrix {
   }
 
   .modal-root__overlay,
-  [class*="modal-root__overlay"] {
+  .modal-root__overlay[style],
+  .modal-root__overlay[style*="background"],
+  [class*="modal-root__overlay"],
+  [class*="modal-root__overlay"][style],
+  div[style*="background-color"].modal-root__overlay {
     background: transparent !important;
     background-color: transparent !important;
   }
