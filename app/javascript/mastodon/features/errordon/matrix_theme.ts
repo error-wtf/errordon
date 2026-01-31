@@ -71,19 +71,40 @@ export const toggleMatrixTheme = (): void => {
   setTheme(next);
 };
 
-// Remove inline background from modal overlays (CSS can't override inline styles reliably)
+// Remove inline background from modal overlays and containers (CSS can't override inline styles reliably)
 const fixModalOverlay = (element: Element): void => {
+  const el = element as HTMLElement;
+  
+  // Fix overlay
   if (element.classList.contains('modal-root__overlay')) {
-    (element as HTMLElement).style.backgroundColor = 'transparent';
-    (element as HTMLElement).style.background = 'transparent';
+    el.style.backgroundColor = 'transparent';
+    el.style.background = 'transparent';
+  }
+  
+  // Fix container when it contains a media modal
+  if (element.classList.contains('modal-root__container')) {
+    const hasMediaModal = element.querySelector('.media-modal, .image-modal, .video-modal, .audio-modal');
+    if (hasMediaModal) {
+      el.style.backgroundColor = 'transparent';
+      el.style.background = 'transparent';
+    }
+  }
+  
+  // Fix the modal-root itself
+  if (element.classList.contains('modal-root')) {
+    el.style.backgroundColor = 'transparent';
+    el.style.background = 'transparent';
   }
 };
 
 const initModalOverlayFixer = (): void => {
-  // Fix any existing overlays
-  document.querySelectorAll('.modal-root__overlay').forEach(fixModalOverlay);
+  // Selectors for elements that need transparent backgrounds
+  const selectors = '.modal-root__overlay, .modal-root__container, .modal-root';
   
-  // Watch for new overlays being added
+  // Fix any existing elements
+  document.querySelectorAll(selectors).forEach(fixModalOverlay);
+  
+  // Watch for new elements being added
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
@@ -91,10 +112,10 @@ const initModalOverlayFixer = (): void => {
           // Check the node itself
           fixModalOverlay(node);
           // Check descendants
-          node.querySelectorAll('.modal-root__overlay').forEach(fixModalOverlay);
+          node.querySelectorAll(selectors).forEach(fixModalOverlay);
         }
       });
-      // Also check for attribute changes on existing overlays
+      // Also check for attribute changes on existing elements
       if (mutation.type === 'attributes' && mutation.target instanceof Element) {
         fixModalOverlay(mutation.target);
       }

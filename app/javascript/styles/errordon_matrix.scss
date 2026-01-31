@@ -814,14 +814,26 @@ body.theme-matrix {
     background: rgba(0, 8, 0, 0.5) !important;
   }
   
-  // Modals - fully opaque (no rain distraction)
-  .modal-root__modal,
-  .modal-root__container,
+  // Modals - fully opaque (no rain distraction) - EXCEPT media modals!
+  .modal-root__modal:not(.media-modal):not(.image-modal):not(.video-modal):not(.audio-modal),
   .actions-modal,
   .boost-modal,
   .confirmation-modal,
   .report-modal {
     background: rgba(5, 5, 5, 0.98) !important;
+  }
+  
+  // Media modals - FULLY TRANSPARENT for Matrix rain!
+  .modal-root__container:has(.media-modal),
+  .modal-root__container:has(.image-modal),
+  .modal-root__container:has(.video-modal),
+  .modal-root__container:has(.audio-modal),
+  .media-modal,
+  .image-modal,
+  .video-modal,
+  .audio-modal {
+    background: transparent !important;
+    background-color: transparent !important;
   }
   
   // Dropdowns - fully opaque
