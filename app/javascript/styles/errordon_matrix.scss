@@ -456,13 +456,15 @@ body.theme-matrix {
     &__image {
       // Banner image - 100% visible, NO overlay, NO filter, NO gradient!
       filter: none !important;
-      background: none !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
       
       // Remove ALL pseudo-elements and overlays
       &::before, &::after {
         display: none !important;
         content: none !important;
-        background: none !important;
+        background: transparent !important;
         opacity: 0 !important;
       }
       
@@ -474,7 +476,7 @@ body.theme-matrix {
       
       // Remove any gradient overlay divs
       > div, .gradient {
-        display: none !important;
+        background: transparent !important;
       }
     }
     
@@ -484,7 +486,8 @@ body.theme-matrix {
       content: none !important;
     }
     
-    &__bar { background: rgba(0, 8, 0, 0.7) !important; }
+    // Bar underneath banner - semi-transparent
+    &__bar { background: rgba(0, 8, 0, 0.8) !important; }
     
     &__tabs__name h1 {
       font-family: $font-hacker;
@@ -1317,10 +1320,9 @@ body.theme-matrix {
   .notification__message,
   .status,
   .detailed-status,
-  .account__header__bar,
+  // NOTE: account__header__bar removed - handled separately
   .account__header__bio,
   .account__header__content,
-  .public-layout .public-account-header__bar,
   .public-layout .public-account-bio,
   .directory__card,
   .explore__search-results,
@@ -1837,13 +1839,14 @@ body.theme-matrix {
   .public-account-header,
   .public-account-header__image {
     background: transparent !important;
+    background-color: transparent !important;
     background-image: none !important;
     filter: none !important;
     
     &::before, &::after {
       display: none !important;
       content: none !important;
-      background: none !important;
+      background: transparent !important;
       opacity: 0 !important;
     }
     
@@ -1853,14 +1856,19 @@ body.theme-matrix {
     }
     
     // Kill any gradient overlay divs
-    > div:not(.account__header__bar):not(.account__header__tabs),
-    .gradient {
+    > div:not(.account__header__bar):not(.account__header__tabs):not(.account__header__tabs__buttons),
+    .gradient,
+    [class*="gradient"] {
       background: transparent !important;
+      background-color: transparent !important;
     }
   }
   
-  // Only the bar/tabs get dark background (not the banner!)
-  .account__header__bar,
+  // Bar/tabs below banner - these get semi-transparent background
+  .account__header__bar {
+    background: rgba(0, 8, 0, 0.85) !important;
+  }
+  
   .account__header__tabs__buttons,
   .public-account-header__bar,
   .public-account-header__tabs,
