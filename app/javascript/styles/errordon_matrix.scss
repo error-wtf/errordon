@@ -7,27 +7,44 @@
 // ============================================================================
 
 // =============================================================================
-// CRITICAL: Override CSS variables for Matrix theme
-// This MUST be at the ROOT level to override the default theme variables
+// CRITICAL: Override ALL CSS variables for Matrix theme
+// This MUST override Mastodon's dark theme variables completely!
 // =============================================================================
-:root,
-html {
-  --color-bg-overlay: transparent !important;
+
+// Override at :root level - MAXIMUM specificity for CSS variables
+:root {
+  // Force these variables to transparent for Matrix rain visibility
+  .theme-matrix &,
+  body.theme-matrix & {
+    --color-bg-overlay: transparent !important;
+    --color-bg-primary: transparent !important;
+    --color-bg-ambient: transparent !important;
+    --color-bg-secondary: transparent !important;
+    --color-bg-tertiary: transparent !important;
+    --color-bg-elevated: transparent !important;
+    --color-black: transparent !important;
+  }
 }
 
-// HTML and Body MUST be transparent for Matrix rain canvas to show!
-html.custom-scrollbars,
-html {
+// Override directly on html - this is where Mastodon sets background!
+html:has(body.theme-matrix),
+html.theme-matrix,
+html:has(.theme-matrix) {
   background: transparent !important;
   background-color: transparent !important;
-}
-
-body.theme-matrix,
-body.app-body.theme-matrix {
-  background: transparent !important;
-  background-color: transparent !important;
-  --color-bg-overlay: transparent !important;
+  --color-bg-ambient: transparent !important;
   --color-bg-primary: transparent !important;
+}
+
+// Override directly on body - CRITICAL for Matrix rain to show!
+body.theme-matrix,
+body.app-body.theme-matrix,
+body.app-body.matrix-color-green.theme-matrix {
+  background: transparent !important;
+  background-color: transparent !important;
+  --color-bg-ambient: transparent !important;
+  --color-bg-primary: transparent !important;
+  --color-bg-overlay: transparent !important;
   --color-black: transparent !important;
 }
 
