@@ -884,10 +884,22 @@ body.theme-matrix {
   z-index: 10;
   text-align: center;
   padding: 60px;
-  background: rgba(0, 0, 0, 0.95);
-  border: 2px solid $matrix-green;
+  background: rgba(0, 0, 0, 0.95) !important;
+  border: 2px solid $matrix-green !important;
   border-radius: 10px;
   box-shadow: 0 0 50px $matrix-green-glow;
+  
+  // Ensure all splash content is visible
+  *, button, input, p, span, h1 {
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: inherit;
+  }
+  
+  button {
+    background: transparent !important;
+    color: var(--matrix-primary-dark) !important;
+  }
 }
 
 .matrix-splash-title {
@@ -1000,19 +1012,22 @@ body.theme-matrix {
 .matrix-splash-skip {
   margin-top: 30px;
   padding: 10px 20px;
-  background: transparent;
-  border: 1px solid var(--matrix-primary-dark);
-  color: var(--matrix-primary-dark);
+  background: transparent !important;
+  border: 1px solid var(--matrix-primary-dark) !important;
+  color: var(--matrix-primary-dark) !important;
   font-family: $font-code;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   
   &:hover,
   &:focus {
-    background: rgba(var(--matrix-primary-rgb), 0.1);
-    border-color: $matrix-green;
-    color: $matrix-green;
+    background: rgba(var(--matrix-primary-rgb), 0.1) !important;
+    border-color: $matrix-green !important;
+    color: $matrix-green !important;
     outline: none;
   }
   
