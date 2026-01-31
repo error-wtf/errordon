@@ -1,1 +1,5 @@
 @use 'common';
+
+// Errordon Matrix Theme - loaded on top of default theme
+// Applied via body.theme-matrix class
+@import 'errordon_matrix';
