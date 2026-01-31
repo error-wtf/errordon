@@ -92,6 +92,16 @@
 // Modal overlay - fully transparent to show Matrix rain!
 .modal-root__overlay {
   background: transparent !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+}
+
+// Override any inline styles on modal overlay
+[class*="modal-root__overlay"],
+div.modal-root__overlay,
+.modal-root > .modal-root__overlay {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 // Media modal container - no extra styling
@@ -515,7 +525,11 @@ body.theme-matrix {
 // ============================================================================
 
 body.theme-matrix {
-  .modal-root__overlay { background: transparent !important; }
+  .modal-root__overlay,
+  [class*="modal-root__overlay"] { 
+    background: transparent !important;
+    background-color: transparent !important;
+  }
   
   // Media modal - 100% visible, NEVER darkened!
   .media-modal,
@@ -1542,8 +1556,10 @@ body.theme-matrix {
     }
   }
 
-  .modal-root__overlay {
+  .modal-root__overlay,
+  [class*="modal-root__overlay"] {
     background: transparent !important;
+    background-color: transparent !important;
   }
 
   // Media modal - 100% visible!
