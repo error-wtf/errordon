@@ -444,12 +444,16 @@ body.theme-matrix {
     background: transparent !important;
     
     &__image {
-      // Banner image - 100% visible, NO overlay, NO filter!
+      // Banner image - 100% visible, NO overlay, NO filter, NO gradient!
       filter: none !important;
       background: none !important;
       
+      // Remove ALL pseudo-elements and overlays
       &::before, &::after {
         display: none !important;
+        content: none !important;
+        background: none !important;
+        opacity: 0 !important;
       }
       
       img {
@@ -457,6 +461,17 @@ body.theme-matrix {
         filter: none !important;
         visibility: visible !important;
       }
+      
+      // Remove any gradient overlay divs
+      > div, .gradient {
+        display: none !important;
+      }
+    }
+    
+    // Remove gradient on the header itself
+    &::before, &::after {
+      display: none !important;
+      content: none !important;
     }
     
     &__bar { background: rgba(0, 8, 0, 0.7) !important; }
@@ -1800,21 +1815,31 @@ body.theme-matrix {
   }
 
   // --- ACCOUNT HEADERS ---
-  // Banner/Header image: 100% visible, NO darkening!
+  // Banner/Header image: 100% visible, NO darkening, NO gradient, NO overlay!
   .account__header,
   .account__header__image,
   .public-account-header,
   .public-account-header__image {
     background: transparent !important;
+    background-image: none !important;
     filter: none !important;
     
     &::before, &::after {
       display: none !important;
+      content: none !important;
+      background: none !important;
+      opacity: 0 !important;
     }
     
     img {
       opacity: 1 !important;
       filter: none !important;
+    }
+    
+    // Kill any gradient overlay divs
+    > div:not(.account__header__bar):not(.account__header__tabs),
+    .gradient {
+      background: transparent !important;
     }
   }
   
