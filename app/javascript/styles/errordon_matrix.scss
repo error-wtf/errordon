@@ -89,9 +89,9 @@
   }
 }
 
-// Modal overlay - transparent to show Matrix rain behind!
+// Modal overlay - fully transparent to show Matrix rain!
 .modal-root__overlay {
-  background: rgba(0, 0, 0, 0.5) !important;
+  background: transparent !important;
 }
 
 // Media modal container - no extra styling
@@ -500,7 +500,7 @@ body.theme-matrix {
 // ============================================================================
 
 body.theme-matrix {
-  .modal-root__overlay { background: rgba(0, 0, 0, 0.5) !important; }
+  .modal-root__overlay { background: transparent !important; }
   
   // Media modal - 100% visible, NEVER darkened!
   .media-modal,
@@ -1528,7 +1528,7 @@ body.theme-matrix {
   }
 
   .modal-root__overlay {
-    background: rgba(0, 0, 0, 0.5) !important;
+    background: transparent !important;
   }
 
   // Media modal - 100% visible!
