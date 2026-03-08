@@ -280,7 +280,7 @@ export const ZoomableImage: React.FC<ZoomableImageProps> = ({
   // Safari bug https://github.com/mastodon/mastodon/issues/35042
   const transform = to(
     [style.scale, style.x, style.y],
-    (s, x, y) => `matrix(${s}, 0, 0, ${s}, ${x}, ${y})`,
+    (s, x, y) => (s === 1 && x === 0 && y === 0) ? "none" : `matrix(${s}, 0, 0, ${s}, ${x}, ${y})`,
   );
 
   return (

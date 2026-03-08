@@ -142,11 +142,17 @@ class ModalRoot extends PureComponent {
 
     let backgroundColor = null;
 
-    if (this.props.backgroundColor && typeof this.props.backgroundColor === 'string') {
-      backgroundColor = this.props.backgroundColor;
-    } else if (this.props.backgroundColor) {
-      const darkenedColor = multiply({ ...this.props.backgroundColor, a: 1 }, { r: 0, g: 0, b: 0, a: 0.7 });
-      backgroundColor = `rgb(${darkenedColor.r}, ${darkenedColor.g}, ${darkenedColor.b})`;
+    // Matrix theme: no darkening - keep overlay transparent
+    const isMatrixTheme = document.body.classList.contains("theme-matrix");
+    if (isMatrixTheme) {
+      backgroundColor = 'transparent';
+    } else {
+      if (this.props.backgroundColor && typeof this.props.backgroundColor === 'string') {
+        backgroundColor = this.props.backgroundColor;
+      } else if (this.props.backgroundColor) {
+        const darkenedColor = multiply({ ...this.props.backgroundColor, a: 1 }, { r: 0, g: 0, b: 0, a: 0.7 });
+        backgroundColor = `rgb(${darkenedColor.r}, ${darkenedColor.g}, ${darkenedColor.b})`;
+      }
     }
 
     return (
