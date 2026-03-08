@@ -293,8 +293,8 @@ body.theme-matrix {
 
   // Keep media visible and functional
   .media-gallery__item-thumbnail {
-    filter: saturate(0.8) brightness(0.9);
-    &:hover { filter: saturate(1) brightness(1); }
+    filter: none;
+    &:hover { filter: none; }
   }
 
   .video-player {
@@ -3298,5 +3298,32 @@ body.theme-matrix {
   .rich-text-editor {
     background: #000 !important;
     color: #fff !important;
+  }
+}
+
+// FIX: Chrome compositing - image dimming in media modal
+body.theme-matrix {
+  .modal-root__overlay,
+  .modal-root__overlay[style],
+  .modal-root__overlay[style*="background"] {
+    opacity: 0 !important;
+    background: none !important;
+    background-color: transparent !important;
+  }
+  .media-modal__navigation {
+    will-change: auto !important;
+    &.media-modal__navigation--hidden {
+      visibility: hidden !important;
+    }
+  }
+  .media-modal__closer {
+    isolation: isolate;
+    z-index: 1;
+  }
+  .media-modal img,
+  .media-modal .zoomable-image img {
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
   }
 }
